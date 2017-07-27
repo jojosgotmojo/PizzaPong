@@ -27,6 +27,8 @@ const int kiWidth = 400;
 const int kiHeight = 400;
 
 
+//NICK LIKES PENIS
+
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
 
 LRESULT CALLBACK
