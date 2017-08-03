@@ -40,13 +40,10 @@ public:
 
     float GetDeltaTick();
 
-	int CountFramesPerSecond(float _DeltaTick);
-
 protected:
 
 private:
     CClock(const CClock& _kr);
-    CClock& operator= (const CClock& _kr);
 
     // Member Variables
 public:

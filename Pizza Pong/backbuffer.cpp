@@ -44,8 +44,7 @@ CBackBuffer::~CBackBuffer()
     DeleteObject(m_hDC);
 }
 
-bool
-CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)
+bool CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)
 {
     m_hWnd = _hWnd;
 
@@ -72,8 +71,7 @@ CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)
     return (true);
 }
 
-void
-CBackBuffer::Clear()
+void CBackBuffer::Clear()
 {
     HBRUSH hOldBrush = static_cast<HBRUSH>(SelectObject(GetBFDC(), GetStockObject(LTGRAY_BRUSH)));
 
@@ -82,26 +80,22 @@ CBackBuffer::Clear()
     SelectObject(GetBFDC(), hOldBrush);
 }
 
-HDC
-CBackBuffer::GetBFDC() const
+HDC CBackBuffer::GetBFDC() const
 {
     return (m_hDC);
 }
 
-int 
-CBackBuffer::GetWidth() const
+int CBackBuffer::GetWidth() const
 {
     return (m_iWidth);
 }
 
-int 
-CBackBuffer::GetHeight() const
+int CBackBuffer::GetHeight() const
 {
     return (m_iHeight);
 }
 
-void 
-CBackBuffer::Present()
+void CBackBuffer::Present()
 {
     HDC hWndDC = ::GetDC(m_hWnd);
 

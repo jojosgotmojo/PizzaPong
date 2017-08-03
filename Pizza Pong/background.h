@@ -46,7 +46,6 @@ protected:
 
 private:
 	CBackGround(const CBackGround& _kr);
-	CBackGround& operator= (const CBackGround& _kr);
 
 	// Member Variables
 public:

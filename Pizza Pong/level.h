@@ -52,7 +52,6 @@ public:
 
 protected:
     void ProcessBallWallCollision();
-	void ProcessPaddleWallCollison();
     void ProcessBallPaddleCollision();
     void ProcessBallBrickCollision();
 
@@ -68,7 +67,6 @@ protected:
 
 private:
     CLevel(const CLevel& _kr);
-    CLevel& operator= (const CLevel& _kr);
 
     // Member Variables
 public:

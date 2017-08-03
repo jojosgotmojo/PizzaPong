@@ -53,7 +53,6 @@ protected:
 
 private:
 	CEntity(const CEntity& _kr);
-	CEntity& operator= (const CEntity& _kr);
 
 	// Member Variables
 public:

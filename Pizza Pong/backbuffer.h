@@ -48,7 +48,6 @@ protected:
 
 private:
     CBackBuffer(const CBackBuffer& _kr);
-    CBackBuffer& operator= (const CBackBuffer& _kr);
 
     // Member Variables
 public:

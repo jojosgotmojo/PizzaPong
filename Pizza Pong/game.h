@@ -62,7 +62,6 @@ protected:
 private:
 	CGame();
 	CGame(const CGame& _kr);
-	CGame& operator= (const CGame& _kr);
 
 	// Member Variables
 public:

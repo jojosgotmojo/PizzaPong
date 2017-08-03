@@ -38,8 +38,7 @@ CClock::~CClock()
 
 }
 
-bool
-CClock::Initialise()
+bool CClock::Initialise()
 {
 	__int64 _TimerFrequency, _currTime;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&_TimerFrequency);
@@ -52,8 +51,7 @@ CClock::Initialise()
 	return (true);
 }
 
-void
-CClock::Process()
+void CClock::Process()
 {
 	//Get the time this frame.
 
@@ -102,8 +100,7 @@ CClock::Process()
 //	return (float)(m_fDeltaTime / 1000.0f);
 //}
 
-float
-CClock::GetDeltaTick()
+float CClock::GetDeltaTick()
 {
 	return static_cast<float>(m_fDeltaTime);
 }

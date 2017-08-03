@@ -71,8 +71,7 @@ CLevel::~CLevel()
 
 }
 
-bool
-CLevel::Initialise(int _iWidth, int _iHeight)
+bool CLevel::Initialise(int _iWidth, int _iHeight)
 {
     m_iWidth = _iWidth;
     m_iHeight = _iHeight;
@@ -130,8 +129,7 @@ CLevel::Initialise(int _iWidth, int _iHeight)
     return (true);
 }
 
-void
-CLevel::Draw()
+void CLevel::Draw()
 {
 	m_pBackground->Draw();
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
@@ -146,8 +144,7 @@ CLevel::Draw()
 	DrawFPS();
 }
 
-void
-CLevel::Process(float _fDeltaTick)
+void CLevel::Process(float _fDeltaTick)
 {
 	m_pBackground->Process(_fDeltaTick);
 	m_pBall->Process(_fDeltaTick);
@@ -170,14 +167,12 @@ CLevel::Process(float _fDeltaTick)
 	m_fpsCounter->CountFramesPerSecond(_fDeltaTick);
 }
 
-CPaddle* 
-CLevel::GetPaddle() const
+CPaddle* CLevel::GetPaddle() const
 {
     return (m_pPaddle);
 }
 
-void 
-CLevel::ProcessBallWallCollision()
+void CLevel::ProcessBallWallCollision()
 {
     float fBallX = m_pBall->GetX();
     float fBallY = m_pBall->GetY();
@@ -209,11 +204,7 @@ CLevel::ProcessBallWallCollision()
 #endif //CHEAT_BOUNCE_ON_BACK_WALL
 }
 
-
-
-
-void
-CLevel::ProcessBallPaddleCollision()
+void CLevel::ProcessBallPaddleCollision()
 {
     float fBallR = m_pBall->GetRadius();
 
@@ -236,8 +227,7 @@ CLevel::ProcessBallPaddleCollision()
     }
 }
 
-void
-CLevel::ProcessBallBrickCollision()
+void CLevel::ProcessBallBrickCollision()
 {
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
     {
@@ -270,8 +260,7 @@ CLevel::ProcessBallBrickCollision()
     }
 }
 
-void
-CLevel::ProcessCheckForWin()
+void CLevel::ProcessCheckForWin()
 {
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
     {
@@ -284,8 +273,7 @@ CLevel::ProcessCheckForWin()
     CGame::GetInstance().GameOverWon();
 }
 
-void
-CLevel::ProcessBallBounds()
+void CLevel::ProcessBallBounds()
 {
 	if (m_pBall->GetX() < 0)
     {
@@ -307,21 +295,18 @@ CLevel::ProcessBallBounds()
     }
 }
 
-int 
-CLevel::GetBricksRemaining() const
+int CLevel::GetBricksRemaining() const
 {
     return (m_iBricksRemaining);
 }
 
-void 
-CLevel::SetBricksRemaining(int _i)
+void CLevel::SetBricksRemaining(int _i)
 {
     m_iBricksRemaining = _i;
     UpdateScoreText();
 }
 
-void
-CLevel::DrawScore()
+void CLevel::DrawScore()
 {
     HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
 
@@ -332,10 +317,7 @@ CLevel::DrawScore()
     TextOutA(hdc, kiX, kiY, m_strScore.c_str(), static_cast<int>(m_strScore.size()));
 }
 
-
-
-void 
-CLevel::UpdateScoreText()
+void CLevel::UpdateScoreText()
 {
     m_strScore = "Bricks Remaining: ";
 
@@ -343,8 +325,7 @@ CLevel::UpdateScoreText()
 }
 
 
-void 
-CLevel::DrawFPS()
+void CLevel::DrawFPS()
 {
 	HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC(); 
 

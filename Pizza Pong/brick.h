@@ -47,7 +47,6 @@ protected:
 
 private:
     CBrick(const CBrick& _kr);
-    CBrick& operator= (const CBrick& _kr);
 
     // Member Variables
 public:

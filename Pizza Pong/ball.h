@@ -52,7 +52,6 @@ protected:
 
 private:
     CBall(const CBall& _kr);
-    CBall& operator= (const CBall& _kr);
 
     // Member Variables
 public:

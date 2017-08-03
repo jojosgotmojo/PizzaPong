@@ -45,7 +45,6 @@ protected:
 
 private:
     CPaddle(const CPaddle& _kr);
-    CPaddle& operator= (const CPaddle& _kr);
 
     // Member Variables
 public:

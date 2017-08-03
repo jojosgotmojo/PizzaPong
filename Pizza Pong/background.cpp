@@ -39,22 +39,19 @@ CBackGround::~CBackGround()
 
 }
 
-bool
-CBackGround::Initialise()
+bool CBackGround::Initialise()
 {
 	VALIDATE(CEntity::Initialise(IDB_BACKGROUND, IDB_BACKGROUNDMASK));
 
 	return (true);
 }
 
-void
-CBackGround::Draw()
+void CBackGround::Draw()
 {
 	CEntity::Draw();
 }
 
-void
-CBackGround::Process(float _fDeltaTick)
+void CBackGround::Process(float _fDeltaTick)
 {
 	CEntity::Process(_fDeltaTick);
 }

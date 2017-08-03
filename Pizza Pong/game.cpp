@@ -52,8 +52,7 @@ CGame::~CGame()
 	m_pClock = 0;
 }
 
-bool
-CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
+bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 {
 	m_hApplicationInstance = _hInstance;
 	m_hMainWindow = _hWnd;
@@ -73,8 +72,7 @@ CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 	return (true);
 }
 
-void
-CGame::Draw()
+void CGame::Draw()
 {
 	m_pBackBuffer->Clear();
 
@@ -83,14 +81,12 @@ CGame::Draw()
 	m_pBackBuffer->Present();
 }
 
-void
-CGame::Process(float _fDeltaTick)
+void CGame::Process(float _fDeltaTick)
 {
 	m_pLevel->Process(_fDeltaTick);
 }
 
-void
-CGame::ExecuteOneFrame()
+void CGame::ExecuteOneFrame()
 {
 	float fDT = m_pClock->GetDeltaTick();
 
@@ -102,8 +98,7 @@ CGame::ExecuteOneFrame()
 	Sleep(1);
 }
 
-CGame&
-CGame::GetInstance()
+CGame& CGame::GetInstance()
 {
 	if (s_pGame == 0)
 	{
@@ -113,47 +108,40 @@ CGame::GetInstance()
 	return (*s_pGame);
 }
 
-void
-CGame::GameOverWon()
+void CGame::GameOverWon()
 {
 	MessageBox(m_hMainWindow, L"Winner!", L"Game Over", MB_OK);
 	PostQuitMessage(0);
 }
 
-void
-CGame::GameOverLost()
+void CGame::GameOverLost()
 {
 	MessageBox(m_hMainWindow, L"Loser!", L"Game Over", MB_OK);
 	PostQuitMessage(0);
 }
 
-void
-CGame::DestroyInstance()
+void CGame::DestroyInstance()
 {
 	delete s_pGame;
 	s_pGame = 0;
 }
 
-CBackBuffer*
-CGame::GetBackBuffer()
+CBackBuffer* CGame::GetBackBuffer()
 {
 	return (m_pBackBuffer);
 }
 
-CLevel*
-CGame::GetLevel()
+CLevel* CGame::GetLevel()
 {
 	return (m_pLevel);
 }
 
-HINSTANCE
-CGame::GetAppInstance()
+HINSTANCE CGame::GetAppInstance()
 {
 	return (m_hApplicationInstance);
 }
 
-HWND
-CGame::GetWindow()
+HWND CGame::GetWindow()
 {
 	return (m_hMainWindow);
 }

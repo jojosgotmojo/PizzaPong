@@ -38,15 +38,13 @@ CFPSCounter::~CFPSCounter()
 }
 
 
-bool
-CFPSCounter::Initialise()
+bool CFPSCounter::Initialise()
 {
 	return (true);
 }
 
 
-void 
-CFPSCounter::CountFramesPerSecond(float _fDeltaTime)
+void CFPSCounter::CountFramesPerSecond(float _fDeltaTime)
 {
 	++m_iFrameCount;
 

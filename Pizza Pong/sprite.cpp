@@ -51,8 +51,7 @@ CSprite::~CSprite()
     }
 }
 
-bool
-CSprite::Initialise(int _iSpriteResourceID, int _iMaskResourceID)
+bool CSprite::Initialise(int _iSpriteResourceID, int _iMaskResourceID)
 {
     HINSTANCE hInstance = CGame::GetInstance().GetAppInstance();
 
@@ -72,8 +71,7 @@ CSprite::Initialise(int _iSpriteResourceID, int _iMaskResourceID)
     return (true);
 }
 
-void
-CSprite::Draw()
+void CSprite::Draw()
 {
     int iW = GetWidth();
     int iH = GetHeight();
@@ -94,57 +92,48 @@ CSprite::Draw()
     SelectObject(s_hSharedSpriteDC, hOldObj);
 }
 
-void
-CSprite::Process(float _fDeltaTick)
+void CSprite::Process(float _fDeltaTick)
 {
 
 }
 
-int
-CSprite::GetWidth() const
+int CSprite::GetWidth() const
 {
     return (m_bitmapSprite.bmWidth);
 }
 
-int
-CSprite::GetHeight() const
+int CSprite::GetHeight() const
 {
     return (m_bitmapSprite.bmHeight);
 }
 
-int 
-CSprite::GetX() const
+int CSprite::GetX() const
 {
     return (m_iX);
 }
 
-int 
-CSprite::GetY() const
+int CSprite::GetY() const
 {
     return (m_iY);
 }
 
-void 
-CSprite::SetX(int _i)
+void CSprite::SetX(int _i)
 {
     m_iX = _i;
 }
 
-void 
-CSprite::SetY(int _i)
+void CSprite::SetY(int _i)
 {
     m_iY = _i;
 }
 
-void 
-CSprite::TranslateRelative(int _iX, int _iY)
+void CSprite::TranslateRelative(int _iX, int _iY)
 {
     m_iX += _iX;
     m_iY += _iY;
 }
 
-void 
-CSprite::TranslateAbsolute(int _iX, int _iY)
+void CSprite::TranslateAbsolute(int _iX, int _iY)
 {
     m_iX = _iX;
     m_iY = _iY;
