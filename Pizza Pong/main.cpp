@@ -27,6 +27,8 @@ const int kiWidth = 400;
 const int kiHeight = 400;
 
 
+
+
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
 
 LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
@@ -95,6 +97,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
 	HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Breakout");
+
+	//CREATE TITLE SCREEN HERE
+
 
 	CGame& rGame = CGame::GetInstance();
 	
