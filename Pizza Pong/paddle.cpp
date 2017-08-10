@@ -40,7 +40,15 @@ CPaddle::~CPaddle()
 
 bool CPaddle::Initialise()
 {
-    VALIDATE(CEntity::Initialise(IDB_PADDLESPRITE, IDB_PADDLEMASK));
+	if (m_iPlayerNumber == 1)
+	{
+		VALIDATE(CEntity::Initialise(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK));
+	}
+	else
+	{
+		VALIDATE(CEntity::Initialise(IDB_PADDLESPRITE, IDB_PADDLEMASK));
+	}
+
 
     return (true);
 }

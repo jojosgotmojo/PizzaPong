@@ -92,7 +92,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	//m_pBall = new CBall();
     //VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
 
-    m_pPaddle1 = new CPaddle(2);
+    m_pPaddle1 = new CPaddle(0);
 	m_pPaddle2 = new CPaddle(1);
     VALIDATE(m_pPaddle1->Initialise());
 	VALIDATE(m_pPaddle2->Initialise());
