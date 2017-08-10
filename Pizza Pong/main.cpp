@@ -23,8 +23,8 @@
 #include "level.h"
 #include "paddle.h"
 
-const int kiWidth = 400;
-const int kiHeight = 400;
+const int kiWidth = 1280;
+const int kiHeight = 720;
 
 
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
