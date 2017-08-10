@@ -37,7 +37,8 @@
 
 CLevel::CLevel()
 : m_iBricksRemaining(0)
-, m_pPaddle(0)
+, m_pPaddle1(0)
+, m_pPaddle2(0)
 , m_pBall(0)
 , m_iWidth(0)
 , m_iHeight(0)
@@ -57,8 +58,11 @@ CLevel::~CLevel()
         delete pBrick;
     }
 
-    delete m_pPaddle;
-    m_pPaddle = 0;
+    delete m_pPaddle1;
+    m_pPaddle1 = 0;
+
+	delete m_pPaddle2;
+	m_pPaddle2 = 0;
 
     delete m_pBall;
     m_pBall = 0;
@@ -85,16 +89,20 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pBackground->SetX((float)m_iWidth / 2);
 	m_pBackground->SetY((float)m_iHeight / 2);
 
-	m_pBall = new CBall();
-    VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
+	//m_pBall = new CBall();
+    //VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
 
-    m_pPaddle = new CPaddle();
-    VALIDATE(m_pPaddle->Initialise());
+    m_pPaddle1 = new CPaddle(2);
+	m_pPaddle2 = new CPaddle(1);
+    VALIDATE(m_pPaddle1->Initialise());
+	VALIDATE(m_pPaddle2->Initialise());
 
     // Set the paddle's position to be centered on the x, 
     // and a little bit up from the bottom of the window.
-    m_pPaddle->SetX(_iWidth / 2.0f);
-    m_pPaddle->SetY(_iHeight - ( 1.5 * m_pPaddle->GetHeight()));
+    m_pPaddle1->SetX(m_pPaddle1->GetWidth() / 2);
+    m_pPaddle1->SetY(_iHeight / 2);
+	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
+	m_pPaddle2->SetY(_iHeight / 2);
 
     const int kiNumBricks = 36;
     const int kiStartX = 20;
@@ -137,8 +145,10 @@ void CLevel::Draw()
         m_vecBricks[i]->Draw();
     }
 
-    m_pPaddle->Draw();
-    m_pBall->Draw();
+    m_pPaddle1->Draw();
+	m_pPaddle2->Draw();
+
+	//m_pBall->Draw();
 
     DrawScore();
 	DrawFPS();
@@ -147,15 +157,20 @@ void CLevel::Draw()
 void CLevel::Process(float _fDeltaTick)
 {
 	m_pBackground->Process(_fDeltaTick);
-	m_pBall->Process(_fDeltaTick);
-	m_pPaddle->Process(_fDeltaTick);
-	ProcessBallWallCollision();
+	if (m_pBall != nullptr)
+	{
+		m_pBall->Process(_fDeltaTick);
+	}
+	
+	m_pPaddle1->Process(_fDeltaTick);
+	m_pPaddle2->Process(_fDeltaTick);
+	//ProcessBallWallCollision();
 	//ProcessPaddleWallCollison();
-    ProcessBallPaddleCollision();
-    ProcessBallBrickCollision();
+    //ProcessBallPaddleCollision();
+   // ProcessBallBrickCollision();
 
-    ProcessCheckForWin();
-	ProcessBallBounds();
+    //ProcessCheckForWin();
+	//ProcessBallBounds();
 
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
     {
@@ -169,7 +184,7 @@ void CLevel::Process(float _fDeltaTick)
 
 CPaddle* CLevel::GetPaddle() const
 {
-    return (m_pPaddle);
+    return (m_pPaddle1);
 }
 
 void CLevel::ProcessBallWallCollision()
@@ -204,28 +219,28 @@ void CLevel::ProcessBallWallCollision()
 #endif //CHEAT_BOUNCE_ON_BACK_WALL
 }
 
-void CLevel::ProcessBallPaddleCollision()
-{
-    float fBallR = m_pBall->GetRadius();
-
-    float fBallX = m_pBall->GetX();
-    float fBallY = m_pBall->GetY(); 
-
-    float fPaddleX = m_pPaddle->GetX();
-    float fPaddleY = m_pPaddle->GetY();
-
-    float fPaddleH = m_pPaddle->GetHeight();
-    float fPaddleW = m_pPaddle->GetWidth();
-
-    if ((fBallX + fBallR > fPaddleX - fPaddleW / 2) && //ball.right > paddle.left
-        (fBallX - fBallR < fPaddleX + fPaddleW / 2) && //ball.left < paddle.right
-        (fBallY + fBallR > fPaddleY - fPaddleH / 2) && //ball.bottom > paddle.top
-        (fBallY - fBallR < fPaddleY + fPaddleH / 2))  //ball.top < paddle.bottom
-    {
-        m_pBall->SetY((fPaddleY - fPaddleH / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
-        m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //Reverse ball's Y direction
-    }
-}
+//void CLevel::ProcessBallPaddleCollision()
+//{
+//    float fBallR = m_pBall->GetRadius();
+//
+//    float fBallX = m_pBall->GetX();
+//    float fBallY = m_pBall->GetY(); 
+//
+//    float fPaddleX = m_pPaddle->GetX();
+//    float fPaddleY = m_pPaddle->GetY();
+//
+//    float fPaddleH = m_pPaddle->GetHeight();
+//    float fPaddleW = m_pPaddle->GetWidth();
+//
+//    if ((fBallX + fBallR > fPaddleX - fPaddleW / 2) && //ball.right > paddle.left
+//        (fBallX - fBallR < fPaddleX + fPaddleW / 2) && //ball.left < paddle.right
+//        (fBallY + fBallR > fPaddleY - fPaddleH / 2) && //ball.bottom > paddle.top
+//        (fBallY - fBallR < fPaddleY + fPaddleH / 2))  //ball.top < paddle.bottom
+//    {
+//        m_pBall->SetY((fPaddleY - fPaddleH / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
+//        m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //Reverse ball's Y direction
+//    }
+//}
 
 void CLevel::ProcessBallBrickCollision()
 {

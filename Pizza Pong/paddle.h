@@ -32,7 +32,7 @@ class CPaddle : public CEntity
 {
     // Member Functions
 public:
-    CPaddle();
+    CPaddle(int _iPlayerNumber);
     virtual ~CPaddle();
 
     virtual bool Initialise();
@@ -52,7 +52,7 @@ public:
 protected:
 
 private:
-
+	int m_iPlayerNumber;
 };
 
 #endif    // __PADDLE_H__

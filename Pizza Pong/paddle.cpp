@@ -27,7 +27,8 @@
 
 // Implementation
 
-CPaddle::CPaddle()
+CPaddle::CPaddle(int _iPlayerNumber)
+	: m_iPlayerNumber(_iPlayerNumber)
 {
 
 }
@@ -51,24 +52,45 @@ void CPaddle::Draw()
 
 void CPaddle::Process(float _fDeltaTick)
 {
-    
-	float fHalfPaddleW = m_pSprite->GetWidth() / 2.0;
+	RECT rect;
+	HWND hwnd = GetActiveWindow();
 
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	GetClientRect(hwnd, &rect);
+
+
+	float fHalfPaddleH = m_pSprite->GetHeight() / 2.0;
+
+	if (m_iPlayerNumber == 1)
 	{
-		m_fX += 400.0f * _fDeltaTick;
+
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
+		{
+			m_fY -= 400.0f * _fDeltaTick;
+		}
+		else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+		{
+			m_fY += 400.0f * _fDeltaTick;
+		}
+
 	}
-	else if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-	{ 
-		m_fX -= 400.0f * _fDeltaTick;
-	}
-	if (m_fX - fHalfPaddleW <= 0)
+	else
 	{
-		m_fX = fHalfPaddleW;
+		if (GetAsyncKeyState(0x57) & 0x8000)
+		{
+			m_fY -= 400.0f * _fDeltaTick;
+		}
+		else if (GetAsyncKeyState(0x53) & 0x8000)
+		{
+			m_fY += 400.0f * _fDeltaTick;
+		}
 	}
-	else if (m_fX + fHalfPaddleW >= 385)
+	if (m_fY - fHalfPaddleH <= rect.top)
 	{
-		m_fX = 385-fHalfPaddleW;
+		m_fY = fHalfPaddleH;
+	}
+	else if (m_fY + fHalfPaddleH >= rect.bottom)
+	{
+		m_fY = rect.bottom- fHalfPaddleH;
 	}
 	
 	CEntity::Process(_fDeltaTick);

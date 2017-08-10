@@ -74,7 +74,8 @@ public:
 protected:
 	CBackGround* m_pBackground;
     CBall* m_pBall;
-    CPaddle* m_pPaddle;
+    CPaddle* m_pPaddle1;
+	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
 
