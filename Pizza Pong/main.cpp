@@ -22,6 +22,11 @@
 #include "utils.h"
 #include "level.h"
 #include "paddle.h"
+#include "background.h"
+#include "backbuffer.h"
+#include "MainMenu.h"
+
+#include "resource.h"
 
 const int kiWidth = 1280;
 const int kiHeight = 720;
@@ -91,41 +96,81 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
+enum GameState
+{
+	MainMenu,
+	QuickGame,
+	Tournament,
+	Credits
+};
+
+GameState currentState = QuickGame;
+
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
 	MSG msg;
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
-	HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Breakout");
 
-	//CREATE TITLE SCREEN HERE
-
-
-	CGame& rGame = CGame::GetInstance();
 	
-	GetClientRect(hwnd, &_rect);
 
-	//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
-	if (!rGame.Initialise(_hInstance, hwnd, _rect.right, _rect.bottom))
+	switch (currentState)
 	{
-		// Failed
-		return (0);
-	}
-
-	while (msg.message != WM_QUIT)
-	{
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		case MainMenu:
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			
+			CMainMenu Main;
+			Main.Initialise(IDB_MAINTEST, IDB_BACKGROUNDMASK, _hInstance, hwnd, kiWidth, kiHeight);
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					Main.Draw();
+				}
+			}
+			
+			
 		}
-		else
+		case QuickGame:
 		{
-			rGame.ExecuteOneFrame();
+			HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			CGame& rGame = CGame::GetInstance();
+
+			GetClientRect(hwnd, &_rect);
+
+			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
+			if (!rGame.Initialise(_hInstance, hwnd, _rect.right, _rect.bottom))
+			{
+				// Failed
+				return (0);
+			}
+
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					rGame.ExecuteOneFrame();
+				}
+			}
+
+			CGame::DestroyInstance();
+
+			return (static_cast<int>(msg.wParam));
+		}
+		default:
+		{
+			return 0;
 		}
 	}
-
-	CGame::DestroyInstance();
-
-	return (static_cast<int>(msg.wParam));
 }

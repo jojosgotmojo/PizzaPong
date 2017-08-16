@@ -90,6 +90,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="paddle.cpp" />
     <ClCompile Include="sprite.cpp" />
   </ItemGroup>
@@ -103,6 +104,7 @@
     <ClInclude Include="framecounter.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="level.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="paddle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sprite.h" />
@@ -116,6 +118,7 @@
     <Image Include="Sprites\BackgroundMask.bmp" />
     <Image Include="Sprites\BallMask.bmp" />
     <Image Include="Sprites\BallSprite.bmp" />
+    <Image Include="Sprites\Main test.bmp" />
     <Image Include="sprites\PaddleSpriteFlippedMask.bmp" />
     <Image Include="sprites\PaddleSpriteFlipped.bmp" />
     <Image Include="Sprites\BrickMask.bmp" />
