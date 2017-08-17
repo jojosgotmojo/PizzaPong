@@ -50,6 +50,8 @@ public:
 
 	CBackBuffer* GetBackBuffer();
 	static CMainMenu& GetInstance();
+	static void DestroyInstance();
+
 
 	void TranslateRelative(int _iX, int _iY);
 	void TranslateAbsolute(int _iX, int _iY);

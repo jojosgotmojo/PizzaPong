@@ -95,6 +95,12 @@ CMainMenu& CMainMenu::GetInstance()
 	return (*s_pMain);
 }
 
+void CMainMenu::DestroyInstance()
+{
+	delete s_pMain;
+	s_pMain = 0;
+}
+
 void CMainMenu::Draw()
 {
 	m_pBackBuffer->Clear();

@@ -36,14 +36,15 @@ enum GameState
 	MainMenu,
 	QuickGame,
 	Tournament,
-	Credits
+	Credits,
+	QuitGame
 };
 
 GameState currentState = MainMenu;
 
-LPARAM lParam;
-
+POINT iStart;
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
+#define WINDOW_CLASS_NAME_2 L"Main Game Window"
 
 LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 {
@@ -58,28 +59,35 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		break;
 		case WM_LBUTTONDOWN:
 		{
-			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam);
+			
+			iStart.x = LOWORD(_lParam);
+			iStart.y = HIWORD(_lParam);
 
 			//quick game button
-			if ((xPos > 405) && (xPos < 857) && (yPos > 355) && (yPos < 454))
+			if ((iStart.x > 405) && (iStart.x < 857) && (iStart.y > 355) && (iStart.y < 454))
 			{
 				currentState = QuickGame;
 			}
 
 			//quit button
-			else if ((xPos > 530) && (xPos < 700) && (yPos > 478) && (yPos < 564))
+			else if ((iStart.x > 530) && (iStart.x < 700) && (iStart.y > 478) && (iStart.y < 564))
 			{
 				PostQuitMessage(0);
 
 				return(0);
 			}
-			break;
+			
 		}
+		break;
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
 
+			return(0);
+		}
+		break;
+		case WM_CLOSE:
+		{
 			return(0);
 		}
 		break;
@@ -104,7 +112,16 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winclass.hbrBackground = static_cast<HBRUSH> (GetStockObject(NULL_BRUSH));
 	winclass.lpszMenuName = NULL;
-	winclass.lpszClassName = WINDOW_CLASS_NAME;
+
+	if (currentState == MainMenu)
+	{
+		winclass.lpszClassName = WINDOW_CLASS_NAME;
+	}
+	else
+	{
+		winclass.lpszClassName = WINDOW_CLASS_NAME_2;
+	}
+
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
 	if (!RegisterClassEx(&winclass))
@@ -125,22 +142,23 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
-
-
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
 	MSG msg;
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
 	HWND hwnd1;
+	HWND hwnd2;
 	
-
-	switch (currentState)
+	while (currentState != QuitGame)
 	{
+
+		switch (currentState)
+		{
 		case MainMenu:
 		{
 			hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
-			
+
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
@@ -160,17 +178,23 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 			
-			return (static_cast<int>(msg.wParam));
+			CMainMenu::DestroyInstance();
+
+			CloseWindow(hwnd1);
+			
+			//SendMessage(hwnd1, WM_CLOSE, 0, NULL);
+			//DestroyWindow(hwnd1);
+			break;
 		}
 		case QuickGame:
 		{
-			hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			hwnd2 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
 			CGame& rGame = CGame::GetInstance();
 
-			GetClientRect(hwnd1, &_rect);
+			GetClientRect(hwnd2, &_rect);
 
 			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
-			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
+			if (!rGame.Initialise(_hInstance, hwnd2, _rect.right, _rect.bottom))
 			{
 				// Failed
 				return (0);
@@ -196,6 +220,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		default:
 		{
 			return 0;
+		}
 		}
 	}
 }
