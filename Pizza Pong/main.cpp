@@ -40,7 +40,7 @@ enum GameState
 	QuitGame
 };
 
-GameState currentState = MainMenu;
+GameState currentState = QuickGame;
 
 POINT iStart;
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
