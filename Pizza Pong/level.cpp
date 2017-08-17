@@ -90,7 +90,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pBackground->SetY((float)m_iHeight / 2);
 
 	m_pBall = new CBall();
-    VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
+    VALIDATE(m_pBall->Initialise(m_iWidth / 4.0f, m_iHeight / 2.0f, -fBallVelX, fBallVelY));
 
     m_pPaddle1 = new CPaddle(0);
 	m_pPaddle2 = new CPaddle(1);
@@ -104,12 +104,12 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
 	m_pPaddle2->SetY(_iHeight / 2);
 
-    const int kiNumBricks = 36;
-    const int kiStartX = 20;
+    const int kiNumBricks = 15;
+    const int kiStartX = m_iWidth /2;
     const int kiGap = 5;
 
-    int iCurrentX = kiStartX;
-    int iCurrentY = kiStartX;
+	int iCurrentX = kiStartX;
+    int iCurrentY = 20;
 
     for (int i = 0; i < kiNumBricks; ++i)
     {
@@ -119,9 +119,9 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
         pBrick->SetX(static_cast<float>(iCurrentX));
         pBrick->SetY(static_cast<float>(iCurrentY));
 
-        iCurrentX += static_cast<int>(pBrick->GetWidth()) + kiGap;
+        iCurrentY += static_cast<int>(pBrick->GetHeight()) + kiGap;
 
-        if (iCurrentX > _iWidth)
+        if (iCurrentX > _iHeight)
         {
             iCurrentX = kiStartX;
             iCurrentY += 20;
@@ -292,8 +292,8 @@ void CLevel::ProcessBallBrickCollision()
                 (fBallY - fBallR < fBrickY + fBrickH / 2))
             {
                 //Hit the front side of the brick...
-                m_pBall->SetY((fBrickY + fBrickH / 2.0f) + fBallR);
-                m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
+                m_pBall->SetX((fBrickX + fBrickW / 2.0f) - fBallR);
+                m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
                 m_vecBricks[i]->SetHit(true);
 
                 SetBricksRemaining(GetBricksRemaining() - 1);

@@ -39,7 +39,7 @@ enum GameState
 	Credits
 };
 
-GameState currentState = MainMenu;
+GameState currentState = QuickGame;
 
 LPARAM lParam;
 
