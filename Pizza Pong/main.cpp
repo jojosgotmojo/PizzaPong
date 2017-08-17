@@ -40,7 +40,7 @@ enum GameState
 	QuitGame
 };
 
-GameState currentState = QuickGame;
+GameState currentState = MainMenu;
 
 POINT iStart;
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
@@ -88,6 +88,8 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		break;
 		case WM_CLOSE:
 		{
+			currentState = MainMenu;
+			
 			return(0);
 		}
 		break;
@@ -178,12 +180,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 			
-			CMainMenu::DestroyInstance();
+			//CMainMenu::DestroyInstance();
 
 			CloseWindow(hwnd1);
-			
-			//SendMessage(hwnd1, WM_CLOSE, 0, NULL);
-			//DestroyWindow(hwnd1);
 			break;
 		}
 		case QuickGame:
@@ -214,8 +213,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			}
 
 			CGame::DestroyInstance();
-
-			return (static_cast<int>(msg.wParam));
+			return(static_cast<int>(msg.wParam));
 		}
 		default:
 		{
