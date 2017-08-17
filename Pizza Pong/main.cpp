@@ -31,8 +31,17 @@
 const int kiWidth = 1280;
 const int kiHeight = 720;
 
+enum GameState
+{
+	MainMenu,
+	QuickGame,
+	Tournament,
+	Credits
+};
 
+GameState currentState = MainMenu;
 
+LPARAM lParam;
 
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
 
@@ -43,10 +52,30 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		case WM_MOUSEMOVE:
 		{
 			int iMouseX = LOWORD(_lParam);
-			//CGame::GetInstance().GetLevel()->GetPaddle()->SetX(static_cast<float>(iMouseX));
+		
 			return (0);
 		}
 		break;
+		case WM_LBUTTONDOWN:
+		{
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+
+			//quick game button
+			if ((xPos > 405) && (xPos < 857) && (yPos > 355) && (yPos < 454))
+			{
+				currentState = QuickGame;
+			}
+
+			//quit button
+			else if ((xPos > 530) && (xPos < 700) && (yPos > 478) && (yPos < 564))
+			{
+				PostQuitMessage(0);
+
+				return(0);
+			}
+			break;
+		}
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
@@ -96,15 +125,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
-enum GameState
-{
-	MainMenu,
-	QuickGame,
-	Tournament,
-	Credits
-};
 
-GameState currentState = MainMenu;
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
@@ -132,6 +153,10 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				else
 				{
 					rMain.Draw();
+				}
+				if (currentState != MainMenu)
+				{
+					break;
 				}
 			}
 			
