@@ -114,10 +114,9 @@
     <ResourceCompile Include="Breakout.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Sprites\Background.bmp" />
-    <Image Include="Sprites\BackgroundMask.bmp" />
     <Image Include="Sprites\BallMask.bmp" />
     <Image Include="Sprites\BallSprite.bmp" />
+    <Image Include="Sprites\Main test mask.bmp" />
     <Image Include="Sprites\Main test.bmp" />
     <Image Include="sprites\PaddleSpriteFlippedMask.bmp" />
     <Image Include="sprites\PaddleSpriteFlipped.bmp" />

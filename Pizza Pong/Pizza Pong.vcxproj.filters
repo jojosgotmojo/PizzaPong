@@ -123,19 +123,16 @@
     <Image Include="Sprites\PaddleSprite.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Sprites\Background.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="sprites\PaddleSpriteFlippedMask.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="sprites\PaddleSpriteFlipped.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Sprites\BackgroundMask.bmp">
+    <Image Include="Sprites\Main test.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Sprites\Main test.bmp">
+    <Image Include="Sprites\Main test mask.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

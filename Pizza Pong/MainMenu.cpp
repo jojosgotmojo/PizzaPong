@@ -61,18 +61,20 @@ CBackBuffer* CMainMenu::GetBackBuffer()
 
 bool CMainMenu::Initialise(int _iMainMenuResourceID, int _iMaskResourceID, HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 {
+	
+
 	HINSTANCE hInstance = _hInstance;
-	HWND hWnd = _hWnd;
+	hWnd = _hWnd;
 
 	m_pBackBuffer = new CBackBuffer();
-	VALIDATE(m_pBackBuffer->Initialise(_hWnd, _iWidth, _iHeight));
+	VALIDATE(m_pBackBuffer->Initialise(hWnd, _iWidth, _iHeight));
 
 	if (!s_hSharedMainMenuDC)
 	{
 		s_hSharedMainMenuDC = CreateCompatibleDC(NULL);
 	}
 
-	m_hMainMenu = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_BACKGROUND));
+	m_hMainMenu = LoadBitmap(hInstance, MAKEINTRESOURCE(_iMainMenuResourceID));
 	VALIDATE(m_hMainMenu);
 	m_hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(_iMaskResourceID));
 	VALIDATE(m_hMask);
@@ -100,8 +102,8 @@ void CMainMenu::Draw()
 	int iW = GetWidth();
 	int iH = GetHeight();
 
-	int iX = m_iX - (iW / 2);
-	int iY = m_iY - (iH / 2);
+	int iX = m_iX;
+	int iY = m_iY;
 
 	HDC hWindowDC = ::GetDC(hWnd);
 
@@ -111,14 +113,14 @@ void CMainMenu::Draw()
 
 	HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
 
-	//BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
-	BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
+	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
+	//BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
 
 
 	SelectObject(s_hSharedMainMenuDC, m_hMainMenu);
 
-	//BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
-	BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
+	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
+	//BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
 
 
 	SelectObject(s_hSharedMainMenuDC, hOldObj);
@@ -133,12 +135,16 @@ void CMainMenu::Process(float _fDeltaTick)
 
 int CMainMenu::GetWidth() const
 {
-	return (m_bitmapMainMenu.bmWidth);
+	RECT _rect;
+	GetClientRect(hWnd, &_rect);
+	return (_rect.right);
 }
 
 int CMainMenu::GetHeight() const
 {
-	return (m_bitmapMainMenu.bmHeight);
+	RECT _rect;
+	GetClientRect(hWnd, &_rect);
+	return (_rect.bottom);
 }
 
 int CMainMenu::GetX() const

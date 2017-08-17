@@ -104,24 +104,24 @@ enum GameState
 	Credits
 };
 
-GameState currentState = QuickGame;
+GameState currentState = MainMenu;
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
 	MSG msg;
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
-
+	HWND hwnd1;
 	
 
 	switch (currentState)
 	{
 		case MainMenu:
 		{
-			HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
 			
-			CMainMenu Main;
-			Main.Initialise(IDB_MAINTEST, IDB_BACKGROUNDMASK, _hInstance, hwnd, kiWidth, kiHeight);
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -131,21 +131,21 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					Main.Draw();
+					rMain.Draw();
 				}
 			}
 			
-			
+			return (static_cast<int>(msg.wParam));
 		}
 		case QuickGame:
 		{
-			HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
 			CGame& rGame = CGame::GetInstance();
 
-			GetClientRect(hwnd, &_rect);
+			GetClientRect(hwnd1, &_rect);
 
 			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
-			if (!rGame.Initialise(_hInstance, hwnd, _rect.right, _rect.bottom))
+			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
 			{
 				// Failed
 				return (0);

@@ -51,7 +51,7 @@ bool CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)
     m_iWidth = _iWidth;
     m_iHeight = _iHeight;
 
-    HDC hWindowDC = ::GetDC(m_hWnd);
+    HDC hWindowDC = GetDC(m_hWnd);
 
     m_hDC = CreateCompatibleDC(hWindowDC);
 

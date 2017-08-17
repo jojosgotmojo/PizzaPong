@@ -82,7 +82,6 @@ protected:
 	static int s_iRefCount;
 
 	static CMainMenu* s_pMain;
-
 private:
 
 };
