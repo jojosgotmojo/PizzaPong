@@ -51,7 +51,8 @@ public:
 	HWND GetWindow();
 
 	void GameOverWon();
-	void GameOverLost();
+	void GameOverLostPlayer1();
+	void GameOverLostPlayer2();
 
 	// Singleton Methods
 	static CGame& GetInstance();

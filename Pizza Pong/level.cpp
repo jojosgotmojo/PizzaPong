@@ -89,8 +89,8 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pBackground->SetX((float)m_iWidth / 2);
 	m_pBackground->SetY((float)m_iHeight / 2);
 
-	//m_pBall = new CBall();
-    //VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
+	m_pBall = new CBall();
+    VALIDATE(m_pBall->Initialise(m_iWidth / 2.0f, m_iHeight / 2.0f, fBallVelX, fBallVelY));
 
     m_pPaddle1 = new CPaddle(0);
 	m_pPaddle2 = new CPaddle(1);
@@ -148,7 +148,7 @@ void CLevel::Draw()
     m_pPaddle1->Draw();
 	m_pPaddle2->Draw();
 
-	//m_pBall->Draw();
+	m_pBall->Draw();
 
     DrawScore();
 	DrawFPS();
@@ -164,13 +164,14 @@ void CLevel::Process(float _fDeltaTick)
 	
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
-	//ProcessBallWallCollision();
+	ProcessBallWallCollision();
 	//ProcessPaddleWallCollison();
-    //ProcessBallPaddleCollision();
-   // ProcessBallBrickCollision();
+    ProcessBallPaddle1Collision();
+	ProcessBallPaddle2Collision();
+    ProcessBallBrickCollision();
 
-    //ProcessCheckForWin();
-	//ProcessBallBounds();
+    ProcessCheckForWin();
+	ProcessBallBounds();
 
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
     {
@@ -199,11 +200,15 @@ void CLevel::ProcessBallWallCollision()
 
     if (fBallX < fHalfBallW) //represents the situation when the ball has hit the left wall
     {
-        m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity
+		CGame::GetInstance().GameOverLostPlayer1();
+		m_pBall->SetX(static_cast<float>(m_iWidth));
+       // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity
     }
     else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
     {
-        m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity direction
+		CGame::GetInstance().GameOverLostPlayer2();
+		m_pBall->SetX(static_cast<float>(m_iWidth));
+       // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity direction
     }
 
 	if (fBallY < fHalfBallH) //represents the situation when the ball has hit the top wall
@@ -211,36 +216,58 @@ void CLevel::ProcessBallWallCollision()
         m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
     }
 
-#ifdef CHEAT_BOUNCE_ON_BACK_WALL
 	if (fBallY  > m_iHeight - fHalfBallH)  //represents the situation when the ball has hit the bottom wall
     {
         m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
     }
-#endif //CHEAT_BOUNCE_ON_BACK_WALL
+
 }
 
-//void CLevel::ProcessBallPaddleCollision()
-//{
-//    float fBallR = m_pBall->GetRadius();
-//
-//    float fBallX = m_pBall->GetX();
-//    float fBallY = m_pBall->GetY(); 
-//
-//    float fPaddleX = m_pPaddle->GetX();
-//    float fPaddleY = m_pPaddle->GetY();
-//
-//    float fPaddleH = m_pPaddle->GetHeight();
-//    float fPaddleW = m_pPaddle->GetWidth();
-//
-//    if ((fBallX + fBallR > fPaddleX - fPaddleW / 2) && //ball.right > paddle.left
-//        (fBallX - fBallR < fPaddleX + fPaddleW / 2) && //ball.left < paddle.right
-//        (fBallY + fBallR > fPaddleY - fPaddleH / 2) && //ball.bottom > paddle.top
-//        (fBallY - fBallR < fPaddleY + fPaddleH / 2))  //ball.top < paddle.bottom
-//    {
-//        m_pBall->SetY((fPaddleY - fPaddleH / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
-//        m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //Reverse ball's Y direction
-//    }
-//}
+void CLevel::ProcessBallPaddle1Collision()
+{
+    float fBallR = m_pBall->GetRadius();
+
+    float fBallX = m_pBall->GetX();
+    float fBallY = m_pBall->GetY(); 
+
+    float fPaddle1X = m_pPaddle1->GetX();
+    float fPaddle1Y = m_pPaddle1->GetY();
+
+    float fPaddle1H = m_pPaddle1->GetHeight();
+    float fPaddle1W = m_pPaddle1->GetWidth();
+
+    if ((fBallX + fBallR > fPaddle1X - fPaddle1W / 2) && //ball.right > paddle.left
+        (fBallX - fBallR < fPaddle1X + fPaddle1W / 2) && //ball.left < paddle.right
+        (fBallY + fBallR > fPaddle1Y - fPaddle1H / 2) && //ball.bottom > paddle.top
+        (fBallY - fBallR < fPaddle1Y + fPaddle1H / 2))  //ball.top < paddle.bottom
+    {
+        m_pBall->SetX((fPaddle1X + fPaddle1W / 2) + fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
+        m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's X direction
+    }
+}
+
+void CLevel::ProcessBallPaddle2Collision()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPaddle2X = m_pPaddle2->GetX();
+	float fPaddle2Y = m_pPaddle2->GetY();
+
+	float fPaddle2H = m_pPaddle2->GetHeight();
+	float fPaddle2W = m_pPaddle2->GetWidth();
+
+	if ((fBallX + fBallR > fPaddle2X - fPaddle2W / 2) && //ball.right > paddle.left
+		(fBallX - fBallR < fPaddle2X + fPaddle2W / 2) && //ball.left < paddle.right
+		(fBallY + fBallR > fPaddle2Y - fPaddle2H / 2) && //ball.bottom > paddle.top
+		(fBallY - fBallR < fPaddle2Y + fPaddle2H / 2))  //ball.top < paddle.bottom
+	{
+		m_pBall->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
+		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's Y direction
+	}
+}
 
 void CLevel::ProcessBallBrickCollision()
 {
@@ -290,23 +317,23 @@ void CLevel::ProcessCheckForWin()
 
 void CLevel::ProcessBallBounds()
 {
-	if (m_pBall->GetX() < 0)
+	if (m_pBall->GetY() < 0)
     {
-        m_pBall->SetX(0);
+        m_pBall->SetY(0);
     }
-	else if (m_pBall->GetX() > m_iWidth)
+	else if (m_pBall->GetY() > m_iHeight)
     {
-        m_pBall->SetX(static_cast<float>(m_iWidth));
+        m_pBall->SetY(static_cast<float>(m_iHeight));
     }
 
-    if (m_pBall->GetY() < 0)
+    if (m_pBall->GetX() < 0)
     {
-        m_pBall->SetY(0.0f);
+        m_pBall->SetX(0.0f);
     }
-    else if (m_pBall->GetY() > m_iHeight)
+    else if (m_pBall->GetX() > m_iWidth)
     {
-        CGame::GetInstance().GameOverLost();
-        //m_pBall->SetY(static_cast<float>(m_iHeight));
+        /*CGame::GetInstance().GameOverLost();
+        m_pBall->SetX(static_cast<float>(m_iWidth));*/
     }
 }
 

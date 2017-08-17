@@ -114,9 +114,15 @@ void CGame::GameOverWon()
 	PostQuitMessage(0);
 }
 
-void CGame::GameOverLost()
+void CGame::GameOverLostPlayer1()
 {
-	MessageBox(m_hMainWindow, L"Loser!", L"Game Over", MB_OK);
+	MessageBox(m_hMainWindow, L"Player 2 wins!", L"Game Over", MB_OK);
+	PostQuitMessage(0);
+}
+
+void CGame::GameOverLostPlayer2()
+{
+	MessageBox(m_hMainWindow, L"Player 1 wins!", L"Game Over", MB_OK);
 	PostQuitMessage(0);
 }
 
