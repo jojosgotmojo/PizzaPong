@@ -138,5 +138,8 @@
     <Image Include="Sprites\Credits.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Sprites\Instructions.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

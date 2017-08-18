@@ -37,7 +37,8 @@ enum GameState
 	QuickGame,
 	Tournament,
 	Credits,
-	QuitGame
+	QuitGame,
+	Instructions
 };
 
 GameState currentState = MainMenu;
@@ -85,12 +86,16 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 				currentState = Credits;
 			}
 
-			//quit button
-			else if ((iStart.x > 540) && (iStart.x < 692) && (iStart.y > 488) && (iStart.y < 558))
+			//Instructions button
+			else if ((iStart.x > 428) && (iStart.x < 827) && (iStart.y > 488) && (iStart.y < 555))
 			{
-				PostQuitMessage(0);
+				currentState = Instructions;
+			}
 
-				return(0);
+			//quit button
+			else if ((iStart.x > 540) && (iStart.x < 692) && (iStart.y > 571) && (iStart.y < 642))
+			{
+				currentState = QuitGame;
 			}
 
 		}
@@ -98,6 +103,14 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		{
 			//back button
 			if ((iStart.x > 923) && (iStart.x < 1231) && (iStart.y > 603) && (iStart.y < 687))
+			{
+				currentState = MainMenu;
+			}
+		}
+		else if (currentState == Instructions)
+		{
+			//back button
+			if ((iStart.x > 895) && (iStart.x < 1215) && (iStart.y > 585) && (iStart.y < 677))
 			{
 				currentState = MainMenu;
 			}
@@ -263,6 +276,37 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 			break;
 
+		}
+		case Instructions:
+		{
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					rMain.Draw();
+				}
+				if (currentState != Credits)
+				{
+					break;
+				}
+			}
+
+			CMainMenu::DestroyInstance();
+			//return(static_cast<int>(msg.wParam));
+
+			break;
+
+		}
+		case QuitGame:
+		{
+			return(static_cast<int>(msg.wParam));
 		}
 		default:
 		{
