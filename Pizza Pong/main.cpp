@@ -115,14 +115,8 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	winclass.hbrBackground = static_cast<HBRUSH> (GetStockObject(NULL_BRUSH));
 	winclass.lpszMenuName = NULL;
 
-	if (currentState == MainMenu)
-	{
-		winclass.lpszClassName = WINDOW_CLASS_NAME;
-	}
-	else
-	{
-		winclass.lpszClassName = WINDOW_CLASS_NAME_2;
-	}
+	winclass.lpszClassName = WINDOW_CLASS_NAME;
+	
 
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
@@ -150,16 +144,17 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
 	HWND hwnd1;
-	HWND hwnd2;
 	
+	hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+
 	while (currentState != QuitGame)
 	{
-
+		
 		switch (currentState)
 		{
 		case MainMenu:
 		{
-			hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			
 
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
@@ -180,20 +175,21 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 			
-			//CMainMenu::DestroyInstance();
+			CMainMenu::DestroyInstance();
 
-			CloseWindow(hwnd1);
+			
 			break;
 		}
 		case QuickGame:
 		{
-			hwnd2 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+			
+
 			CGame& rGame = CGame::GetInstance();
 
-			GetClientRect(hwnd2, &_rect);
+			GetClientRect(hwnd1, &_rect);
 
 			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
-			if (!rGame.Initialise(_hInstance, hwnd2, _rect.right, _rect.bottom))
+			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
 			{
 				// Failed
 				return (0);

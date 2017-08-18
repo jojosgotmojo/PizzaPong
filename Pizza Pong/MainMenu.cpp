@@ -45,6 +45,9 @@ CMainMenu::~CMainMenu()
 	DeleteObject(m_hMainMenu);
 	DeleteObject(m_hMask);
 
+	delete m_pBackBuffer;
+	m_pBackBuffer = 0;
+
 	--s_iRefCount;
 
 	if (s_iRefCount == 0)
