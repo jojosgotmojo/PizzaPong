@@ -50,52 +50,78 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 {
 	switch (_uiMsg)
 	{
-		case WM_MOUSEMOVE:
-		{
-			int iMouseX = LOWORD(_lParam);
-		
-			return (0);
-		}
-		break;
-		case WM_LBUTTONDOWN:
-		{
-			
-			iStart.x = LOWORD(_lParam);
-			iStart.y = HIWORD(_lParam);
+	case WM_MOUSEMOVE:
+	{
+		int iMouseX = LOWORD(_lParam);
 
+		return (0);
+	}
+	break;
+	case WM_LBUTTONDOWN:
+	{
+
+		iStart.x = LOWORD(_lParam);
+		iStart.y = HIWORD(_lParam);
+
+
+		//Main Menu Buttons
+		if (currentState == MainMenu)
+		{
 			//quick game button
-			if ((iStart.x > 405) && (iStart.x < 857) && (iStart.y > 355) && (iStart.y < 454))
+			if ((iStart.x > 392) && (iStart.x < 840) && (iStart.y > 198) && (iStart.y < 289))
 			{
 				currentState = QuickGame;
 			}
 
+			//tournament mode button
+			else if ((iStart.x > 316) && (iStart.x < 927) && (iStart.y > 296) && (iStart.y < 380))
+			{
+				currentState = Tournament;
+			}
+
+			//Credits button
+			else if ((iStart.x > 480) && (iStart.x < 742) && (iStart.y > 392) && (iStart.y < 477))
+			{
+				currentState = Credits;
+			}
+
 			//quit button
-			else if ((iStart.x > 530) && (iStart.x < 700) && (iStart.y > 478) && (iStart.y < 564))
+			else if ((iStart.x > 540) && (iStart.x < 692) && (iStart.y > 488) && (iStart.y < 558))
 			{
 				PostQuitMessage(0);
 
 				return(0);
 			}
-			
-		}
-		break;
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
 
-			return(0);
 		}
-		break;
-		case WM_CLOSE:
+		else if (currentState == Credits)
 		{
-			currentState = MainMenu;
-			
-			return(0);
+			//back button
+			if ((iStart.x > 923) && (iStart.x < 1231) && (iStart.y > 603) && (iStart.y < 687))
+			{
+				currentState = MainMenu;
+			}
 		}
-		break;
-
-		default:break;
+			
 	}
+	break;
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+
+		return(0);
+	}
+	break;
+	case WM_CLOSE:
+	{
+		currentState = MainMenu;
+			
+		return(0);
+	}
+	break;
+
+	default:break;
+}
 
 	return (DefWindowProc(_hWnd, _uiMsg, _wParam, _lParam));
 }
@@ -183,7 +209,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		case QuickGame:
 		{
 			
-
 			CGame& rGame = CGame::GetInstance();
 
 			GetClientRect(hwnd1, &_rect);
@@ -210,6 +235,34 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 			CGame::DestroyInstance();
 			return(static_cast<int>(msg.wParam));
+		}
+
+		case Credits:
+		{
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, kiWidth, kiHeight));
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					rMain.Draw();
+				}
+				if (currentState != Credits)
+				{
+					break;
+				}
+			}
+
+			CMainMenu::DestroyInstance();
+			//return(static_cast<int>(msg.wParam));
+
+			break;
+
 		}
 		default:
 		{

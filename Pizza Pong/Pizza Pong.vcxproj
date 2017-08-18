@@ -116,6 +116,7 @@
   <ItemGroup>
     <Image Include="Sprites\BallMask.bmp" />
     <Image Include="Sprites\BallSprite.bmp" />
+    <Image Include="Sprites\Credits.bmp" />
     <Image Include="Sprites\Main test mask.bmp" />
     <Image Include="Sprites\Main test.bmp" />
     <Image Include="sprites\PaddleSpriteFlippedMask.bmp" />

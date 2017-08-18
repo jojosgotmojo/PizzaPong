@@ -135,5 +135,8 @@
     <Image Include="Sprites\Main test mask.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Sprites\Credits.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
