@@ -116,6 +116,8 @@
   <ItemGroup>
     <Image Include="Sprites\BallMask.bmp" />
     <Image Include="Sprites\BallSprite.bmp" />
+    <Image Include="Sprites\brussel.bmp" />
+    <Image Include="Sprites\brusselMask.bmp" />
     <Image Include="Sprites\Credits.bmp" />
     <Image Include="Sprites\Instructions.bmp" />
     <Image Include="Sprites\Main test mask.bmp" />
@@ -126,6 +128,8 @@
     <Image Include="Sprites\BrickSprite.bmp" />
     <Image Include="Sprites\PaddleMask.bmp" />
     <Image Include="Sprites\PaddleSprite.bmp" />
+    <Image Include="Sprites\pizza.bmp" />
+    <Image Include="Sprites\pizzaMask.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

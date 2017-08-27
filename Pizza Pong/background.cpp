@@ -41,7 +41,7 @@ CBackGround::~CBackGround()
 
 bool CBackGround::Initialise()
 {
-	CEntity::Initialise(NULL, NULL);
+	CEntity::Initialise(IDB_PIZZA, IDB_PIZZAMASK);
 
 	return (true);
 }

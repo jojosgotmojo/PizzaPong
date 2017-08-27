@@ -41,7 +41,7 @@ CBall::~CBall()
 
 bool CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocityY)
 {
-    VALIDATE(CEntity::Initialise(IDB_BALLSPRITE, IDB_BALLMASK));
+    VALIDATE(CEntity::Initialise(IDB_BRUSSEL, IDB_BRUSSELMASK));
     
     m_fX = _fPosX;
     m_fY = _fPosY;

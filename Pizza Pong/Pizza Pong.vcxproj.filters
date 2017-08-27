@@ -141,5 +141,17 @@
     <Image Include="Sprites\Instructions.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Sprites\brussel.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\pizza.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\brusselMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\pizzaMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
