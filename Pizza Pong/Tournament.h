@@ -65,7 +65,7 @@ protected:
 
 	
 	void DrawScore();
-	void DrawFPS();
+	//void DrawFPS();
 
 	void SetBricksRemaining(int _i);
 
@@ -94,6 +94,7 @@ protected:
 
 	std::string m_strScore1;
 	std::string m_strScore2;
+	std::string m_strScore3;
 
 private:
 

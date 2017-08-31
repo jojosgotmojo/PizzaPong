@@ -127,9 +127,22 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 	break;
 	case WM_CLOSE:
 	{
-		currentState = MainMenu;
+		MessageBox(GetActiveWindow(), L"Do you want to exit the game?", L"Close", MB_YESNO);
+		if (IDYES)
+		{
+			PostQuitMessage(0);
+		}
+		else
+		{
+			break;
+		}
 			
-		return(0);
+
+	}
+	case WM_QUIT:
+	{
+		currentState = QuitGame;
+		break;
 	}
 	break;
 
@@ -293,6 +306,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case Credits:
 		{
+			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
@@ -320,6 +334,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case Instructions:
 		{
+			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)

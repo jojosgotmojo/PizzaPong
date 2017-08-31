@@ -45,7 +45,7 @@ CTournament::CTournament()
 	, m_fpsCounter(0)
 	, m_iPlayer1WinCount(0)
 	, m_iPlayer2WinCount(0)
-	, m_iNumberOfGamesPlayed(0)
+	, m_iNumberOfGamesPlayed(1)
 {
 
 }
@@ -370,10 +370,13 @@ void CTournament::DrawScore()
 	const int kiY = m_iHeight - 14;
 	const int kiX2 = m_iWidth - 74;
 	const int kiY2 = m_iHeight - 14;
+	const int kiX3 = m_iWidth / 2 - 50;
+	const int kiY3 = 20;
 	SetBkMode(hdc, TRANSPARENT);
-
 	TextOutA(hdc, kiX, kiY, m_strScore1.c_str(), static_cast<int>(m_strScore1.size()));
 	TextOutA(hdc, kiX2, kiY2, m_strScore2.c_str(), static_cast<int>(m_strScore2.size()));
+	
+	TextOutA(hdc, kiX3, kiY3, m_strScore3.c_str(), static_cast<int>(m_strScore3.size()));
 }
 
 void CTournament::UpdateScoreText()
@@ -383,6 +386,9 @@ void CTournament::UpdateScoreText()
 
 	m_strScore2 = "Player 2: ";
 	m_strScore2 += ToString(GetNumberOfWinsPlayer2());
+
+	m_strScore3 = "Round ";
+	m_strScore3 += ToString(GetNumberOfGamesPlayed());
 }
 
 
