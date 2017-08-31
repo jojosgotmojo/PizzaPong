@@ -49,6 +49,7 @@ public:
 	CLevel* GetLevel();
 	HINSTANCE GetAppInstance();
 	HWND GetWindow();
+	bool GetGameState();
 
 	void GameOverWon();
 	void GameOverLostPlayer1();
@@ -70,6 +71,7 @@ public:
 protected:
 	CClock* m_pClock;
 	CLevel* m_pLevel;
+	bool m_bIsLevelOver;
 
 	CBackBuffer* m_pBackBuffer;
 

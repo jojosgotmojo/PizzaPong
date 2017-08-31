@@ -235,6 +235,12 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 			while (msg.message != WM_QUIT)
 			{
+				if (rGame.GetGameState() == true)
+				{
+					currentState = MainMenu;
+					break;
+				}
+
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 				{
 					TranslateMessage(&msg);
@@ -247,7 +253,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			}
 
 			CGame::DestroyInstance();
-			return(static_cast<int>(msg.wParam));
+			//return(static_cast<int>(msg.wParam)); //don't exit and go to main menu
 		}
 
 		case Credits:

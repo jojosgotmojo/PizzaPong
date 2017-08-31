@@ -36,6 +36,7 @@ CGame::CGame()
 	, m_hApplicationInstance(0)
 	, m_hMainWindow(0)
 	, m_pBackBuffer(0)
+	, m_bIsLevelOver(false)
 {
 
 }
@@ -111,19 +112,22 @@ CGame& CGame::GetInstance()
 void CGame::GameOverWon()
 {
 	MessageBox(m_hMainWindow, L"Winner!", L"Game Over", MB_OK);
-	PostQuitMessage(0);
+	m_bIsLevelOver = true;
+	//PostQuitMessage(0);
 }
 
 void CGame::GameOverLostPlayer1()
 {
 	MessageBox(m_hMainWindow, L"Player 2 wins!", L"Game Over", MB_OK);
-	PostQuitMessage(0);
+	m_bIsLevelOver = true;
+	//PostQuitMessage(0);
 }
 
 void CGame::GameOverLostPlayer2()
 {
 	MessageBox(m_hMainWindow, L"Player 1 wins!", L"Game Over", MB_OK);
-	PostQuitMessage(0);
+	m_bIsLevelOver = true;
+	//PostQuitMessage(0);
 }
 
 void CGame::DestroyInstance()
@@ -150,5 +154,10 @@ HINSTANCE CGame::GetAppInstance()
 HWND CGame::GetWindow()
 {
 	return (m_hMainWindow);
+}
+
+bool CGame::GetGameState()
+{
+	return m_bIsLevelOver;
 }
 
