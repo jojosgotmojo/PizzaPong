@@ -169,8 +169,6 @@ void CLevel::Process(float _fDeltaTick)
     ProcessBallPaddle1Collision();
 	ProcessBallPaddle2Collision();
     ProcessBallBrickCollision();
-
-    ProcessCheckForWin();
 	ProcessBallBounds();
 
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
@@ -200,13 +198,13 @@ void CLevel::ProcessBallWallCollision()
 
     if (fBallX < fHalfBallW) //represents the situation when the ball has hit the left wall
     {
-		CGame::GetInstance().GameOverLostPlayer1();
+		CGame::GetInstance(false).GameOverLostPlayer1();
 		m_pBall->SetX(static_cast<float>(m_iWidth));
        // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity
     }
     else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
     {
-		CGame::GetInstance().GameOverLostPlayer2();
+		CGame::GetInstance(false).GameOverLostPlayer2();
 		m_pBall->SetX(static_cast<float>(m_iWidth));
        // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity direction
     }
@@ -302,19 +300,6 @@ void CLevel::ProcessBallBrickCollision()
     }
 }
 
-void CLevel::ProcessCheckForWin()
-{
-    for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-    {
-        if (!m_vecBricks[i]->IsHit())
-        {
-            return;
-        }
-    }
-
-    CGame::GetInstance().GameOverWon();
-}
-
 void CLevel::ProcessBallBounds()
 {
 	if (m_pBall->GetY() < 0)
@@ -350,7 +335,7 @@ void CLevel::SetBricksRemaining(int _i)
 
 void CLevel::DrawScore()
 {
-    HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
+    HDC hdc = CGame::GetInstance(false).GetBackBuffer()->GetBFDC();
 
     const int kiX = 0;
     const int kiY = m_iHeight - 14;
@@ -369,7 +354,7 @@ void CLevel::UpdateScoreText()
 
 void CLevel::DrawFPS()
 {
-	HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC(); 
+	HDC hdc = CGame::GetInstance(false).GetBackBuffer()->GetBFDC(); 
 
 	m_fpsCounter->DrawFPSText(hdc, m_iWidth, m_iHeight);
 

@@ -55,9 +55,6 @@ protected:
     void ProcessBallPaddle1Collision();
 	void ProcessBallPaddle2Collision();
     void ProcessBallBrickCollision();
-
-    void ProcessCheckForWin();
-
     void ProcessBallBounds();
 
     void UpdateScoreText();

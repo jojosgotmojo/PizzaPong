@@ -17,6 +17,7 @@
 // Local Includes
 #include "Clock.h"
 #include "Level.h"
+#include "Tournament.h"
 #include "BackBuffer.h"
 #include "utils.h"
 
@@ -30,13 +31,14 @@ CGame* CGame::s_pGame = 0;
 
 // Implementation
 
-CGame::CGame()
+CGame::CGame(bool _bMode)
 	: m_pLevel(0)
 	, m_pClock(0)
 	, m_hApplicationInstance(0)
 	, m_hMainWindow(0)
 	, m_pBackBuffer(0)
 	, m_bIsLevelOver(false)
+	, m_bIsTournament(_bMode)
 {
 
 }
@@ -65,9 +67,18 @@ bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeig
 	m_pBackBuffer = new CBackBuffer();
 	VALIDATE(m_pBackBuffer->Initialise(_hWnd, _iWidth, _iHeight));
 
-	m_pLevel = new CLevel();
-	VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight));
+	if (m_bIsTournament == false)
+	{
+		m_pLevel = new CLevel();
+		VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight));
+	}
+	else if (m_bIsTournament == true)
+	{
+		m_pTournament = new CTournament();
+		VALIDATE(m_pTournament->Initialise(_iWidth, _iHeight));
+	}
 
+	
 	ShowCursor(false);
 
 	return (true);
@@ -77,14 +88,28 @@ void CGame::Draw()
 {
 	m_pBackBuffer->Clear();
 
-	m_pLevel->Draw();
-
+	if (m_bIsTournament == false)
+	{
+		m_pLevel->Draw();
+	}
+	else if (m_bIsTournament == true)
+	{
+		m_pTournament->Draw();
+	}
 	m_pBackBuffer->Present();
 }
 
 void CGame::Process(float _fDeltaTick)
 {
-	m_pLevel->Process(_fDeltaTick);
+
+	if (m_bIsTournament == false)
+	{
+		m_pLevel->Process(_fDeltaTick);
+	}
+	else if (m_bIsTournament == true)
+	{
+		m_pTournament->Process(_fDeltaTick);
+	}
 }
 
 void CGame::ExecuteOneFrame()
@@ -99,35 +124,69 @@ void CGame::ExecuteOneFrame()
 	Sleep(1);
 }
 
-CGame& CGame::GetInstance()
+CGame& CGame::GetInstance(bool _bMode)
 {
 	if (s_pGame == 0)
 	{
-		s_pGame = new CGame();
+		s_pGame = new CGame(_bMode);
 	}
 
 	return (*s_pGame);
 }
 
-void CGame::GameOverWon()
-{
-	MessageBox(m_hMainWindow, L"Winner!", L"Game Over", MB_OK);
-	m_bIsLevelOver = true;
-	//PostQuitMessage(0);
-}
-
 void CGame::GameOverLostPlayer1()
 {
 	MessageBox(m_hMainWindow, L"Player 2 wins!", L"Game Over", MB_OK);
-	m_bIsLevelOver = true;
-	//PostQuitMessage(0);
+	if ((m_bIsTournament == true) && (m_pTournament->GetNumberOfGamesPlayed() >= 10))
+	{
+		m_pTournament->IncrementWinsPlayer2();
+		m_pTournament->UpdateScoreText();
+		GameOverWinner();
+		m_bIsLevelOver = true;
+	}
+	else if (m_bIsTournament == false)
+	{
+		m_bIsLevelOver = true;
+	}
+	if (m_pTournament != nullptr)
+	{
+		m_pTournament->IncrementWinsPlayer2();
+		m_pTournament->UpdateScoreText();
+	}
+
+
 }
 
 void CGame::GameOverLostPlayer2()
 {
 	MessageBox(m_hMainWindow, L"Player 1 wins!", L"Game Over", MB_OK);
-	m_bIsLevelOver = true;
-	//PostQuitMessage(0);
+	if ((m_bIsTournament == true) && (m_pTournament->GetNumberOfGamesPlayed() >= 10))
+	{
+		GameOverWinner();
+		m_bIsLevelOver = true;
+	}
+	else if (m_bIsTournament == false)
+	{
+		m_bIsLevelOver = true;
+	}
+	if (m_pTournament != nullptr)
+	{
+		m_pTournament->IncrementWinsPlayer1();
+		m_pTournament->UpdateScoreText();
+	}
+
+}
+
+void CGame::GameOverWinner()
+{
+	if (m_pTournament->GetNumberOfWinsPlayer1() > m_pTournament->GetNumberOfWinsPlayer2())
+	{
+		MessageBox(m_hMainWindow, L"Player 1 wins the Tournament!", L"Winner!", MB_OK);
+	}
+	else
+	{
+		MessageBox(m_hMainWindow, L"Player 2 wins the Tournament!", L"Winner!", MB_OK);
+	}
 }
 
 void CGame::DestroyInstance()
@@ -146,6 +205,11 @@ CLevel* CGame::GetLevel()
 	return (m_pLevel);
 }
 
+CTournament * CGame::GetTournament()
+{
+	return (m_pTournament);
+}
+
 HINSTANCE CGame::GetAppInstance()
 {
 	return (m_hApplicationInstance);
@@ -159,5 +223,10 @@ HWND CGame::GetWindow()
 bool CGame::GetGameState()
 {
 	return m_bIsLevelOver;
+}
+
+bool CGame::GetGameMode()
+{
+	return m_bIsTournament;
 }
 

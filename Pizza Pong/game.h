@@ -31,6 +31,7 @@
 // Prototypes
 class CLevel;
 class CBackBuffer;
+class CTournament;
 
 class CGame
 {
@@ -47,22 +48,24 @@ public:
 
 	CBackBuffer* GetBackBuffer();
 	CLevel* GetLevel();
+	CTournament* GetTournament();
 	HINSTANCE GetAppInstance();
 	HWND GetWindow();
 	bool GetGameState();
+	bool GetGameMode();
 
-	void GameOverWon();
 	void GameOverLostPlayer1();
 	void GameOverLostPlayer2();
+	void GameOverWinner();
 
 	// Singleton Methods
-	static CGame& GetInstance();
+	static CGame& GetInstance(bool _bMode);
 	static void DestroyInstance();
 
 protected:
 
 private:
-	CGame();
+	CGame(bool _bMode);
 	CGame(const CGame& _kr);
 
 	// Member Variables
@@ -71,7 +74,9 @@ public:
 protected:
 	CClock* m_pClock;
 	CLevel* m_pLevel;
+	CTournament* m_pTournament;
 	bool m_bIsLevelOver;
+	bool m_bIsTournament;
 
 	CBackBuffer* m_pBackBuffer;
 

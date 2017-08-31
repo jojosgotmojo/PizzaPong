@@ -53,7 +53,7 @@ CSprite::~CSprite()
 
 bool CSprite::Initialise(int _iSpriteResourceID, int _iMaskResourceID)
 {
-    HINSTANCE hInstance = CGame::GetInstance().GetAppInstance();
+    HINSTANCE hInstance = CGame::GetInstance(false).GetAppInstance();
 
     if (!s_hSharedSpriteDC)
     {
@@ -79,7 +79,7 @@ void CSprite::Draw()
     int iX = m_iX - (iW / 2);
     int iY = m_iY - (iH / 2);
 
-    CBackBuffer* pBackBuffer = CGame::GetInstance().GetBackBuffer();
+    CBackBuffer* pBackBuffer = CGame::GetInstance(false).GetBackBuffer();
 
     HGDIOBJ hOldObj = SelectObject(s_hSharedSpriteDC, m_hMask);
 

@@ -194,7 +194,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		case MainMenu:
 		{
 			
-
+			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
@@ -221,8 +221,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case QuickGame:
 		{
-			
-			CGame& rGame = CGame::GetInstance();
+			ShowCursor(false);
+			CGame& rGame = CGame::GetInstance(false);
 
 			GetClientRect(hwnd1, &_rect);
 
@@ -253,9 +253,44 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			}
 
 			CGame::DestroyInstance();
-			//return(static_cast<int>(msg.wParam)); //don't exit and go to main menu
+			break;
 		}
+		case Tournament:
+		{
+			ShowCursor(false);
+			CGame& rGame = CGame::GetInstance(true);
 
+			GetClientRect(hwnd1, &_rect);
+
+			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
+			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
+			{
+				// Failed
+				return (0);
+			}
+
+			while (msg.message != WM_QUIT)
+			{
+				if (rGame.GetGameState() == true)
+				{
+					currentState = MainMenu;
+					break;
+				}
+
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					rGame.ExecuteOneFrame();
+				}
+			}
+
+			CGame::DestroyInstance();
+			break;
+		}
 		case Credits:
 		{
 			CMainMenu& rMain = CMainMenu::GetInstance();
