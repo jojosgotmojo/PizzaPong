@@ -25,6 +25,7 @@
 #include "background.h"
 #include "backbuffer.h"
 #include "MainMenu.h"
+#include <time.h>
 
 #include "resource.h"
 
@@ -196,6 +197,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
 	HWND hwnd1;
+
+	srand(time(NULL));
 	
 	hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
 

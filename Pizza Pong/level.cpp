@@ -23,6 +23,7 @@
 #include "backbuffer.h"
 #include "framecounter.h"
 #include "background.h"
+#include <time.h>
 
 // This Include
 #include "Level.h"
@@ -44,7 +45,6 @@ CLevel::CLevel()
 , m_iHeight(0)
 , m_fpsCounter(0)
 {
-
 }
 
 CLevel::~CLevel()
@@ -241,6 +241,31 @@ void CLevel::ProcessBallPaddle1Collision()
     {
         m_pBall->SetX((fPaddle1X + fPaddle1W / 2) + fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
         m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's X direction
+		
+
+		int iRand = rand() % 1 + 9;
+		float ReducedValue = static_cast<float>(iRand) / 10;
+
+
+		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle1Y))
+		{
+			if (m_pBall->GetVelocityY() < -375.00f)
+			{
+				m_pBall->SetVelocityY(-375.00f);
+			}
+
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
+
+		if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle1Y))
+		{
+
+			if (m_pBall->GetVelocityY() > 375.00f)
+			{
+				m_pBall->SetVelocityY(375.00f);
+			}
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
     }
 }
 
@@ -262,8 +287,32 @@ void CLevel::ProcessBallPaddle2Collision()
 		(fBallY + fBallR > fPaddle2Y - fPaddle2H / 2) && //ball.bottom > paddle.top
 		(fBallY - fBallR < fPaddle2Y + fPaddle2H / 2))  //ball.top < paddle.bottom
 	{
+		int iRand = rand() % 1 + 9;
+		float ReducedValue = static_cast<float>(iRand) / 10;
+
 		m_pBall->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
 		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's Y direction
+
+		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle2Y))
+		{
+			if (m_pBall->GetVelocityY() < -375.00f)
+			{
+				m_pBall->SetVelocityY(-375.00f);
+			}
+
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
+
+		if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle2Y))
+		{
+
+			if (m_pBall->GetVelocityY() > 375.00f)
+			{
+				m_pBall->SetVelocityY(375.00f);
+			}
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
+		
 	}
 }
 
@@ -289,9 +338,15 @@ void CLevel::ProcessBallBrickCollision()
                 (fBallY + fBallR > fBrickY - fBrickH / 2) &&
                 (fBallY - fBallR < fBrickY + fBrickH / 2))
             {
+				int iDirection = rand() % 2;
+
                 //Hit the front side of the brick...
                 m_pBall->SetX((fBrickX + fBrickW / 2.0f) - fBallR);
                 m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
+				if (iDirection == 1)
+				{
+					m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
+				}
                 m_vecBricks[i]->SetHit(true);
 
                 SetBricksRemaining(GetBricksRemaining() - 1);
