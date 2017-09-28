@@ -249,22 +249,25 @@ void CLevel::ProcessBallPaddle1Collision()
 
 		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle1Y))
 		{
-			if (m_pBall->GetVelocityY() < -375.00f)
+			if (m_pBall->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-375.00f);
+				m_pBall->SetVelocityY(-225.00f);
 			}
 
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-
-		if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle1Y))
+		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle1Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 375.00f)
+			if (m_pBall->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(375.00f);
+				m_pBall->SetVelocityY(225.00f);
 			}
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
+		else
+		{
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
     }
 }
@@ -295,22 +298,25 @@ void CLevel::ProcessBallPaddle2Collision()
 
 		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle2Y))
 		{
-			if (m_pBall->GetVelocityY() < -375.00f)
+			if (m_pBall->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-375.00f);
+				m_pBall->SetVelocityY(-225.00f);
 			}
 
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-
-		if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle2Y))
+		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle2Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 375.00f)
+			if (m_pBall->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(375.00f);
+				m_pBall->SetVelocityY(225.00f);
 			}
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+		}
+		else
+		{
+			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		
 	}
