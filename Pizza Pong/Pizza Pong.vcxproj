@@ -92,6 +92,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="paddle.cpp" />
+    <ClCompile Include="powerup.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="Tournament.cpp" />
   </ItemGroup>
@@ -107,6 +108,7 @@
     <ClInclude Include="level.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="paddle.h" />
+    <ClInclude Include="powerup.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="Tournament.h" />
@@ -120,7 +122,11 @@
     <Image Include="Sprites\BallSprite.bmp" />
     <Image Include="Sprites\brussel.bmp" />
     <Image Include="Sprites\brusselMask.bmp" />
+    <Image Include="Sprites\ChiliMask.bmp" />
+    <Image Include="Sprites\ChiliSprite.bmp" />
     <Image Include="Sprites\Credits.bmp" />
+    <Image Include="Sprites\GreenPepperMask.bmp" />
+    <Image Include="Sprites\GreenPepperSprite.bmp" />
     <Image Include="Sprites\Instructions.bmp" />
     <Image Include="Sprites\Main test mask.bmp" />
     <Image Include="Sprites\Main test.bmp" />

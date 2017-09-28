@@ -57,6 +57,9 @@
     <ClCompile Include="Tournament.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="powerup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tournament.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="powerup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -157,6 +163,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Sprites\pizzaMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\ChiliMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\ChiliSprite.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\GreenPepperMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\GreenPepperSprite.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
