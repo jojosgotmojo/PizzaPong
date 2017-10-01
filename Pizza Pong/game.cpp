@@ -137,44 +137,13 @@ CGame& CGame::GetInstance(bool _bMode)
 void CGame::GameOverLostPlayer1()
 {
 	MessageBox(m_hMainWindow, L"Player 2 wins!", L"Game Over", MB_OK);
-	if ((m_bIsTournament == true) && (m_pTournament->GetNumberOfGamesPlayed() >= 10))
-	{
-		m_pTournament->IncrementWinsPlayer2();
-		m_pTournament->UpdateScoreText();
-		GameOverWinner();
-		m_bIsLevelOver = true;
+	m_bIsLevelOver = true;
 	}
-	else if (m_bIsTournament == false)
-	{
-		m_bIsLevelOver = true;
-	}
-	if (m_pTournament != nullptr)
-	{
-		m_pTournament->IncrementWinsPlayer2();
-		m_pTournament->UpdateScoreText();
-	}
-
-
-}
 
 void CGame::GameOverLostPlayer2()
 {
 	MessageBox(m_hMainWindow, L"Player 1 wins!", L"Game Over", MB_OK);
-	if ((m_bIsTournament == true) && (m_pTournament->GetNumberOfGamesPlayed() >= 10))
-	{
-		GameOverWinner();
-		m_bIsLevelOver = true;
-	}
-	else if (m_bIsTournament == false)
-	{
-		m_bIsLevelOver = true;
-	}
-	if (m_pTournament != nullptr)
-	{
-		m_pTournament->IncrementWinsPlayer1();
-		m_pTournament->UpdateScoreText();
-	}
-
+	m_bIsLevelOver = true;
 }
 
 void CGame::GameOverWinner()
@@ -187,6 +156,7 @@ void CGame::GameOverWinner()
 	{
 		MessageBox(m_hMainWindow, L"Player 2 wins the Tournament!", L"Winner!", MB_OK);
 	}
+	m_bIsLevelOver = true;
 }
 
 void CGame::DestroyInstance()
