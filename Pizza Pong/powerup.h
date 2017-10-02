@@ -35,10 +35,16 @@ public:
 	CPowerup();
 	virtual ~CPowerup();
 
-	virtual bool Initialise();
+	virtual bool Initialise();  
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
+
+
+	//testing powerup functions
+	virtual void SpeedUpBall(); 
+	virtual void ResizePaddles();
+	virtual void ResizeBall();
 
 
 protected:

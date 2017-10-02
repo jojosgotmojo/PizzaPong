@@ -102,3 +102,19 @@ void CPowerup::Process(float _fDeltaTick)
 
 	CEntity::Process(_fDeltaTick);
 }
+
+
+void CPowerup::SpeedUpBall()
+{
+
+}
+
+void CPowerup::ResizePaddles()
+{
+
+}
+
+void CPowerup::ResizeBall()
+{
+
+}
