@@ -18,10 +18,12 @@
 #define __BRICK_H__
 
 // Library Includes
-
+#include <chrono>
 // Local Includes
 #include "entity.h"
 
+
+using namespace std::chrono;
 // Types
 
 // Constants
@@ -47,7 +49,8 @@ protected:
 
 private:
     CBrick(const CBrick& _kr);
-
+	high_resolution_clock::time_point m_tpFirst;
+	high_resolution_clock::time_point m_tpCheck;
     // Member Variables
 public:
 
