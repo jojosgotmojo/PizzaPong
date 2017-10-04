@@ -39,7 +39,9 @@ enum GameState
 	Tournament,
 	Credits,
 	QuitGame,
-	Instructions
+	Instructions,
+	Instructions2
+
 };
 
 GameState currentState = MainMenu;
@@ -114,6 +116,22 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 			if ((iStart.x > 895) && (iStart.x < 1215) && (iStart.y > 585) && (iStart.y < 677))
 			{
 				currentState = MainMenu;
+			}
+			if ((iStart.x > 604) && (iStart.x < 858) && (iStart.y > 579) && (iStart.y < 666))
+			{
+				currentState = Instructions2;
+			}
+		}
+		else if (currentState == Instructions2)
+		{
+			//back button
+			if ((iStart.x > 895) && (iStart.x < 1215) && (iStart.y > 585) && (iStart.y < 677))
+			{
+				currentState = MainMenu;
+			}
+			if ((iStart.x > 604) && (iStart.x < 858) && (iStart.y > 579) && (iStart.y < 666))
+			{
+				currentState = Instructions;
 			}
 		}
 			
@@ -340,6 +358,34 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					rMain.Draw();
+				}
+				if (currentState != Credits)
+				{
+					break;
+				}
+			}
+
+			CMainMenu::DestroyInstance();
+			//return(static_cast<int>(msg.wParam));
+
+			break;
+
+		}
+		case Instructions2:
+		{
+			ShowCursor(true);
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
