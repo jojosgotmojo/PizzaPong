@@ -20,9 +20,11 @@
 
 // Library Includes
 #include <windows.h>
-
+#include <chrono>
 // Local Includes
 #include "clock.h"
+
+using namespace std::chrono;
 
 // Types
 

@@ -33,6 +33,7 @@ class CPaddle;
 class CBrick;
 class CFPSCounter;
 class CBackGround;
+class CPowerup;
 
 class CTournament
 {
@@ -80,6 +81,8 @@ protected:
 	CBall* m_pBall;
 	CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
+	CPowerup* m_Powerup1;
+	CPowerup* m_Powerup2;
 	std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
 

@@ -32,20 +32,13 @@ class CPowerup : public CEntity
 {
 	// Member Functions
 public:
-	CPowerup();
+	CPowerup(int _iRandomNumber);
 	virtual ~CPowerup();
 
-	virtual bool Initialise();  
+	virtual bool Initialise(int _iX, int _iY);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
-
-
-	//testing powerup functions
-	virtual void SpeedUpBall(); 
-	virtual void ResizePaddles();
-	virtual void ResizeBall();
-
 
 protected:
 
@@ -58,7 +51,7 @@ public:
 protected:
 
 private:
-	int m_iPlayerNumber;
+	int m_iPowerUpNumber;
 };
 
 #endif    // __POWERUP_H__

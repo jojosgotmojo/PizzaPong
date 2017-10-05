@@ -23,6 +23,7 @@
 #include "backbuffer.h"
 #include "framecounter.h"
 #include "background.h"
+#include "powerup.h"
 
 // This Include
 #include "Tournament.h"
@@ -107,6 +108,19 @@ bool CTournament::Initialise(int _iWidth, int _iHeight)
 	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
 	m_pPaddle2->SetY(_iHeight / 2);
 
+	int iRandomInitialise1 = rand() % 3;
+	int iRandomInitialise2 = rand() % 3;
+
+	int iRandomX1 = rand() % 550 + 50;
+	int iRandomX2 = rand() % 550 + 680;
+	int iRandomY1 = rand() % 660 + 30;
+	int iRandomY2 = rand() % 660 + 30;
+
+	m_Powerup1 = new CPowerup(iRandomInitialise1);
+	m_Powerup2 = new CPowerup(iRandomInitialise2);
+	VALIDATE(m_Powerup1->Initialise(iRandomX1, iRandomY1));
+	VALIDATE(m_Powerup2->Initialise(iRandomX2, iRandomY2));
+
 	const int kiNumBricks = 15;
 	const int kiStartX = m_iWidth / 2;
 	const int kiGap = 5;
@@ -151,6 +165,9 @@ void CTournament::Draw()
 	m_pPaddle1->Draw();
 	m_pPaddle2->Draw();
 
+	m_Powerup1->Draw();
+	m_Powerup2->Draw();
+
 	m_pBall->Draw();
 
 	DrawScore();
@@ -167,11 +184,14 @@ void CTournament::Process(float _fDeltaTick)
 
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
+	m_Powerup1->Process(_fDeltaTick);
+	m_Powerup2->Process(_fDeltaTick);
 	ProcessBallWallCollision();
 	ProcessBallPaddle1Collision();
 	ProcessBallPaddle2Collision();
 	ProcessBallBrickCollision();
 	ProcessBallBounds();
+
 
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
