@@ -485,7 +485,7 @@ void CTournament::UpdateScoreText()
 	m_strScore2 = "Player 2:";
 	m_strScore2 += ToString(GetNumberOfWinsPlayer2());
 
-	m_strScore3 = "Round";
+	m_strScore3 = "Round ";
 	m_strScore3 += ToString(GetNumberOfGamesPlayed());
 }
 
