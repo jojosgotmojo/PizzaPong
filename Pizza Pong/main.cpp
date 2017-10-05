@@ -31,6 +31,9 @@
 
 const int kiWidth = 1280;
 const int kiHeight = 720;
+HDC hDC;
+HFONT font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 
 enum GameState
 {
@@ -54,6 +57,12 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 {
 	switch (_uiMsg)
 	{
+
+	case WM_CREATE:
+	{
+		SelectFont(hDC, font);
+
+	}
 	case WM_MOUSEMOVE:
 	{
 		int iMouseX = LOWORD(_lParam);
