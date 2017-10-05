@@ -8,13 +8,14 @@
 //
 // File Name	: main.cpp
 // Description	: Base window initialisation
-// Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
+// Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacey
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
 
 //Library Includes
 #include <windows.h>
 #include <windowsx.h>
+#include <mmsystem.h>
 
 //Local Includes
 #include "Game.h"
@@ -29,8 +30,13 @@
 
 #include "resource.h"
 
+HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
 const int kiWidth = 1280;
 const int kiHeight = 720;
+HDC hDC;
+HFONT font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 
 enum GameState
 {
@@ -67,6 +73,12 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		}
 	}
 	break;
+
+	case WM_CREATE:
+	{
+		SelectFont(hDC, font);
+
+	}
 	case WM_MOUSEMOVE:
 	{
 		int iMouseX = LOWORD(_lParam);
@@ -224,6 +236,8 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
+	PlaySound(TEXT("win.wav"), NULL, SND_ASYNC | SND_LOOP);
+
 	MSG msg;
 	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));

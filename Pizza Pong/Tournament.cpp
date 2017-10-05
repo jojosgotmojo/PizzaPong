@@ -603,26 +603,35 @@ void CTournament::SetBricksRemaining(int _i)
 void CTournament::DrawScore()
 {
 	HDC hdc = CGame::GetInstance(true).GetBackBuffer()->GetBFDC();
+	HFONT font = CreateFont(46, 20, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
+	HFONT hTmp;
 
 	const int kiX = 0;
-	const int kiY = m_iHeight - 14;
-	const int kiX2 = m_iWidth - 74;
-	const int kiY2 = m_iHeight - 14;
-	const int kiX3 = m_iWidth / 2 - 50;
+	const int kiY = m_iHeight - 50;
+	const int kiX2 = m_iWidth - 215;
+	const int kiY2 = m_iHeight - 50;
+	const int kiX3 = m_iWidth / 2 - 75;
 	const int kiY3 = 20;
 	SetBkMode(hdc, TRANSPARENT);
+
+	hTmp = (HFONT)SelectObject(hdc, font);
+
+
 	TextOutA(hdc, kiX, kiY, m_strScore1.c_str(), static_cast<int>(m_strScore1.size()));
 	TextOutA(hdc, kiX2, kiY2, m_strScore2.c_str(), static_cast<int>(m_strScore2.size()));
 	
 	TextOutA(hdc, kiX3, kiY3, m_strScore3.c_str(), static_cast<int>(m_strScore3.size()));
+
+	DeleteObject(SelectObject(hdc, hTmp));
 }
 
 void CTournament::UpdateScoreText()
 {
-	m_strScore1 = "Player 1: ";
+	m_strScore1 = "Player 1:";
 	m_strScore1 += ToString(GetNumberOfWinsPlayer1());
 
-	m_strScore2 = "Player 2: ";
+	m_strScore2 = "Player 2:";
 	m_strScore2 += ToString(GetNumberOfWinsPlayer2());
 
 	m_strScore3 = "Round ";
