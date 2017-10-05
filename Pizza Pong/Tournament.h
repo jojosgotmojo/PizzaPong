@@ -20,6 +20,9 @@
 // Library Includes
 #include <vector>
 #include <string>
+#include <chrono>
+
+using namespace std::chrono;
 
 // Local Includes
 
@@ -63,6 +66,9 @@ protected:
 	void ProcessBallPaddle2Collision();
 	void ProcessBallBrickCollision();
 	void ProcessBallBounds();
+	void ProcessBallPowerup1();
+	void ProcessBallPowerup2();
+	void ProcessBallPowerup3();
 
 	
 	void DrawScore();
@@ -81,11 +87,23 @@ protected:
 	CBall* m_pBall;
 	CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
+	CPaddle* m_pLastPlayer;
+	CPaddle* m_pSnapShot1;
+	CPaddle* m_pSnapShot2;
 	CPowerup* m_Powerup1;
 	CPowerup* m_Powerup2;
 	std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
+	
+	high_resolution_clock::time_point m_tpInitialTimer1;
+	high_resolution_clock::time_point m_tpInitialTimer2;
+	high_resolution_clock::time_point m_tpCheckTimer1;
+	high_resolution_clock::time_point m_tpCheckTimer2;
+	double m_dDuration1;
+	double m_dDuration2;
 
+	int m_iPowerUp1Identifier;
+	int m_iPowerUp2Identifier;
 	int m_iPlayer1WinCount;
 	int m_iPlayer2WinCount;
 	int m_iNumberOfGamesPlayed;

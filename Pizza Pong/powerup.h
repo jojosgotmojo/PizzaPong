@@ -39,6 +39,8 @@ public:
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
+	void SetHit(bool _bIsHit);
+	bool IsHit() const;
 
 protected:
 
@@ -52,6 +54,7 @@ protected:
 
 private:
 	int m_iPowerUpNumber;
+	bool m_bIsHit;
 };
 
 #endif    // __POWERUP_H__

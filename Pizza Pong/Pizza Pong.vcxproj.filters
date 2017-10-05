@@ -177,5 +177,17 @@
     <Image Include="Sprites\GreenPepperSprite.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Sprites\PaddleMaskEnlarged.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\PaddleSpriteEnlarged.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\PaddleSpriteFlippedEnlarged.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Sprites\PaddleSpriteFlippedMaskEnlarged.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

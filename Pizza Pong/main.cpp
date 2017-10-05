@@ -54,6 +54,19 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 {
 	switch (_uiMsg)
 	{
+	case WM_CHAR:
+	{
+		switch (_wParam)
+		{
+		case VK_ESCAPE:
+		{
+			SendMessage(_hWnd, WM_CLOSE, _wParam, _lParam);
+			return (0);
+		}
+		default:break;
+		}
+	}
+	break;
 	case WM_MOUSEMOVE:
 	{
 		int iMouseX = LOWORD(_lParam);

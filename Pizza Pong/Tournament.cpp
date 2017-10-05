@@ -48,7 +48,8 @@ CTournament::CTournament()
 	, m_iPlayer2WinCount(0)
 	, m_iNumberOfGamesPlayed(1)
 {
-
+	m_tpInitialTimer1 = high_resolution_clock::now();
+	m_tpInitialTimer2 = high_resolution_clock::now();
 }
 
 CTournament::~CTournament()
@@ -108,16 +109,16 @@ bool CTournament::Initialise(int _iWidth, int _iHeight)
 	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
 	m_pPaddle2->SetY(_iHeight / 2);
 
-	int iRandomInitialise1 = rand() % 3;
-	int iRandomInitialise2 = rand() % 3;
+	m_iPowerUp1Identifier = rand() % 3;
+	m_iPowerUp2Identifier = rand() % 3;
 
 	int iRandomX1 = rand() % 550 + 50;
 	int iRandomX2 = rand() % 550 + 680;
 	int iRandomY1 = rand() % 660 + 30;
 	int iRandomY2 = rand() % 660 + 30;
 
-	m_Powerup1 = new CPowerup(iRandomInitialise1);
-	m_Powerup2 = new CPowerup(iRandomInitialise2);
+	m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+	m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
 	VALIDATE(m_Powerup1->Initialise(iRandomX1, iRandomY1));
 	VALIDATE(m_Powerup2->Initialise(iRandomX2, iRandomY2));
 
@@ -191,14 +192,62 @@ void CTournament::Process(float _fDeltaTick)
 	ProcessBallPaddle2Collision();
 	ProcessBallBrickCollision();
 	ProcessBallBounds();
+	ProcessBallPowerup1();
+	ProcessBallPowerup2();
 
+	m_tpCheckTimer1 = high_resolution_clock::now();
+	m_tpCheckTimer2 = high_resolution_clock::now();
+	
+	m_dDuration1 = duration_cast<milliseconds>(m_tpCheckTimer1 - m_tpInitialTimer1).count() / 1000.00;
+	m_dDuration2 = duration_cast<milliseconds>(m_tpCheckTimer2 - m_tpInitialTimer2).count() / 1000.00;
+
+	if (m_dDuration1 >= 20.00 && m_pSnapShot1 != nullptr)
+	{
+		switch (m_iPowerUp1Identifier)
+		{
+			case 0:
+			{
+				m_pSnapShot1->Initialise();
+				break;
+			}
+			case 1:
+			{
+				m_pSnapShot1->ResetSpeed();
+				break;
+			}
+			case 2:
+			{
+				break;
+			}
+			default:break;
+		}
+	}
+	if (m_dDuration2 >= 20.00&& m_pSnapShot2 != nullptr)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pSnapShot2->Initialise();
+			break;
+		}
+		case 1:
+		{
+			m_pSnapShot2->ResetSpeed();
+			break;
+		}
+		case 2:
+		{
+			break;
+		}
+		default:break;
+		}
+	}
 
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
 		m_vecBricks[i]->Process(_fDeltaTick);
 	}
-
-
 
 	m_fpsCounter->CountFramesPerSecond(_fDeltaTick);
 }
@@ -326,6 +375,7 @@ void CTournament::ProcessBallPaddle1Collision()
 		{
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
+		m_pLastPlayer = m_pPaddle1;
 	}
 }
 
@@ -375,7 +425,7 @@ void CTournament::ProcessBallPaddle2Collision()
 		{
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
-
+		m_pLastPlayer = m_pPaddle2;
 	}
 }
 
@@ -438,6 +488,105 @@ void CTournament::ProcessBallBounds()
 		/*CGame::GetInstance().GameOverLost();
 		m_pBall->SetX(static_cast<float>(m_iWidth));*/
 	}
+}
+
+void CTournament::ProcessBallPowerup1()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPowerUp1X = m_Powerup1->GetX();
+	float fPowerUp1Y = m_Powerup1->GetY();
+	float fPowerUp2X = m_Powerup2->GetX();
+	float fPowerUp2Y = m_Powerup2->GetY();
+
+	float fPowerUp1H = m_Powerup1->GetHeight();
+	float fPowerUp1W = m_Powerup1->GetWidth();
+	float fPowerUp2H = m_Powerup2->GetHeight();
+	float fPowerUp2W = m_Powerup2->GetWidth();
+
+	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			m_tpInitialTimer1 = high_resolution_clock::now();
+			m_pLastPlayer->Enlarge();
+			m_Powerup1->SetHit(true);
+			m_pSnapShot1 = m_pLastPlayer;
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			m_tpInitialTimer2 = high_resolution_clock::now();
+			m_pLastPlayer->Enlarge();
+			m_Powerup2->SetHit(true);
+			m_pSnapShot2 = m_pLastPlayer;
+		}
+	}
+
+}
+
+void CTournament::ProcessBallPowerup2()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPowerUp1X = m_Powerup1->GetX();
+	float fPowerUp1Y = m_Powerup1->GetY();
+	float fPowerUp2X = m_Powerup2->GetX();
+	float fPowerUp2Y = m_Powerup2->GetY();
+
+	float fPowerUp1H = m_Powerup1->GetHeight();
+	float fPowerUp1W = m_Powerup1->GetWidth();
+	float fPowerUp2H = m_Powerup2->GetHeight();
+	float fPowerUp2W = m_Powerup2->GetWidth();
+
+	if (m_iPowerUp1Identifier == 1 && m_Powerup1->IsHit() == false)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			m_tpInitialTimer1 = high_resolution_clock::now();
+			m_pLastPlayer->SpeedUp();
+			m_Powerup1->SetHit(true);
+			m_pSnapShot1 = m_pLastPlayer;
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 1 && m_Powerup2->IsHit() == false)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			m_tpInitialTimer2 = high_resolution_clock::now();
+			m_pLastPlayer->SpeedUp();
+			m_Powerup2->SetHit(true);
+			m_pSnapShot2 = m_pLastPlayer;
+		}
+	}
+}
+
+void CTournament::ProcessBallPowerup3()
+{
+
+
 }
 
 int CTournament::GetBricksRemaining() const

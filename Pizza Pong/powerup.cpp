@@ -30,7 +30,7 @@
 CPowerup::CPowerup(int _iRandomNumber)
 	: m_iPowerUpNumber(_iRandomNumber)
 {
-
+	m_bIsHit = false;
 }
 
 CPowerup::~CPowerup()
@@ -74,10 +74,23 @@ bool CPowerup::Initialise(int _iX, int _iY)
 
 void CPowerup::Draw()
 {
-	CEntity::Draw();
+	if (!m_bIsHit)
+	{
+		CEntity::Draw();
+	}
 }
 
 void CPowerup::Process(float _fDeltaTick)
 {
 	CEntity::Process(_fDeltaTick);
+}
+
+void CPowerup::SetHit(bool _bIsHit)
+{
+	m_bIsHit = _bIsHit;
+}
+
+bool CPowerup::IsHit() const
+{
+	return m_bIsHit;
 }

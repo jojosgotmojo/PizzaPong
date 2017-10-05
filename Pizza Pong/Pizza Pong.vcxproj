@@ -130,12 +130,16 @@
     <Image Include="Sprites\Instructions.bmp" />
     <Image Include="Sprites\Main test mask.bmp" />
     <Image Include="Sprites\Main test.bmp" />
+    <Image Include="Sprites\PaddleMaskEnlarged.bmp" />
+    <Image Include="Sprites\PaddleSpriteEnlarged.bmp" />
+    <Image Include="Sprites\PaddleSpriteFlippedEnlarged.bmp" />
     <Image Include="sprites\PaddleSpriteFlippedMask.bmp" />
     <Image Include="sprites\PaddleSpriteFlipped.bmp" />
     <Image Include="Sprites\BrickMask.bmp" />
     <Image Include="Sprites\BrickSprite.bmp" />
     <Image Include="Sprites\PaddleMask.bmp" />
     <Image Include="Sprites\PaddleSprite.bmp" />
+    <Image Include="Sprites\PaddleSpriteFlippedMaskEnlarged.bmp" />
     <Image Include="Sprites\pizza.bmp" />
     <Image Include="Sprites\pizzaMask.bmp" />
   </ItemGroup>

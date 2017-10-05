@@ -30,7 +30,7 @@
 CPaddle::CPaddle(int _iPlayerNumber)
 	: m_iPlayerNumber(_iPlayerNumber)
 {
-
+	m_fYVelocity = 400.00f;
 }
 
 CPaddle::~CPaddle()
@@ -53,6 +53,20 @@ bool CPaddle::Initialise()
     return (true);
 }
 
+bool CPaddle::Enlarge()
+{
+	if (m_iPlayerNumber == 1)
+	{
+		VALIDATE(CEntity::Initialise(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK));
+	}
+	else
+	{
+		VALIDATE(CEntity::Initialise(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK));
+	}
+
+	return true;
+}
+
 void CPaddle::Draw()
 {
     CEntity::Draw();
@@ -73,11 +87,11 @@ void CPaddle::Process(float _fDeltaTick)
 
 		if (GetAsyncKeyState(VK_UP) & 0x8000)
 		{
-			m_fY -= 400.0f * _fDeltaTick;
+			m_fY -= m_fYVelocity * _fDeltaTick;
 		}
 		else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 		{
-			m_fY += 400.0f * _fDeltaTick;
+			m_fY += m_fYVelocity * _fDeltaTick;
 		}
 
 	}
@@ -85,11 +99,11 @@ void CPaddle::Process(float _fDeltaTick)
 	{
 		if (GetAsyncKeyState(0x57) & 0x8000)
 		{
-			m_fY -= 400.0f * _fDeltaTick;
+			m_fY -= m_fYVelocity * _fDeltaTick;
 		}
 		else if (GetAsyncKeyState(0x53) & 0x8000)
 		{
-			m_fY += 400.0f * _fDeltaTick;
+			m_fY += m_fYVelocity * _fDeltaTick;
 		}
 	}
 	if (m_fY - fHalfPaddleH <= rect.top)
@@ -102,4 +116,15 @@ void CPaddle::Process(float _fDeltaTick)
 	}
 	
 	CEntity::Process(_fDeltaTick);
+}
+
+void CPaddle::SpeedUp()
+{
+	m_fYVelocity *= 1.5f;
+
+}
+
+void CPaddle::ResetSpeed()
+{
+	m_fYVelocity = 400.00f;
 }

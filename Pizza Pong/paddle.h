@@ -36,10 +36,12 @@ public:
     virtual ~CPaddle();
 
     virtual bool Initialise();
+	virtual bool Enlarge();
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
-
+	void SpeedUp();
+	void ResetSpeed();
 
 protected:
 
@@ -53,6 +55,7 @@ protected:
 
 private:
 	int m_iPlayerNumber;
+	int m_fYVelocity;
 };
 
 #endif    // __PADDLE_H__
