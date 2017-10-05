@@ -53,7 +53,7 @@ bool CPowerup::Initialise(int _iX, int _iY)
 		case 1:
 		{
 			//Paddle speed up
-			VALIDATE(CEntity::Initialise(IDB_CHILISPRITE, IDB_CHILIMASK));
+			VALIDATE(CEntity::Initialise(IDB_CHILIMASK, IDB_CHILISPRITE));
 			this->m_fX = _iX;
 			this->m_fY = _iY;
 			break;
