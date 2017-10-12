@@ -211,11 +211,13 @@ void CTournament::Process(float _fDeltaTick)
 			{
 				
 				m_pSnapShot1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
+				m_pSnapShot1 = nullptr;
 				break;
 			}
 			case 1:
 			{
 				m_pSnapShot1->ResetSpeed();
+				m_pSnapShot1 = nullptr;
 				break;
 			}
 			case 2:
@@ -232,11 +234,13 @@ void CTournament::Process(float _fDeltaTick)
 		case 0:
 		{
 			m_pSnapShot2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
+			m_pSnapShot2 = nullptr;
 			break;
 		}
 		case 1:
 		{
 			m_pSnapShot2->ResetSpeed();
+			m_pSnapShot2 = nullptr;
 			break;
 		}
 		case 2:
