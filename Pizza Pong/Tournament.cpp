@@ -36,6 +36,7 @@
 // Implementation
 
 //#define CHEAT_BOUNCE_ON_BACK_WALL
+#define DEFAULT_BALL_SPEED 75.00
 
 CTournament::CTournament()
 	: m_iBricksRemaining(0)
@@ -301,6 +302,7 @@ void CTournament::ProcessBallWallCollision()
 		this->IncrementWinsPlayer2();
 		this->UpdateScoreText();
 		m_pBall->SetX(static_cast<float>(m_iWidth / 4.0f * 3));
+		m_pBall->SetVelocityY(DEFAULT_BALL_SPEED);
 		if (this->GetNumberOfGamesPlayed() >= 11)
 		{
 			CGame::GetInstance(true).GameOverWinner();
@@ -311,6 +313,7 @@ void CTournament::ProcessBallWallCollision()
 		this->IncrementWinsPlayer1();
 		this->UpdateScoreText();
 		m_pBall->SetX(static_cast<float>(m_iWidth / 4.0f));
+		m_pBall->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		if ((this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() > this->GetNumberOfWinsPlayer2())) || (this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() < this->GetNumberOfWinsPlayer2())))
 		{
@@ -509,7 +512,7 @@ void CTournament::ProcessBallPowerup1()
 	float fPowerUp2H = m_Powerup2->GetHeight();
 	float fPowerUp2W = m_Powerup2->GetWidth();
 
-	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false)
+	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
 			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
@@ -523,7 +526,7 @@ void CTournament::ProcessBallPowerup1()
 		}
 	}
 
-	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false)
+	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
 			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
@@ -556,7 +559,7 @@ void CTournament::ProcessBallPowerup2()
 	float fPowerUp2H = m_Powerup2->GetHeight();
 	float fPowerUp2W = m_Powerup2->GetWidth();
 
-	if (m_iPowerUp1Identifier == 1 && m_Powerup1->IsHit() == false)
+	if (m_iPowerUp1Identifier == 1 && m_Powerup1->IsHit() == false && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
 			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
@@ -570,7 +573,7 @@ void CTournament::ProcessBallPowerup2()
 		}
 	}
 
-	if (m_iPowerUp2Identifier == 1 && m_Powerup2->IsHit() == false)
+	if (m_iPowerUp2Identifier == 1 && m_Powerup2->IsHit() == false && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
 			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
