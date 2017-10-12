@@ -24,6 +24,7 @@
 #include "framecounter.h"
 #include "background.h"
 #include "powerup.h"
+#include "resource.h"
 
 // This Include
 #include "Tournament.h"
@@ -207,7 +208,8 @@ void CTournament::Process(float _fDeltaTick)
 		{
 			case 0:
 			{
-				m_pSnapShot1->Initialise();
+				
+				m_pSnapShot1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
 				break;
 			}
 			case 1:
@@ -228,7 +230,7 @@ void CTournament::Process(float _fDeltaTick)
 		{
 		case 0:
 		{
-			m_pSnapShot2->Initialise();
+			m_pSnapShot2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
 			break;
 		}
 		case 1:
@@ -515,7 +517,7 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 		{
 			m_tpInitialTimer1 = high_resolution_clock::now();
-			m_pLastPlayer->Enlarge();
+			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 			m_Powerup1->SetHit(true);
 			m_pSnapShot1 = m_pLastPlayer;
 		}
@@ -529,7 +531,7 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
 		{
 			m_tpInitialTimer2 = high_resolution_clock::now();
-			m_pLastPlayer->Enlarge();
+			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
 			m_Powerup2->SetHit(true);
 			m_pSnapShot2 = m_pLastPlayer;
 		}

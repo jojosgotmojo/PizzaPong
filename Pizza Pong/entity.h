@@ -39,6 +39,7 @@ public:
 
 	virtual void Draw() = 0;
 	virtual void Process(float _fDeltaTick);
+	bool ChangeSprite(const int _kiSpriteID, const int _kiMaskID);
 
 	void SetX(float _f);
 	void SetY(float _f);

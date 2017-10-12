@@ -36,7 +36,6 @@ public:
     virtual ~CPaddle();
 
     virtual bool Initialise();
-	virtual bool Enlarge();
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);

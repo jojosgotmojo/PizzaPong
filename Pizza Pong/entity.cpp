@@ -49,6 +49,12 @@ bool CEntity::Initialise(const int _kiSpriteID, const int _kiMaskID)
     return (true);
 }
 
+bool CEntity::ChangeSprite(const int _kiSpriteID, const int _kiMaskID)
+{
+	VALIDATE(m_pSprite->Initialise(_kiSpriteID, _kiMaskID));
+	return true;
+}
+
 void CEntity::Draw()
 {
     m_pSprite->Draw();

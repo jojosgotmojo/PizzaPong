@@ -53,20 +53,6 @@ bool CPaddle::Initialise()
     return (true);
 }
 
-bool CPaddle::Enlarge()
-{
-	if (m_iPlayerNumber == 1)
-	{
-		VALIDATE(CEntity::Initialise(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK));
-	}
-	else
-	{
-		VALIDATE(CEntity::Initialise(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK));
-	}
-
-	return true;
-}
-
 void CPaddle::Draw()
 {
     CEntity::Draw();
