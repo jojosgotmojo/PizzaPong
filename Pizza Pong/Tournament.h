@@ -116,6 +116,8 @@ protected:
 	std::string m_strScore1;
 	std::string m_strScore2;
 	std::string m_strScore3;
+	std::string m_strScore4;
+	std::string m_strScore5;
 
 private:
 
