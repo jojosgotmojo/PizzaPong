@@ -77,11 +77,11 @@ CLevel::~CLevel()
 
 bool CLevel::Initialise(int _iWidth, int _iHeight)
 {
-    m_iWidth = _iWidth;
-    m_iHeight = _iHeight;
+	m_iWidth = _iWidth;
+	m_iHeight = _iHeight;
 
-    const float fBallVelX = 200.0f;
-    const float fBallVelY = 75.0f;
+	const float fBallVelX = 200.0f;
+	const float fBallVelY = 75.0f;
 
 	m_pBackground = new CBackGround();
 	VALIDATE(m_pBackground->Initialise());
@@ -90,51 +90,54 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pBackground->SetY((float)m_iHeight / 2);
 
 	m_pBall = new CBall();
-    VALIDATE(m_pBall->Initialise(m_iWidth / 4.0f, m_iHeight / 2.0f, -fBallVelX, fBallVelY));
+	VALIDATE(m_pBall->Initialise(m_iWidth / 4.0f, m_iHeight / 2.0f, -fBallVelX, fBallVelY));
 
-    m_pPaddle1 = new CPaddle(0);
+	m_pPaddle1 = new CPaddle(0);
 	m_pPaddle2 = new CPaddle(1);
-    VALIDATE(m_pPaddle1->Initialise());
+	VALIDATE(m_pPaddle1->Initialise());
 	VALIDATE(m_pPaddle2->Initialise());
 
-    // Set the paddle's position to be centered on the x, 
-    // and a little bit up from the bottom of the window.
-    m_pPaddle1->SetX(m_pPaddle1->GetWidth() / 2);
-    m_pPaddle1->SetY(_iHeight / 2);
+	// Set the paddle's position to be centered on the x, 
+	// and a little bit up from the bottom of the window.
+	m_pPaddle1->SetX(m_pPaddle1->GetWidth() / 2);
+	m_pPaddle1->SetY(_iHeight / 2);
 	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
 	m_pPaddle2->SetY(_iHeight / 2);
 
-    const int kiNumBricks = 15;
-    const int kiStartX = m_iWidth /2;
-    const int kiGap = 5;
+	const int kiNumBricks = 45;
+	const int kiStartX = m_iWidth / 2 - 80;
+	const int kiStartY = 30;
+	const int kiGap = 5;
 
 	int iCurrentX = kiStartX;
-    int iCurrentY = 20;
+	int iCurrentY = kiStartY;
 
-    for (int i = 0; i < kiNumBricks; ++i)
-    {
-        CBrick* pBrick = new CBrick();
-        VALIDATE(pBrick->Initialise());
+	for (int i = 0; i < kiNumBricks; ++i)
+	{
+		CBrick* pBrick = new CBrick();
+		VALIDATE(pBrick->Initialise());
 
-        pBrick->SetX(static_cast<float>(iCurrentX));
-        pBrick->SetY(static_cast<float>(iCurrentY));
+		pBrick->SetX(static_cast<float>(iCurrentX));
+		pBrick->SetY(static_cast<float>(iCurrentY));
 
-        iCurrentY += static_cast<int>(pBrick->GetHeight()) + kiGap;
+		iCurrentY += static_cast<int>(pBrick->GetHeight()) + kiGap;
 
-        if (iCurrentX > _iHeight)
-        {
-            iCurrentX = kiStartX;
-            iCurrentY += 20;
-        }
+		if (iCurrentY > _iHeight)
+		{
+			iCurrentY = kiStartY;
+			//iCurrentX = kiStartX;
+			iCurrentX += 30;
 
-        m_vecBricks.push_back(pBrick);
-    }
+		}
 
-    SetBricksRemaining(kiNumBricks);
+		m_vecBricks.push_back(pBrick);
+	}
+
+	SetBricksRemaining(kiNumBricks);
 	m_fpsCounter = new CFPSCounter();
 	VALIDATE(m_fpsCounter->Initialise());
 
-    return (true);
+	return (true);
 }
 
 void CLevel::Draw()

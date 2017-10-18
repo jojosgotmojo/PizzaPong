@@ -28,6 +28,7 @@
 #include "MainMenu.h"
 #include <time.h>
 
+#include <vld.h>
 
 #include "resource.h"
 

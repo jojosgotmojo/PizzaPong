@@ -124,12 +124,13 @@ bool CTournament::Initialise(int _iWidth, int _iHeight)
 	VALIDATE(m_Powerup1->Initialise(iRandomX1, iRandomY1));
 	VALIDATE(m_Powerup2->Initialise(iRandomX2, iRandomY2));
 
-	const int kiNumBricks = 15;
-	const int kiStartX = m_iWidth / 2;
+	const int kiNumBricks = 45;
+	const int kiStartX = m_iWidth / 2 - 80;
+	const int kiStartY = 30;
 	const int kiGap = 5;
 
 	int iCurrentX = kiStartX;
-	int iCurrentY = 20;
+	int iCurrentY = kiStartY;
 
 	for (int i = 0; i < kiNumBricks; ++i)
 	{
@@ -141,10 +142,10 @@ bool CTournament::Initialise(int _iWidth, int _iHeight)
 
 		iCurrentY += static_cast<int>(pBrick->GetHeight()) + kiGap;
 
-		if (iCurrentX > _iHeight)
+		if (iCurrentY > _iHeight)
 		{
-			iCurrentX = kiStartX;
-			iCurrentY += 20;
+			iCurrentY = kiStartY;
+			iCurrentX += 30;
 		}
 
 		m_vecBricks.push_back(pBrick);
@@ -156,7 +157,6 @@ bool CTournament::Initialise(int _iWidth, int _iHeight)
 
 	return (true);
 }
-
 void CTournament::Draw()
 {
 	m_pBackground->Draw();
