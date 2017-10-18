@@ -28,6 +28,7 @@
 #include "MainMenu.h"
 #include <time.h>
 
+
 #include "resource.h"
 
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
