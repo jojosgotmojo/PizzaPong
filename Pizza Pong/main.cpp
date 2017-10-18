@@ -234,6 +234,9 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
+//Testchange
+int iTest = 0;
+
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
 	PlaySound(TEXT("win.wav"), NULL, SND_ASYNC | SND_LOOP);

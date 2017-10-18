@@ -212,12 +212,14 @@ void CTournament::Process(float _fDeltaTick)
 				
 				m_pSnapShot1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
 				m_pSnapShot1 = nullptr;
+				m_Powerup1->SetHit(false);
 				break;
 			}
 			case 1:
 			{
 				m_pSnapShot1->ResetSpeed();
 				m_pSnapShot1 = nullptr;
+				m_Powerup1->SetHit(false);
 				break;
 			}
 			case 2:
@@ -235,12 +237,14 @@ void CTournament::Process(float _fDeltaTick)
 		{
 			m_pSnapShot2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
 			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
 			break;
 		}
 		case 1:
 		{
 			m_pSnapShot2->ResetSpeed();
 			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
 			break;
 		}
 		case 2:
@@ -626,11 +630,32 @@ void CTournament::DrawScore()
 
 	hTmp = (HFONT)SelectObject(hdc, font);
 
+	if (m_dDuration1 >= 0.00 && m_Powerup1->IsHit())
+	{
+		m_strScore4 = "PowerUp: " + ToString(20 - (int)m_dDuration1);
+	}
+	else
+	{
+		m_strScore4 = "PowerUp: -";
+	}
+
+	if (m_dDuration2 > 0.00 && m_Powerup2->IsHit())
+	{
+		m_strScore5 = "PowerUp: " + ToString(20 - (int)m_dDuration2);
+	}
+	else
+	{
+		m_strScore5 = "PowerUp: -";
+	}
+
+	
 
 	TextOutA(hdc, kiX, kiY, m_strScore1.c_str(), static_cast<int>(m_strScore1.size()));
 	TextOutA(hdc, kiX2, kiY2, m_strScore2.c_str(), static_cast<int>(m_strScore2.size()));
 	
 	TextOutA(hdc, kiX3, kiY3, m_strScore3.c_str(), static_cast<int>(m_strScore3.size()));
+	TextOutA(hdc, kiX, kiY2-50, m_strScore4.c_str(), static_cast<int>(m_strScore4.size()));
+	TextOutA(hdc, kiX2 - 20, kiY2-50, m_strScore5.c_str(), static_cast<int>(m_strScore5.size()));
 
 	DeleteObject(SelectObject(hdc, hTmp));
 }
