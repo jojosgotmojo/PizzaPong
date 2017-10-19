@@ -69,6 +69,15 @@ void CBrick::Process(float _fDeltaTick)
     }
 }
 
+double CBrick::CheckTimeElapsed() const
+{
+	high_resolution_clock::time_point Temp = high_resolution_clock::now();
+
+	double dCheck = duration_cast<milliseconds>(Temp - m_tpFirst).count() / 10000.00;
+	return dCheck;
+
+}
+
 void CBrick::SetHit(bool _b)
 {
 	m_tpFirst = high_resolution_clock::now();

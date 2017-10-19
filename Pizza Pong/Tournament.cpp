@@ -444,6 +444,7 @@ void CTournament::ProcessBallPaddle2Collision()
 
 void CTournament::ProcessBallBrickCollision()
 {
+
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
 		if (!m_vecBricks[i]->IsHit())
@@ -464,15 +465,34 @@ void CTournament::ProcessBallBrickCollision()
 				(fBallY + fBallR > fBrickY - fBrickH / 2) &&
 				(fBallY - fBallR < fBrickY + fBrickH / 2))
 			{
-				int iDirection = rand() % 2;
-
 				//Hit the front side of the brick...
-				m_pBall->SetX((fBrickX + fBrickW / 2.0f) - fBallR);
-				m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
-				if (iDirection == 1)
+
+
+				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
-					m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
+					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
+					if (m_pBall->GetVelocityX() >= 1)
+					{
+						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+					}
+					if (m_pBall->GetVelocityX() <= -1)
+					{
+						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+					}
 				}
+				else
+				{
+					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
+					if (m_pBall->GetVelocityX() >= 1)
+					{
+						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+					}
+					if (m_pBall->GetVelocityX() <= -1)
+					{
+						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+					}
+				}
+				
 				m_vecBricks[i]->SetHit(true);
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
@@ -485,16 +505,16 @@ void CTournament::ProcessBallBounds()
 {
 	if (m_pBall->GetY() < 0)
 	{
-		m_pBall->SetY(0);
+		m_pBall->SetY(m_pBall->GetRadius());
 	}
 	else if (m_pBall->GetY() > m_iHeight)
 	{
-		m_pBall->SetY(static_cast<float>(m_iHeight));
+		m_pBall->SetY(m_iHeight - m_pBall->GetRadius());
 	}
 
 	if (m_pBall->GetX() < 0)
 	{
-		m_pBall->SetX(0.0f);
+		m_pBall->SetX(m_pBall->GetRadius());
 	}
 	else if (m_pBall->GetX() > m_iWidth)
 	{
@@ -520,7 +540,7 @@ void CTournament::ProcessBallPowerup1()
 	float fPowerUp2H = m_Powerup2->GetHeight();
 	float fPowerUp2W = m_Powerup2->GetWidth();
 
-	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer != nullptr)
+	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer == m_pPaddle1)
 	{
 		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
 			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
@@ -534,7 +554,35 @@ void CTournament::ProcessBallPowerup1()
 		}
 	}
 
-	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer != nullptr)
+	if (m_iPowerUp1Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer == m_pPaddle1)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			m_tpInitialTimer1 = high_resolution_clock::now();
+			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+			m_Powerup2->SetHit(true);
+			m_pSnapShot1 = m_pLastPlayer;
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer != m_pPaddle2)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			m_tpInitialTimer2 = high_resolution_clock::now();
+			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+			m_Powerup1->SetHit(true);
+			m_pSnapShot2 = m_pLastPlayer;
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer != m_pPaddle2)
 	{
 		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
 			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
@@ -630,7 +678,7 @@ void CTournament::DrawScore()
 
 	hTmp = (HFONT)SelectObject(hdc, font);
 
-	if (m_dDuration1 >= 0.00 && m_Powerup1->IsHit())
+	if (m_dDuration1 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) &&  (m_pSnapShot1 == m_pPaddle1 || m_pSnapShot2 == m_pPaddle1))
 	{
 		m_strScore4 = "PowerUp: " + ToString(20 - (int)m_dDuration1);
 	}
@@ -639,7 +687,7 @@ void CTournament::DrawScore()
 		m_strScore4 = "PowerUp: -";
 	}
 
-	if (m_dDuration2 > 0.00 && m_Powerup2->IsHit())
+	if (m_dDuration2 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot2 == m_pPaddle2 || m_pSnapShot2 == m_pPaddle2))
 	{
 		m_strScore5 = "PowerUp: " + ToString(20 - (int)m_dDuration2);
 	}
