@@ -36,13 +36,16 @@
 #include <vld.h>
 
 
+//#include <vld.h>
 
+//Global variables
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
-const int kiWidth = 1280;
-const int kiHeight = 720;
-HDC hDC;
-HFONT font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+const int g_kiWidth = 1280;
+const int g_kiHeight = 720;
+POINT g_iStart;
+#define WINDOW_CLASS_NAME L"Pizza Pong"
+HFONT g_Font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 
 
@@ -58,152 +61,141 @@ enum GameState
 	QuitGame,
 	Instructions,
 	Instructions2
-
 };
 
-GameState currentState = MainMenu;
-
-POINT iStart;
-#define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
-#define WINDOW_CLASS_NAME_2 L"Main Game Window"
+GameState g_currentState = MainMenu;
 
 LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 {
 	switch (_uiMsg)
 	{
-	case WM_CHAR:
-	{
-		switch (_wParam)
+		case WM_CHAR:
 		{
-		case VK_ESCAPE:
-		{
-			SendMessage(_hWnd, WM_CLOSE, _wParam, _lParam);
-			return (0);
-		}
-		default:break;
-		}
-	}
-	break;
-
-	case WM_CREATE:
-	{
-		SelectFont(hDC, font);
-
-	}
-	case WM_MOUSEMOVE:
-	{
-		int iMouseX = LOWORD(_lParam);
-
-		return (0);
-	}
-	break;
-	case WM_LBUTTONDOWN:
-	{
-
-		iStart.x = LOWORD(_lParam);
-		iStart.y = HIWORD(_lParam);
-
-
-		//Main Menu Buttons
-		if (currentState == MainMenu)
-		{
-			//quick game button
-			if ((iStart.x > 392) && (iStart.x < 840) && (iStart.y > 198) && (iStart.y < 289))
+			switch (_wParam)
 			{
-				currentState = QuickGame;
+			case VK_ESCAPE:
+			{
+				SendMessage(_hWnd, WM_CLOSE, _wParam, _lParam);
+				return (0);
 			}
-
-			//tournament mode button
-			else if ((iStart.x > 316) && (iStart.x < 927) && (iStart.y > 296) && (iStart.y < 380))
-			{
-				currentState = Tournament;
-			}
-
-			//Credits button
-			else if ((iStart.x > 480) && (iStart.x < 742) && (iStart.y > 392) && (iStart.y < 477))
-			{
-				currentState = Credits;
-			}
-
-			//Instructions button
-			else if ((iStart.x > 428) && (iStart.x < 827) && (iStart.y > 488) && (iStart.y < 555))
-			{
-				currentState = Instructions;
-			}
-
-			//quit button
-			else if ((iStart.x > 540) && (iStart.x < 692) && (iStart.y > 571) && (iStart.y < 642))
-			{
-				currentState = QuitGame;
-			}
-
-		}
-		else if (currentState == Credits)
-		{
-			//back button
-			if ((iStart.x > 923) && (iStart.x < 1231) && (iStart.y > 603) && (iStart.y < 687))
-			{
-				currentState = MainMenu;
+			default:break;
 			}
 		}
-		else if (currentState == Instructions)
+		break;
+
+		case WM_CREATE:
 		{
-			//back button
-			if ((iStart.x > 895) && (iStart.x < 1215) && (iStart.y > 585) && (iStart.y < 677))
-			{
-				currentState = MainMenu;
-			}
-			if ((iStart.x > 604) && (iStart.x < 858) && (iStart.y > 579) && (iStart.y < 666))
-			{
-				currentState = Instructions2;
-			}
+			SelectFont(GetDC(_hWnd), g_Font);
+
 		}
-		else if (currentState == Instructions2)
+		//Unused?
+		//case WM_MOUSEMOVE:
+		//{
+		//	int iMouseX = LOWORD(_lParam);
+		//	return (0);
+		//}
+		//break;
+		case WM_LBUTTONDOWN:
 		{
-			//back button
-			if ((iStart.x > 895) && (iStart.x < 1215) && (iStart.y > 585) && (iStart.y < 677))
+			g_iStart.x = LOWORD(_lParam);
+			g_iStart.y = HIWORD(_lParam);
+
+			//Main Menu Buttons
+			if (g_currentState == MainMenu)
 			{
-				currentState = MainMenu;
+				//quick game button
+				if ((g_iStart.x > 392) && (g_iStart.x < 840) && (g_iStart.y > 198) && (g_iStart.y < 289))
+				{
+					g_currentState = QuickGame;
+				}
+
+				//tournament mode button
+				else if ((g_iStart.x > 316) && (g_iStart.x < 927) && (g_iStart.y > 296) && (g_iStart.y < 380))
+				{
+					g_currentState = Tournament;
+				}
+
+				//Credits button
+				else if ((g_iStart.x > 480) && (g_iStart.x < 742) && (g_iStart.y > 392) && (g_iStart.y < 477))
+				{
+					g_currentState = Credits;
+				}
+
+				//Instructions button
+				else if ((g_iStart.x > 428) && (g_iStart.x < 827) && (g_iStart.y > 488) && (g_iStart.y < 555))
+				{
+					g_currentState = Instructions;
+				}
+
+				//quit button
+				else if ((g_iStart.x > 540) && (g_iStart.x < 692) && (g_iStart.y > 571) && (g_iStart.y < 642))
+				{
+					g_currentState = QuitGame;
+				}
+
 			}
-			if ((iStart.x > 604) && (iStart.x < 858) && (iStart.y > 579) && (iStart.y < 666))
+			else if (g_currentState == Credits)
 			{
-				currentState = Instructions;
+				//back button
+				if ((g_iStart.x > 923) && (g_iStart.x < 1231) && (g_iStart.y > 603) && (g_iStart.y < 687))
+				{
+					g_currentState = MainMenu;
+				}
 			}
-		}
+			else if (g_currentState == Instructions)
+			{
+				//back button
+				if ((g_iStart.x > 895) && (g_iStart.x < 1215) && (g_iStart.y > 585) && (g_iStart.y < 677))
+				{
+					g_currentState = MainMenu;
+				}
+				if ((g_iStart.x > 604) && (g_iStart.x < 858) && (g_iStart.y > 579) && (g_iStart.y < 666))
+				{
+					g_currentState = Instructions2;
+				}
+			}
+			else if (g_currentState == Instructions2)
+			{
+				//back button
+				if ((g_iStart.x > 895) && (g_iStart.x < 1215) && (g_iStart.y > 585) && (g_iStart.y < 677))
+				{
+					g_currentState = MainMenu;
+				}
+				if ((g_iStart.x > 604) && (g_iStart.x < 858) && (g_iStart.y > 579) && (g_iStart.y < 666))
+				{
+					g_currentState = Instructions;
+				}
+			}
 			
-	}
-	break;
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-
-		return(0);
-	}
-	break;
-	case WM_CLOSE:
-	{
-		MessageBox(GetActiveWindow(), L"Do you want to exit the game?", L"Close", MB_YESNO);
-		if (IDYES)
+		}
+		break;
+		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
+
+			return(0);
 		}
-		else
+		break;
+		case WM_CLOSE:
 		{
+			MessageBox(GetActiveWindow(), L"Do you want to exit the game?", L"Close", MB_YESNO);
+			if (IDYES)
+			{
+				PostQuitMessage(0);
+			}
+			else
+			{
+				break;
+			}
+		}
+		case WM_QUIT:
+		{
+			g_currentState = QuitGame;
 			break;
 		}
-			
-
-	}
-	case WM_QUIT:
-	{
-		currentState = QuitGame;
 		break;
+		default:break;
 	}
-	break;
-
-	default:break;
-}
-
 	return (DefWindowProc(_hWnd, _uiMsg, _wParam, _lParam));
 }
 
@@ -221,10 +213,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winclass.hbrBackground = static_cast<HBRUSH> (GetStockObject(NULL_BRUSH));
 	winclass.lpszMenuName = NULL;
-
 	winclass.lpszClassName = WINDOW_CLASS_NAME;
-	
-
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
 	if (!RegisterClassEx(&winclass))
@@ -245,11 +234,6 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
-
-
-//Testchange
-int iTest = 0;
-
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
 	/*SoundEffect.InitFmod();
@@ -258,25 +242,23 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 
 	MSG msg;
-	RECT _rect;
 	ZeroMemory(&msg, sizeof(MSG));
 	HWND hwnd1;
-
+	RECT _rect;
 	srand(time(NULL));
 	
-	hwnd1 = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"Pizza Pong");
+	hwnd1 = CreateAndRegisterWindow(_hInstance, g_kiWidth, g_kiHeight, L"Pizza Pong");
 
-	while (currentState != QuitGame)
+	while (g_currentState != QuitGame)
 	{
 		
-		switch (currentState)
+		switch (g_currentState)
 		{
 		case MainMenu:
 		{
 			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
-			
-			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
+			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -288,7 +270,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				{
 					rMain.Draw();
 				}
-				if (currentState != MainMenu)
+				if (g_currentState != MainMenu)
 				{
 					rMain.DestroyInstance();
 				
@@ -302,10 +284,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		{
 			ShowCursor(false);
 			CGame& rGame = CGame::GetInstance(false);
-
 			GetClientRect(hwnd1, &_rect);
 
-			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
+			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
 			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
 			{
 				// Failed
@@ -316,7 +297,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			{
 				if (rGame.GetGameState() == true)
 				{
-					currentState = MainMenu;
+					g_currentState = MainMenu;
 					break;
 				}
 
@@ -330,18 +311,16 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 					rGame.ExecuteOneFrame();
 				}
 			}
-
-			rGame.DestroyInstance();
+			CGame::DestroyInstance();
 			break;
 		}
 		case Tournament:
 		{
 			ShowCursor(false);
 			CGame& rGame = CGame::GetInstance(true);
-
 			GetClientRect(hwnd1, &_rect);
 
-			//if (!rGame.Initialise(_hInstance, hwnd, kiWidth, kiHeight))
+			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
 			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
 			{
 				// Failed
@@ -352,7 +331,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			{
 				if (rGame.GetGameState() == true)
 				{
-					currentState = MainMenu;
+					g_currentState = MainMenu;
 					break;
 				}
 
@@ -366,16 +345,14 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 					rGame.ExecuteOneFrame();
 				}
 			}
-
-			rGame.DestroyInstance();
-			
+			CGame::DestroyInstance();
 			break;
 		}
 		case Credits:
 		{
 			ShowCursor(true);
-			CCredits& rCredits = CCredits::GetInstance();
-			VALIDATE(rCredits.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, kiWidth, kiHeight));
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -387,23 +364,21 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				{
 					rCredits.Draw();
 				}
-				if (currentState != Credits)
+				if (g_currentState != Credits)
 				{
 					rCredits.DestroyInstance();
 					//delete &rCredits;
 					break;
 				}
 			}
-			
-
+			CMainMenu::DestroyInstance();
 			break;
-
 		}
 		case Instructions:
 		{
 			ShowCursor(true);
-			CMainMenu& rInstruct = CMainMenu::GetInstance();
-			VALIDATE(rInstruct.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -415,23 +390,21 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				{
 					rInstruct.Draw();
 				}
-				if (currentState != Instructions)
+				if (g_currentState != Credits)
 				{
 					rInstruct.DestroyInstance();
 					
 					break;
 				}
 			}
-
-
+			CMainMenu::DestroyInstance();
 			break;
-
 		}
 		case Instructions2:
 		{
 			ShowCursor(true);
-			CMainMenu& rInstruct2 = CMainMenu::GetInstance();
-			VALIDATE(rInstruct2.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, kiWidth, kiHeight));
+			CMainMenu& rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -443,7 +416,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				{
 					rInstruct2.Draw();
 				}
-				if (currentState != Instructions2)
+				if (g_currentState != Credits)
 				{
 					rInstruct2.DestroyInstance();
 					//delete &rInstruct2;
@@ -451,9 +424,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 					break;
 				}
 			}
-
+			CMainMenu::DestroyInstance();
 			break;
-
 		}
 		case QuitGame:
 		{

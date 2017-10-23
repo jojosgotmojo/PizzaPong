@@ -41,6 +41,7 @@ public:
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
+	double CheckTimeElapsed() const;
 
     void SetHit(bool _b);
     bool IsHit() const;

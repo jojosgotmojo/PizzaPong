@@ -105,12 +105,12 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pPaddle2->SetY(_iHeight / 2);
 
 	const int kiNumBricks = 45;
-	const int kiStartX = m_iWidth / 2 - 80;
-	const int kiStartY = 30;
+	const int kg_iStartX = m_iWidth / 2 - 80;
+	const int kg_iStartY = 30;
 	const int kiGap = 5;
 
-	int iCurrentX = kiStartX;
-	int iCurrentY = kiStartY;
+	int iCurrentX = kg_iStartX;
+	int iCurrentY = kg_iStartY;
 
 	for (int i = 0; i < kiNumBricks; ++i)
 	{
@@ -124,8 +124,8 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 
 		if (iCurrentY > _iHeight)
 		{
-			iCurrentY = kiStartY;
-			//iCurrentX = kiStartX;
+			iCurrentY = kg_iStartY;
+			//iCurrentX = kg_iStartX;
 			iCurrentX += 30;
 
 		}
