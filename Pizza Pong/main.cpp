@@ -27,6 +27,7 @@
 #include "backbuffer.h"
 #include "MainMenu.h"
 #include <time.h>
+#include "resource.h"
 #include "Credits.h"
 #include "sounds.h"
 
@@ -34,7 +35,7 @@
 
 #include <vld.h>
 
-#include "resource.h"
+
 
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
