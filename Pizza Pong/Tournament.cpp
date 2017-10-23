@@ -25,6 +25,7 @@
 #include "background.h"
 #include "powerup.h"
 #include "resource.h"
+#include "sounds.h"
 
 // This Include
 #include "Tournament.h"
@@ -32,6 +33,8 @@
 // Static Variables
 
 // Static Function Prototypes
+
+CSounds SoundEffect;
 
 // Implementation
 
@@ -511,7 +514,7 @@ void CTournament::ProcessBallBrickCollision()
 			{
 				//Hit the front side of the brick...
 
-
+				SoundEffect.PlaySoundQ("hitSound");
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
 					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
