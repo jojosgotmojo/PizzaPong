@@ -52,7 +52,7 @@ bool CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVe
     return (true);
 }
 
-void CBall::Draw()
+void CBall::Draw() 
 {
     CEntity::Draw();
 }

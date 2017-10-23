@@ -33,7 +33,6 @@
 
 #include "Dependencies\FMOD\fmod.hpp"
 
-#include <vld.h>
 
 
 //#include <vld.h>
@@ -362,11 +361,11 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rCredits.Draw();
+					rMain.Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rCredits.DestroyInstance();
+					rMain.DestroyInstance();
 					//delete &rCredits;
 					break;
 				}
@@ -388,11 +387,11 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rInstruct.Draw();
+					rMain.Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rInstruct.DestroyInstance();
+					rMain.DestroyInstance();
 					
 					break;
 				}
@@ -414,11 +413,11 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rInstruct2.Draw();
+					rMain.Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rInstruct2.DestroyInstance();
+					rMain.DestroyInstance();
 					//delete &rInstruct2;
 
 					break;
