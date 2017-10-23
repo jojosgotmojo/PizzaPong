@@ -18,24 +18,24 @@
 #include "utils.h"
 #include "resource.h"
 
-#include "MainMenu.h"
+#include "Credits.h"
 
 
-HDC CMainMenu::s_hSharedMainMenuDC = 0;
-int CMainMenu::s_iRefCount = 0;
-CMainMenu* CMainMenu::s_pMain = 0;
-CBackBuffer* CMainMenu::m_pBackBuffer = 0;
+HDC CCredits::s_hSharedCreditsDC = 0;
+int CCredits::s_iRefCount = 0;
+CCredits* CCredits::s_pMain = 0;
+CBackBuffer* CCredits::m_pBackBuffer = 0;
 
-CMainMenu::CMainMenu()
+CCredits::CCredits()
 	: m_iX(0)
 	, m_iY(0)
 {
 	++s_iRefCount;
 }
 
-CMainMenu::~CMainMenu()
+CCredits::~CCredits()
 {
-	DeleteObject(m_hMainMenu);
+	DeleteObject(m_hCredits);
 	DeleteObject(m_hMask);
 
 	delete m_pBackBuffer;
@@ -45,17 +45,17 @@ CMainMenu::~CMainMenu()
 
 	if (s_iRefCount == 0)
 	{
-		DeleteDC(s_hSharedMainMenuDC);
-		s_hSharedMainMenuDC = 0;
+		DeleteDC(s_hSharedCreditsDC);
+		s_hSharedCreditsDC = 0;
 	}
 }
 
-CBackBuffer* CMainMenu::GetBackBuffer()
+CBackBuffer* CCredits::GetBackBuffer()
 {
 	return (m_pBackBuffer);
 }
 
-bool CMainMenu::Initialise(int _iMainMenuResourceID, int _iMaskResourceID, HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
+bool CCredits::Initialise(int _iCreditsResourceID, int _iMaskResourceID, HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 {
 	HINSTANCE hInstance = _hInstance;
 	hWnd = _hWnd;
@@ -63,33 +63,33 @@ bool CMainMenu::Initialise(int _iMainMenuResourceID, int _iMaskResourceID, HINST
 	m_pBackBuffer = new CBackBuffer();
 	VALIDATE(m_pBackBuffer->Initialise(hWnd, _iWidth, _iHeight));
 
-	if (!s_hSharedMainMenuDC)
+	if (!s_hSharedCreditsDC)
 	{
-		s_hSharedMainMenuDC = CreateCompatibleDC(NULL);
+		s_hSharedCreditsDC = CreateCompatibleDC(NULL);
 	}
 
-	m_hMainMenu = LoadBitmap(hInstance, MAKEINTRESOURCE(_iMainMenuResourceID));
-	VALIDATE(m_hMainMenu);
+	m_hCredits = LoadBitmap(hInstance, MAKEINTRESOURCE(_iCreditsResourceID));
+	VALIDATE(m_hCredits);
 	m_hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(_iMaskResourceID));
 	VALIDATE(m_hMask);
 
-	GetObject(m_hMainMenu, sizeof(BITMAP), &m_bitmapMainMenu);
+	GetObject(m_hCredits, sizeof(BITMAP), &m_bitmapCredits);
 	GetObject(m_hMask, sizeof(BITMAP), &m_bitmapMask);
 
 	return (true);
 }
 
-CMainMenu& CMainMenu::GetInstance()
+CCredits& CCredits::GetInstance()
 {
 	if (s_pMain == 0)
 	{
-		s_pMain = new CMainMenu();
+		s_pMain = new CCredits();
 	}
 
 	return (*s_pMain);
 }
 
-void CMainMenu::DestroyInstance()
+void CCredits::DestroyInstance()
 {
 	delete s_pMain;
 	s_pMain = 0;
@@ -99,7 +99,7 @@ void CMainMenu::DestroyInstance()
 
 }
 
-void CMainMenu::Draw()
+void CCredits::Draw()
 {
 	m_pBackBuffer->Clear();
 
@@ -113,62 +113,62 @@ void CMainMenu::Draw()
 
 	HDC hDC = CreateCompatibleDC(hWindowDC);
 
-	CBackBuffer* pBackBuffer = CMainMenu::GetInstance().GetBackBuffer();
+	CBackBuffer* pBackBuffer = CCredits::GetInstance().GetBackBuffer();
 
-	HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
+	HGDIOBJ hOldObj = SelectObject(s_hSharedCreditsDC, m_hMask);
 
-	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
+	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedCreditsDC, 0, 0, SRCAND);
 
-	SelectObject(s_hSharedMainMenuDC, m_hMainMenu);
+	SelectObject(s_hSharedCreditsDC, m_hCredits);
 
-	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
+	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedCreditsDC, 0, 0, SRCPAINT);
 
-	SelectObject(s_hSharedMainMenuDC, hOldObj);
+	SelectObject(s_hSharedCreditsDC, hOldObj);
 
 	m_pBackBuffer->Present();
 }
 
-int CMainMenu::GetWidth() const
+int CCredits::GetWidth() const
 {
 	RECT _rect;
 	GetClientRect(hWnd, &_rect);
 	return (_rect.right);
 }
 
-int CMainMenu::GetHeight() const
+int CCredits::GetHeight() const
 {
 	RECT _rect;
 	GetClientRect(hWnd, &_rect);
 	return (_rect.bottom);
 }
 
-int CMainMenu::GetX() const
+int CCredits::GetX() const
 {
 	return (m_iX);
 }
 
-int CMainMenu::GetY() const
+int CCredits::GetY() const
 {
 	return (m_iY);
 }
 
-void CMainMenu::SetX(int _i)
+void CCredits::SetX(int _i)
 {
 	m_iX = _i;
 }
 
-void CMainMenu::SetY(int _i)
+void CCredits::SetY(int _i)
 {
 	m_iY = _i;
 }
 
-void CMainMenu::TranslateRelative(int _iX, int _iY)
+void CCredits::TranslateRelative(int _iX, int _iY)
 {
 	m_iX += _iX;
 	m_iY += _iY;
 }
 
-void CMainMenu::TranslateAbsolute(int _iX, int _iY)
+void CCredits::TranslateAbsolute(int _iX, int _iY)
 {
 	m_iX = _iX;
 	m_iY = _iY;

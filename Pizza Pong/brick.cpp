@@ -17,6 +17,9 @@
 // Local Includes
 #include "resource.h"
 #include "utils.h"
+#include "Dependencies\FMOD\fmod.hpp"
+#include "sounds.h"
+
 
 // This Include
 #include "Brick.h"
@@ -26,6 +29,7 @@
 // Static Function Prototypes
 
 // Implementation
+
 
 CBrick::CBrick()
 : m_bHit(false)
@@ -40,6 +44,7 @@ CBrick::~CBrick()
 
 bool CBrick::Initialise()
 {
+	
     VALIDATE(CEntity::Initialise(IDB_BRICKSPRITE, IDB_BRICKMASK));
 
     return (true);

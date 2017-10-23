@@ -42,6 +42,8 @@ CBackBuffer::~CBackBuffer()
 
     DeleteObject(m_hSurface);
     DeleteObject(m_hDC);
+
+	
 }
 
 bool CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)

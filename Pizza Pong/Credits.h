@@ -14,20 +14,20 @@
 
 #pragma once
 
-#if !defined(__MainMenu_H__)
-#define __MainMenu_H__
+#if !defined(__Credits_H__)
+#define __Credits_H__
 
 // Library Includes
 #include "windows.h"
 #include "backbuffer.h"
 
 // Prototypes
-class CMainMenu
+class CCredits
 {
 	// Member Functions
 public:
-	CMainMenu();
-	~CMainMenu();
+	CCredits();
+	~CCredits();
 
 	bool Initialise(int _iResourceID, int _iMaskResourceID, HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight);
 
@@ -42,7 +42,7 @@ public:
 	void SetY(int _i);
 
 	CBackBuffer* GetBackBuffer();
-	static CMainMenu& GetInstance();
+	static CCredits& GetInstance();
 	static void DestroyInstance();
 
 	void TranslateRelative(int _iX, int _iY);
@@ -52,34 +52,31 @@ protected:
 
 
 private:
-	CMainMenu(const CMainMenu& _kr);
-	//CBackBuffer* m_pBackBuffer;
-
-	// Member Variables
+	CCredits(const CCredits& _kr);
+	
 public:
 
 protected:
-	//Center handle
 
 	HWND hWnd;
 
 	int m_iX;
 	int m_iY;
 
-	HBITMAP m_hMainMenu;
+	HBITMAP m_hCredits;
 	HBITMAP m_hMask;
 
-	BITMAP m_bitmapMainMenu;
+	BITMAP m_bitmapCredits;
 	BITMAP m_bitmapMask;
 
-	static HDC s_hSharedMainMenuDC;
+	static HDC s_hSharedCreditsDC;
 	static int s_iRefCount;
 
 	static CBackBuffer* m_pBackBuffer;
 
-	static CMainMenu* s_pMain;
+	static CCredits* s_pMain;
 private:
 
 };
 
-#endif    // __MainMenu_H__
+#endif    // __Credits_H__

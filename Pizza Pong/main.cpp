@@ -27,6 +27,10 @@
 #include "backbuffer.h"
 #include "MainMenu.h"
 #include <time.h>
+#include "Credits.h"
+#include "sounds.h"
+
+#include "Dependencies\FMOD\fmod.hpp"
 
 #include <vld.h>
 
@@ -39,6 +43,10 @@ const int kiHeight = 720;
 HDC hDC;
 HFONT font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
+
+
+
+//CSounds SoundEffect;
 
 enum GameState
 {
@@ -236,12 +244,17 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 	return (hwnd);
 }
 
+
+
 //Testchange
 int iTest = 0;
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
-	PlaySound(TEXT("win.wav"), NULL, SND_ASYNC | SND_LOOP);
+	/*SoundEffect.InitFmod();
+	SoundEffect.LoadSound();
+	SoundEffect.PlaySoundQ("bgMusic");*/
+
 
 	MSG msg;
 	RECT _rect;
@@ -259,9 +272,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		{
 		case MainMenu:
 		{
-			
 			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
+			
 			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
@@ -276,13 +289,12 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				if (currentState != MainMenu)
 				{
+					rMain.DestroyInstance();
+				
 					break;
 				}
 			}
-			
-			CMainMenu::DestroyInstance();
-
-			
+					
 			break;
 		}
 		case QuickGame:
@@ -318,7 +330,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 
-			CGame::DestroyInstance();
+			rGame.DestroyInstance();
 			break;
 		}
 		case Tournament:
@@ -354,14 +366,15 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 
-			CGame::DestroyInstance();
+			rGame.DestroyInstance();
+			
 			break;
 		}
 		case Credits:
 		{
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, kiWidth, kiHeight));
+			CCredits& rCredits = CCredits::GetInstance();
+			VALIDATE(rCredits.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -371,16 +384,16 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rCredits.Draw();
 				}
 				if (currentState != Credits)
 				{
+					rCredits.DestroyInstance();
+					//delete &rCredits;
 					break;
 				}
 			}
-
-			CMainMenu::DestroyInstance();
-			//return(static_cast<int>(msg.wParam));
+			
 
 			break;
 
@@ -388,8 +401,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		case Instructions:
 		{
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
+			CMainMenu& rInstruct = CMainMenu::GetInstance();
+			VALIDATE(rInstruct.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -399,16 +412,16 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rInstruct.Draw();
 				}
-				if (currentState != Credits)
+				if (currentState != Instructions)
 				{
+					rInstruct.DestroyInstance();
+					
 					break;
 				}
 			}
 
-			CMainMenu::DestroyInstance();
-			//return(static_cast<int>(msg.wParam));
 
 			break;
 
@@ -416,8 +429,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		case Instructions2:
 		{
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, kiWidth, kiHeight));
+			CMainMenu& rInstruct2 = CMainMenu::GetInstance();
+			VALIDATE(rInstruct2.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, kiWidth, kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -427,16 +440,16 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rInstruct2.Draw();
 				}
-				if (currentState != Credits)
+				if (currentState != Instructions2)
 				{
+					rInstruct2.DestroyInstance();
+					//delete &rInstruct2;
+
 					break;
 				}
 			}
-
-			CMainMenu::DestroyInstance();
-			//return(static_cast<int>(msg.wParam));
 
 			break;
 
