@@ -68,7 +68,7 @@ protected:
 	void ProcessBallBounds();
 	void ProcessBallPowerup1();
 	void ProcessBallPowerup2();
-	void ProcessBallPowerup3();
+	bool ProcessBallPowerup3();
 
 	
 	void DrawScore();
@@ -85,6 +85,8 @@ public:
 protected:
 	CBackGround* m_pBackground;
 	CBall* m_pBall;
+	CBall* m_pBall2;
+	CBall* m_pBall3;
 	CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
 	CPaddle* m_pLastPlayer;
