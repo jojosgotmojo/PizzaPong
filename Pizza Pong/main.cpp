@@ -47,6 +47,8 @@ POINT g_iStart;
 HFONT g_Font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 
+CSounds SoundEffect;
+
 
 
 //CSounds SoundEffect;
@@ -235,9 +237,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
-	/*SoundEffect.InitFmod();
-	SoundEffect.LoadSound();
-	SoundEffect.PlaySoundQ("bgMusic");*/
+	SoundEffect.PlaySoundQ("bgMusic");
 
 
 	MSG msg;
@@ -286,7 +286,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			GetClientRect(hwnd1, &_rect);
 
 			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
-			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
+			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
 				return (0);
@@ -320,7 +320,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			GetClientRect(hwnd1, &_rect);
 
 			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
-			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom))
+			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
 				return (0);

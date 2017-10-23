@@ -34,7 +34,7 @@
 
 // Static Function Prototypes
 
-CSounds SoundEffect;
+//CSounds SoundEffect;
 
 // Implementation
 
@@ -87,8 +87,9 @@ CTournament::~CTournament()
 
 }
 
-bool CTournament::Initialise(int _iWidth, int _iHeight)
+bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 {
+	_sound = SoundEffect;
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
@@ -514,7 +515,7 @@ void CTournament::ProcessBallBrickCollision()
 			{
 				//Hit the front side of the brick...
 
-				SoundEffect.PlaySoundQ("hitSound");
+				_sound.PlaySoundQ("hitSound");
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
 					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);

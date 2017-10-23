@@ -23,6 +23,7 @@
 #include <chrono>
 // Local Includes
 #include "clock.h"
+#include "sounds.h"
 
 using namespace std::chrono;
 
@@ -41,7 +42,7 @@ class CGame
 public:
 	virtual ~CGame();
 
-	virtual bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight);
+	virtual bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
