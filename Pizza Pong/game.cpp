@@ -20,6 +20,7 @@
 #include "Tournament.h"
 #include "BackBuffer.h"
 #include "utils.h"
+#include "sounds.h"
 
 // This Include
 #include "Game.h"
@@ -55,7 +56,7 @@ CGame::~CGame()
 	m_pClock = 0;
 }
 
-bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
+bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect)
 {
 	m_hApplicationInstance = _hInstance;
 	m_hMainWindow = _hWnd;
@@ -75,7 +76,7 @@ bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeig
 	else if (m_bIsTournament == true)
 	{
 		m_pTournament = new CTournament();
-		VALIDATE(m_pTournament->Initialise(_iWidth, _iHeight));
+		VALIDATE(m_pTournament->Initialise(_iWidth, _iHeight, SoundEffect));
 	}
 
 	
