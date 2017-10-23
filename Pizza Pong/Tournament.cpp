@@ -264,7 +264,7 @@ void CTournament::Process(float _fDeltaTick)
 			default:break;
 		}
 	}
-	if (m_dDuration2 >= 20.00&& m_pSnapShot2 == m_pPaddle2)
+	if (m_dDuration2 >= 20.00&& m_pSnapShot2 != m_pPaddle2)
 	{
 		switch (m_iPowerUp2Identifier)
 		{
@@ -514,7 +514,7 @@ void CTournament::ProcessBallBrickCollision()
 			{
 				//Hit the front side of the brick...
 
-				
+				SoundEffect.PlaySoundQ("hitSound");
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
 					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
@@ -543,7 +543,6 @@ void CTournament::ProcessBallBrickCollision()
 				m_vecBricks[i]->SetHit(true);
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
-				SoundEffect.PlaySoundQ("hitSound");
 			}
 		}
 	}
