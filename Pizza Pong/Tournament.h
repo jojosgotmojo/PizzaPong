@@ -74,7 +74,6 @@ protected:
 
 	
 	void DrawScore();
-	//void DrawFPS();
 
 	void SetBricksRemaining(int _i);
 
@@ -92,8 +91,6 @@ protected:
 	CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
 	CPaddle* m_pLastPlayer;
-	CPaddle* m_pSnapShot1;
-	CPaddle* m_pSnapShot2;
 	CPowerup* m_Powerup1;
 	CPowerup* m_Powerup2;
 	CTimer* m_pTimer1;
