@@ -22,6 +22,7 @@
 #include <string>
 #include <chrono>
 #include "sounds.h"
+#include "Timer.h"
 
 using namespace std::chrono;
 
@@ -95,6 +96,8 @@ protected:
 	CPaddle* m_pSnapShot2;
 	CPowerup* m_Powerup1;
 	CPowerup* m_Powerup2;
+	CTimer* m_pTimer1;
+	CTimer* m_pTimer2;
 	std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
 	CSounds _sound;
