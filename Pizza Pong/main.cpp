@@ -238,7 +238,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
-	Back.PlaySoundQ();
+	//Back.PlaySoundQ();
 
 
 	MSG msg;
