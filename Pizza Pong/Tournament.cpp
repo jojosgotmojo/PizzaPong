@@ -56,6 +56,8 @@ CTournament::CTournament()
 	, m_iNumberOfGamesPlayed(1)
 	, m_pTimer1(0)
 	, m_pTimer2(0)
+	, m_pTimerP2A(0)
+	, m_pTimerP2B(0)
 {
 
 }
@@ -200,6 +202,14 @@ void CTournament::Draw()
 	{
 		m_pTimer2->Draw();
 	}
+	if (m_pTimerP2A != nullptr)
+	{
+		m_pTimerP2A->Draw();
+	}
+	if (m_pTimerP2B != nullptr)
+	{
+		m_pTimerP2B->Draw();
+	}
 
 	DrawScore();
 	//DrawFPS();
@@ -229,6 +239,14 @@ void CTournament::Process(float _fDeltaTick)
 	{
 		m_pTimer2->Process(_fDeltaTick);
 	}
+	if (m_pTimerP2A != nullptr)
+	{
+		m_pTimerP2A->Process(_fDeltaTick);
+	}
+	if (m_pTimerP2B != nullptr)
+	{
+		m_pTimerP2B->Process(_fDeltaTick);
+	}
 
 
 	m_pPaddle1->Process(_fDeltaTick);
@@ -244,23 +262,26 @@ void CTournament::Process(float _fDeltaTick)
 	ProcessBallPowerup2();
 	ProcessBallPowerup3();
 
-	if (m_dDuration1 >= 20.00 && m_pSnapShot1 == m_pPaddle1)
+	if (m_pTimer1 != nullptr && m_pTimer1->IsActive() == false)
 	{
 		switch (m_iPowerUp1Identifier)
 		{
 			case 0:
 			{
-				
-				m_pSnapShot1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
+				m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
 				m_pSnapShot1 = nullptr;
 				m_Powerup1->SetHit(false);
+				delete m_pTimer1;
+				m_pTimer1 = nullptr;
 				break;
 			}
 			case 1:
 			{
-				m_pSnapShot1->ResetSpeed();
+				m_pPaddle1->ResetSpeed();
 				m_pSnapShot1 = nullptr;
 				m_Powerup1->SetHit(false);
+				delete m_pTimer1;
+				m_pTimer1 = nullptr;
 				break;
 			}
 			case 2:
@@ -277,20 +298,24 @@ void CTournament::Process(float _fDeltaTick)
 				}
 				m_pSnapShot1 = nullptr;
 				m_Powerup1->SetHit(false);
+				delete m_pTimer1;
+				m_pTimer1 = nullptr;
 				break;
 			}
 			default:break;
 		}
 	}
-	if (m_dDuration2 >= 20.00&& m_pSnapShot2 == m_pPaddle2)
+	if (m_pTimer2 != nullptr && m_pTimer2->IsActive() == false)
 	{
 		switch (m_iPowerUp2Identifier)
 		{
 		case 0:
 		{
-			m_pSnapShot2->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
+			m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
 			m_pSnapShot2 = nullptr;
 			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
 			break;
 		}
 		case 1:
@@ -298,6 +323,8 @@ void CTournament::Process(float _fDeltaTick)
 			m_pSnapShot2->ResetSpeed();
 			m_pSnapShot2 = nullptr;
 			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
 			break;
 		}
 		case 2:
@@ -314,12 +341,99 @@ void CTournament::Process(float _fDeltaTick)
 			}
 			m_pSnapShot2 = nullptr;
 			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
 			break;
 		}
 		default:break;
 		}
 	}
-
+	if (m_pTimerP2A != nullptr && m_pTimerP2A->IsActive() == false)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pSnapShot2->ResetSpeed();
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			if (m_pBall3 != nullptr)
+			{
+				delete m_pBall3;
+				m_pBall3 = nullptr;
+			}
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
+	if (m_pTimerP2B != nullptr && m_pTimerP2B->IsActive() == false)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pSnapShot2->ResetSpeed();
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			if (m_pBall3 != nullptr)
+			{
+				delete m_pBall3;
+				m_pBall3 = nullptr;
+			}
+			m_pSnapShot2 = nullptr;
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
 		m_vecBricks[i]->Process(_fDeltaTick);
@@ -610,63 +724,94 @@ void CTournament::ProcessBallPowerup1()
 	float fPowerUp2H = m_Powerup2->GetHeight();
 	float fPowerUp2W = m_Powerup2->GetWidth();
 
-	if (m_iPowerUp1Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer == m_pPaddle1)
+	if (m_iPowerUp1Identifier == 0 && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
 			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
 			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
 			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 		{
-			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
-			m_Powerup1->SetHit(true);
-			m_pTimer1 = new CTimer(0);
-			m_pTimer1->Initialise(20, m_iHeight - 100);
-			m_pSnapShot1 = m_pLastPlayer;
+			if (m_Powerup1->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(0);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(0);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(0);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(0);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_pSnapShot1 = m_pLastPlayer;
+				m_Powerup1->SetHit(true);
+				
+			}
 		}
 	}
 
-	if (m_iPowerUp1Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer == m_pPaddle1)
-	{
-		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
-			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
-			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
-			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
-		{
-			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
-			m_Powerup2->SetHit(true);
-			m_pTimer2 = new CTimer(0);
-			m_pTimer2->Initialise(100, m_iHeight - 100);
-			m_pSnapShot1 = m_pLastPlayer;
-		}
-	}
-
-	if (m_iPowerUp2Identifier == 0 && m_Powerup1->IsHit() == false && m_pLastPlayer != m_pPaddle2)
+	if (m_iPowerUp1Identifier == 0 && m_pLastPlayer != nullptr)
 	{
 		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
 			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
 			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
 			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
 		{
-			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
-			m_Powerup1->SetHit(true);
-			m_pTimer1 = new CTimer(0);
-			m_pTimer1->Initialise(m_iWidth - 80, m_iHeight - 100);
-			m_pSnapShot2 = m_pLastPlayer;
-		}
-	}
+			if (m_Powerup2->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 
-	if (m_iPowerUp2Identifier == 0 && m_Powerup2->IsHit() == false && m_pLastPlayer != m_pPaddle2)
-	{
-		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
-			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
-			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
-			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
-		{
-			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
-			m_Powerup2->SetHit(true);
-			m_pTimer2 = new CTimer(0);
-			m_pTimer2->Initialise(m_iWidth - 160, m_iHeight - 100);
-			m_pSnapShot2 = m_pLastPlayer;
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(0);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(0);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(0);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(0);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_pSnapShot1 = m_pLastPlayer;
+				m_Powerup2->SetHit(true);
+			}
 		}
 	}
 
@@ -810,34 +955,12 @@ void CTournament::DrawScore()
 	SetBkMode(hdc, TRANSPARENT);
 	HFONT hTmp = (HFONT)SelectObject(hdc, font);
 
-	//if (m_dDuration1 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle1 || m_pSnapShot2 == m_pPaddle1))
-	//{
-	//	m_strScore4 = "PowerUp: " + ToString(20 - (int)m_dDuration1);
-	//}
-	//else
-	//{
-	//	m_strScore4 = "PowerUp: -";
-	//}
-
-	//if (m_dDuration2 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle2 || m_pSnapShot2 == m_pPaddle2))
-	//{
-	//	m_strScore5 = "PowerUp: " + ToString(20 - (int)m_dDuration2);
-	//}
-	//else
-	//{
-	//	m_strScore5 = "PowerUp: -";
-	//}
-
 	//Player 1's score
 	TextOutA(hdc, kiX, kiY, m_strScore1.c_str(), static_cast<int>(m_strScore1.size()));
 	//Player 2's score
 	TextOutA(hdc, kiX2, kiY2, m_strScore2.c_str(), static_cast<int>(m_strScore2.size()));
 	//Round number
 	TextOutA(hdc, kiX3, kiY3, m_strScore3.c_str(), static_cast<int>(m_strScore3.size()));
-	////Player 1's powerup
-	//TextOutA(hdc, kiX, kiY2-50, m_strScore4.c_str(), static_cast<int>(m_strScore4.size()));
-	////Player 2's powerup
-	//TextOutA(hdc, kiX2 - 20, kiY2-50, m_strScore5.c_str(), static_cast<int>(m_strScore5.size()));
 
 	DeleteObject(SelectObject(hdc, hTmp));
 }

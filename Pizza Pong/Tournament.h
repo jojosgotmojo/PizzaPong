@@ -98,6 +98,8 @@ protected:
 	CPowerup* m_Powerup2;
 	CTimer* m_pTimer1;
 	CTimer* m_pTimer2;
+	CTimer* m_pTimerP2A;
+	CTimer* m_pTimerP2B;
 	std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
 	CSounds _sound;
@@ -123,8 +125,6 @@ protected:
 	std::string m_strScore1;
 	std::string m_strScore2;
 	std::string m_strScore3;
-	std::string m_strScore4;
-	std::string m_strScore5;
 
 private:
 
