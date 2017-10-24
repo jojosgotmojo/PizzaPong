@@ -24,6 +24,7 @@
 #include "framecounter.h"
 #include "background.h"
 #include <time.h>
+#include "sounds.h"
 
 // This Include
 #include "Level.h"
@@ -75,8 +76,13 @@ CLevel::~CLevel()
 
 }
 
-bool CLevel::Initialise(int _iWidth, int _iHeight)
+bool CLevel::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 {
+	_sound = SoundEffect;
+
+	_sound.InitFmod();
+	_sound.LoadSound();
+
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
@@ -248,6 +254,7 @@ void CLevel::ProcessBallPaddle1Collision()
 
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
+		_sound.PlaySoundQ("hitSound");
 
 
 		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle1Y))
@@ -295,6 +302,7 @@ void CLevel::ProcessBallPaddle2Collision()
 	{
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
+		_sound.PlaySoundQ("hitSound");
 
 		m_pBall->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
 		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's Y direction
@@ -357,6 +365,7 @@ void CLevel::ProcessBallBrickCollision()
 					m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
 				}
                 m_vecBricks[i]->SetHit(true);
+				_sound.PlaySoundQ("hitSound");
 
                 SetBricksRemaining(GetBricksRemaining() - 1);
             }

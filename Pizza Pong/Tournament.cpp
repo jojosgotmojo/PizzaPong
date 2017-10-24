@@ -94,6 +94,9 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
+	_sound.InitFmod();
+	_sound.LoadSound();
+
 	const float fBallVelX = 200.0f;
 	const float fBallVelY = 75.0f;
 
@@ -451,6 +454,8 @@ void CTournament::ProcessBallPaddle1Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -501,6 +506,8 @@ void CTournament::ProcessBallPaddle2Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -555,6 +562,7 @@ void CTournament::ProcessBallBrickCollision()
 				}
 				
 				m_vecBricks[i]->SetHit(true);
+				_sound.PlaySoundQ("hitSound");
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
 				_sound.PlaySoundQ("hitSound");
