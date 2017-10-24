@@ -25,6 +25,7 @@
 #include "background.h"
 #include "powerup.h"
 #include "resource.h"
+#include "sounds.h"
 
 // This Include
 #include "Tournament.h"
@@ -32,6 +33,8 @@
 // Static Variables
 
 // Static Function Prototypes
+
+//CSounds SoundEffect;
 
 // Implementation
 
@@ -51,9 +54,10 @@ CTournament::CTournament()
 	, m_iPlayer1WinCount(0)
 	, m_iPlayer2WinCount(0)
 	, m_iNumberOfGamesPlayed(1)
+	, m_pTimer1(0)
+	, m_pTimer2(0)
 {
-	m_tpInitialTimer1 = high_resolution_clock::now();
-	m_tpInitialTimer2 = high_resolution_clock::now();
+
 }
 
 CTournament::~CTournament()
@@ -84,10 +88,14 @@ CTournament::~CTournament()
 
 }
 
-bool CTournament::Initialise(int _iWidth, int _iHeight)
+bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 {
+	_sound = SoundEffect;
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
+
+	_sound.InitFmod();
+	_sound.LoadSound();
 
 	const float fBallVelX = 200.0f;
 	const float fBallVelY = 75.0f;
@@ -184,6 +192,15 @@ void CTournament::Draw()
 		m_pBall3->Draw();
 	}
 
+	if (m_pTimer1 != nullptr)
+	{
+		m_pTimer1->Draw();
+	}
+	if (m_pTimer2 != nullptr)
+	{
+		m_pTimer2->Draw();
+	}
+
 	DrawScore();
 	//DrawFPS();
 }
@@ -204,6 +221,16 @@ void CTournament::Process(float _fDeltaTick)
 		m_pBall3->Process(_fDeltaTick);
 	}
 
+	if (m_pTimer1 != nullptr)
+	{
+		m_pTimer1->Process(_fDeltaTick);
+	}
+	if (m_pTimer2 != nullptr)
+	{
+		m_pTimer2->Process(_fDeltaTick);
+	}
+
+
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
 	m_Powerup1->Process(_fDeltaTick);
@@ -216,12 +243,6 @@ void CTournament::Process(float _fDeltaTick)
 	ProcessBallPowerup1();
 	ProcessBallPowerup2();
 	ProcessBallPowerup3();
-
-	m_tpCheckTimer1 = high_resolution_clock::now();
-	m_tpCheckTimer2 = high_resolution_clock::now();
-	
-	m_dDuration1 = duration_cast<milliseconds>(m_tpCheckTimer1 - m_tpInitialTimer1).count() / 1000.00;
-	m_dDuration2 = duration_cast<milliseconds>(m_tpCheckTimer2 - m_tpInitialTimer2).count() / 1000.00;
 
 	if (m_dDuration1 >= 20.00 && m_pSnapShot1 == m_pPaddle1)
 	{
@@ -261,7 +282,7 @@ void CTournament::Process(float _fDeltaTick)
 			default:break;
 		}
 	}
-	if (m_dDuration2 >= 20.00&& m_pSnapShot2 != m_pPaddle2)
+	if (m_dDuration2 >= 20.00&& m_pSnapShot2 == m_pPaddle2)
 	{
 		switch (m_iPowerUp2Identifier)
 		{
@@ -433,6 +454,8 @@ void CTournament::ProcessBallPaddle1Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -483,6 +506,8 @@ void CTournament::ProcessBallPaddle2Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -511,7 +536,6 @@ void CTournament::ProcessBallBrickCollision()
 			{
 				//Hit the front side of the brick...
 
-
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
 					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
@@ -538,8 +562,10 @@ void CTournament::ProcessBallBrickCollision()
 				}
 				
 				m_vecBricks[i]->SetHit(true);
+				_sound.PlaySoundQ("hitSound");
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
+				_sound.PlaySoundQ("hitSound");
 			}
 		}
 	}
@@ -591,9 +617,10 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
 			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 		{
-			m_tpInitialTimer1 = high_resolution_clock::now();
 			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
 			m_Powerup1->SetHit(true);
+			m_pTimer1 = new CTimer(0);
+			m_pTimer1->Initialise(20, m_iHeight - 100);
 			m_pSnapShot1 = m_pLastPlayer;
 		}
 	}
@@ -605,9 +632,10 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
 			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 		{
-			m_tpInitialTimer1 = high_resolution_clock::now();
 			m_pLastPlayer->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
 			m_Powerup2->SetHit(true);
+			m_pTimer2 = new CTimer(0);
+			m_pTimer2->Initialise(100, m_iHeight - 100);
 			m_pSnapShot1 = m_pLastPlayer;
 		}
 	}
@@ -619,9 +647,10 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
 			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
 		{
-			m_tpInitialTimer2 = high_resolution_clock::now();
 			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 			m_Powerup1->SetHit(true);
+			m_pTimer1 = new CTimer(0);
+			m_pTimer1->Initialise(m_iWidth - 80, m_iHeight - 100);
 			m_pSnapShot2 = m_pLastPlayer;
 		}
 	}
@@ -633,9 +662,10 @@ void CTournament::ProcessBallPowerup1()
 			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
 			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
 		{
-			m_tpInitialTimer2 = high_resolution_clock::now();
 			m_pLastPlayer->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 			m_Powerup2->SetHit(true);
+			m_pTimer2 = new CTimer(0);
+			m_pTimer2->Initialise(m_iWidth - 160, m_iHeight - 100);
 			m_pSnapShot2 = m_pLastPlayer;
 		}
 	}
@@ -780,23 +810,23 @@ void CTournament::DrawScore()
 	SetBkMode(hdc, TRANSPARENT);
 	HFONT hTmp = (HFONT)SelectObject(hdc, font);
 
-	if (m_dDuration1 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle1 || m_pSnapShot2 == m_pPaddle1))
-	{
-		m_strScore4 = "PowerUp: " + ToString(20 - (int)m_dDuration1);
-	}
-	else
-	{
-		m_strScore4 = "PowerUp: -";
-	}
+	//if (m_dDuration1 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle1 || m_pSnapShot2 == m_pPaddle1))
+	//{
+	//	m_strScore4 = "PowerUp: " + ToString(20 - (int)m_dDuration1);
+	//}
+	//else
+	//{
+	//	m_strScore4 = "PowerUp: -";
+	//}
 
-	if (m_dDuration2 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle2 || m_pSnapShot2 == m_pPaddle2))
-	{
-		m_strScore5 = "PowerUp: " + ToString(20 - (int)m_dDuration2);
-	}
-	else
-	{
-		m_strScore5 = "PowerUp: -";
-	}
+	//if (m_dDuration2 >= 0.00 && (m_Powerup1->IsHit() || m_Powerup2->IsHit()) && (m_pSnapShot1 == m_pPaddle2 || m_pSnapShot2 == m_pPaddle2))
+	//{
+	//	m_strScore5 = "PowerUp: " + ToString(20 - (int)m_dDuration2);
+	//}
+	//else
+	//{
+	//	m_strScore5 = "PowerUp: -";
+	//}
 
 	//Player 1's score
 	TextOutA(hdc, kiX, kiY, m_strScore1.c_str(), static_cast<int>(m_strScore1.size()));
@@ -804,10 +834,10 @@ void CTournament::DrawScore()
 	TextOutA(hdc, kiX2, kiY2, m_strScore2.c_str(), static_cast<int>(m_strScore2.size()));
 	//Round number
 	TextOutA(hdc, kiX3, kiY3, m_strScore3.c_str(), static_cast<int>(m_strScore3.size()));
-	//Player 1's powerup
-	TextOutA(hdc, kiX, kiY2-50, m_strScore4.c_str(), static_cast<int>(m_strScore4.size()));
-	//Player 2's powerup
-	TextOutA(hdc, kiX2 - 20, kiY2-50, m_strScore5.c_str(), static_cast<int>(m_strScore5.size()));
+	////Player 1's powerup
+	//TextOutA(hdc, kiX, kiY2-50, m_strScore4.c_str(), static_cast<int>(m_strScore4.size()));
+	////Player 2's powerup
+	//TextOutA(hdc, kiX2 - 20, kiY2-50, m_strScore5.c_str(), static_cast<int>(m_strScore5.size()));
 
 	DeleteObject(SelectObject(hdc, hTmp));
 }

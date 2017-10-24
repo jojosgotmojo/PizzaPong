@@ -21,6 +21,8 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include "sounds.h"
+#include "Timer.h"
 
 using namespace std::chrono;
 
@@ -45,7 +47,7 @@ public:
 	CTournament();
 	virtual ~CTournament();
 
-	virtual bool Initialise(int _iWidth, int _iHeight);
+	virtual bool Initialise(int _iWidth, int _iHeight, CSounds SoundEffect);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
@@ -94,8 +96,11 @@ protected:
 	CPaddle* m_pSnapShot2;
 	CPowerup* m_Powerup1;
 	CPowerup* m_Powerup2;
+	CTimer* m_pTimer1;
+	CTimer* m_pTimer2;
 	std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
+	CSounds _sound;
 	
 	high_resolution_clock::time_point m_tpInitialTimer1;
 	high_resolution_clock::time_point m_tpInitialTimer2;
