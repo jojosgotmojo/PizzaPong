@@ -71,7 +71,7 @@ bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeig
 	if (m_bIsTournament == false)
 	{
 		m_pLevel = new CLevel();
-		VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight));
+		VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight, SoundEffect));
 	}
 	else if (m_bIsTournament == true)
 	{

@@ -20,6 +20,7 @@
 // Library Includes
 #include <vector>
 #include <string>
+#include "sounds.h"
 
 // Local Includes
 
@@ -41,7 +42,7 @@ public:
     CLevel();
     virtual ~CLevel();
 
-    virtual bool Initialise(int _iWidth, int _iHeight);
+    virtual bool Initialise(int _iWidth, int _iHeight, CSounds _sound);
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
@@ -76,6 +77,7 @@ protected:
 	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;
 	CFPSCounter* m_fpsCounter;
+	CSounds _sound;
 
     int m_iWidth;
     int m_iHeight;

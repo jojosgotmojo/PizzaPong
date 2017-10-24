@@ -93,6 +93,9 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
+	_sound.InitFmod();
+	_sound.LoadSound();
+
 	const float fBallVelX = 200.0f;
 	const float fBallVelY = 75.0f;
 
@@ -265,7 +268,7 @@ void CTournament::Process(float _fDeltaTick)
 			default:break;
 		}
 	}
-	if (m_dDuration2 >= 20.00&& m_pSnapShot2 != m_pPaddle2)
+	if (m_dDuration2 >= 20.00&& m_pSnapShot2 == m_pPaddle2)
 	{
 		switch (m_iPowerUp2Identifier)
 		{
@@ -437,6 +440,8 @@ void CTournament::ProcessBallPaddle1Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -487,6 +492,8 @@ void CTournament::ProcessBallPaddle2Collision()
 			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
@@ -515,7 +522,6 @@ void CTournament::ProcessBallBrickCollision()
 			{
 				//Hit the front side of the brick...
 
-				_sound.PlaySoundQ("hitSound");
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
 					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
@@ -542,6 +548,7 @@ void CTournament::ProcessBallBrickCollision()
 				}
 				
 				m_vecBricks[i]->SetHit(true);
+				_sound.PlaySoundQ("hitSound");
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
 			}

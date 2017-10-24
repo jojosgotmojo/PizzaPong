@@ -81,6 +81,7 @@ protected:
 	bool m_bIsLevelOver;
 	bool m_bIsTournament;
 
+
 	CBackBuffer* m_pBackBuffer;
 
 	//Application data
