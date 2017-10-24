@@ -18,6 +18,7 @@
 #include "resource.h"
 #include "utils.h"
 #include "game.h"
+#include "backbuffer.h"
 
 // This Include
 #include "timer.h"
@@ -89,15 +90,16 @@ void CTimer::Draw()
 		this->SetActive(false);
 	}
 
-	HDC hdc = GetDC(GetActiveWindow());
+
+	HDC hdc = CGame::GetInstance(true).GetBackBuffer()->GetBFDC();
 	HFONT font = CreateFont(46, 20, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 		CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 	SetBkMode(hdc, TRANSPARENT);
 	HFONT hTmp = (HFONT)SelectObject(hdc, font);
 
-	m_TimerString = ToString(m_dDuration);
+	m_TimerString = ToString(20 - (int)m_dDuration);
 
-	TextOutA(hdc, this->GetX() + this->GetWidth() / 2, this->GetY() + this->GetHeight() / 2, m_TimerString.c_str(), static_cast<int>(m_TimerString.size()));
+	TextOutA(hdc, this->GetX(), this->GetY(), m_TimerString.c_str(), static_cast<int>(m_TimerString.size()));
 
 	DeleteObject(SelectObject(hdc, hTmp));
 }
