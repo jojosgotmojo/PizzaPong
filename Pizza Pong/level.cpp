@@ -24,15 +24,22 @@
 #include "background.h"
 #include <time.h>
 #include "sounds.h"
+#include "powerup.h"
+#include "resource.h"
+
 
 // This Include
 #include "Level.h"
+
+#define DEFAULT_BALL_SPEED 75.00
+
 
 CLevel::CLevel()
 : m_iBricksRemaining(0)
 , m_pPaddle1(0)
 , m_pPaddle2(0)
 , m_pBall(0)
+, m_pBall2(0)
 , m_iWidth(0)
 , m_iHeight(0)
 {
@@ -60,6 +67,25 @@ CLevel::~CLevel()
 
 	delete m_pBackground;
 	m_pBackground = 0;
+
+	delete m_pBall;
+	m_pBall = 0;
+
+	delete m_pBall2;
+	m_pBall2 = 0;
+
+	delete m_pTimer1;
+	m_pTimer1 = 0;
+
+	delete m_pTimer2;
+	m_pTimer2 = 0;
+
+	delete m_pTimerP2A;
+	m_pTimerP2A = 0;
+
+	delete m_pTimerP2B;
+	m_pTimerP2B = 0;
+
 
 }
 
@@ -96,6 +122,20 @@ bool CLevel::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	m_pPaddle1->SetY(_iHeight / 2);
 	m_pPaddle2->SetX(m_iWidth - m_pPaddle2->GetWidth() / 2);
 	m_pPaddle2->SetY(_iHeight / 2);
+
+
+	m_iPowerUp1Identifier = rand() % 3;
+	m_iPowerUp2Identifier = rand() % 3;
+
+	int iRandomX1 = rand() % 550 + 50;
+	int iRandomX2 = rand() % 550 + 680;
+	int iRandomY1 = rand() % 660 + 30;
+	int iRandomY2 = rand() % 660 + 30;
+
+	m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+	m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+	VALIDATE(m_Powerup1->Initialise(iRandomX1, iRandomY1));
+	VALIDATE(m_Powerup2->Initialise(iRandomX2, iRandomY2));
 
 	const int kiNumBricks = 45;
 	const int kg_iStartX = m_iWidth / 2 - 80;
@@ -141,7 +181,30 @@ void CLevel::Draw()
     m_pPaddle1->Draw();
 	m_pPaddle2->Draw();
 
+	m_Powerup1->Draw();
+	m_Powerup2->Draw();
+
 	m_pBall->Draw();
+	if (m_pBall2 != nullptr)
+	{
+		m_pBall2->Draw();
+	}
+	if (m_pTimer1 != nullptr)
+	{
+		m_pTimer1->Draw();
+	}
+	if (m_pTimer2 != nullptr)
+	{
+		m_pTimer2->Draw();
+	}
+	if (m_pTimerP2A != nullptr)
+	{
+		m_pTimerP2A->Draw();
+	}
+	if (m_pTimerP2B != nullptr)
+	{
+		m_pTimerP2B->Draw();
+	}
 
     DrawScore();
 }
@@ -153,14 +216,176 @@ void CLevel::Process(float _fDeltaTick)
 	{
 		m_pBall->Process(_fDeltaTick);
 	}
+	if (m_pBall2 != nullptr)
+	{
+		m_pBall2->Process(_fDeltaTick);
+	}
 	
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
-	ProcessBallWallCollision();
-    ProcessBallPaddle1Collision();
-	ProcessBallPaddle2Collision();
-    ProcessBallBrickCollision();
-	ProcessBallBounds();
+	m_Powerup1->Process(_fDeltaTick);
+	m_Powerup2->Process(_fDeltaTick);
+	ProcessBallWallCollision(m_pBall);
+	ProcessBallPaddle1Collision(m_pBall);
+	ProcessBallPaddle2Collision(m_pBall);
+	ProcessBallBrickCollision(m_pBall);
+	ProcessBallBounds(m_pBall);
+
+	if (m_pBall2 != nullptr)
+	{
+		ProcessBallWallCollision(m_pBall2);
+		ProcessBallPaddle1Collision(m_pBall2);
+		ProcessBallPaddle2Collision(m_pBall2);
+		ProcessBallBrickCollision(m_pBall2);
+		ProcessBallBounds(m_pBall2);
+	}
+	ProcessBallPowerup1();
+	ProcessBallPowerup2();
+	ProcessBallPowerup3();
+
+	if (m_pTimer1 != nullptr && m_pTimer1->IsActive() == false)
+	{
+		switch (m_iPowerUp1Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
+			m_Powerup1->SetHit(false);
+			delete m_pTimer1;
+			m_pTimer1 = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pPaddle1->ResetSpeed();
+			m_Powerup1->SetHit(false);
+			delete m_pTimer1;
+			m_pTimer1 = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			
+			m_Powerup1->SetHit(false);
+			delete m_pTimer1;
+			m_pTimer1 = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
+	if (m_pTimer2 != nullptr && m_pTimer2->IsActive() == false)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
+			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pPaddle1->ResetSpeed();
+			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			m_Powerup2->SetHit(false);
+			delete m_pTimer2;
+			m_pTimer2 = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
+	if (m_pTimerP2A != nullptr && m_pTimerP2A->IsActive() == false)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pPaddle2->ResetSpeed();
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2A;
+			m_pTimerP2A = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
+	if (m_pTimerP2B != nullptr && m_pTimerP2B->IsActive() == false)
+	{
+		switch (m_iPowerUp2Identifier)
+		{
+		case 0:
+		{
+			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		case 1:
+		{
+			m_pPaddle2->ResetSpeed();
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		case 2:
+		{
+			if (m_pBall2 != nullptr)
+			{
+				delete m_pBall2;
+				m_pBall2 = nullptr;
+			}
+			
+			m_Powerup2->SetHit(false);
+			delete m_pTimerP2B;
+			m_pTimerP2B = nullptr;
+			break;
+		}
+		default:break;
+		}
+	}
 
     for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
     {
@@ -174,99 +399,107 @@ CPaddle* CLevel::GetPaddle() const
     return (m_pPaddle1);
 }
 
-void CLevel::ProcessBallWallCollision()
+void CLevel::ProcessBallWallCollision(CBall* ballnum)
 {
-    float fBallX = m_pBall->GetX();
-    float fBallY = m_pBall->GetY();
-    float fBallW = m_pBall->GetWidth();
-    float fBallH = m_pBall->GetHeight();
 
-    float fHalfBallW = fBallW / 2;
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
+	float fBallW = ballnum->GetWidth();
+	float fBallH = ballnum->GetHeight();
+
+	float fHalfBallW = fBallW / 2;
 	float fHalfBallH = fBallH / 2;
 
-    if (fBallX < fHalfBallW) //represents the situation when the ball has hit the left wall
-    {
+	if (fBallX < fHalfBallW) //represents the situation when the ball has hit the left wall
+	{
+		
+		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f * 3));
+		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
+
 		CGame::GetInstance(false).GameOverLostPlayer1();
-		m_pBall->SetX(static_cast<float>(m_iWidth));
-       // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity
-    }
-    else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
-    {
+		
+	}
+	else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
+	{
+	
+		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f));
+		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
+
 		CGame::GetInstance(false).GameOverLostPlayer2();
-		m_pBall->SetX(static_cast<float>(m_iWidth));
-       // m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //reverse the ball's x velocity direction
-    }
+		
+	}
 
 	if (fBallY < fHalfBallH) //represents the situation when the ball has hit the top wall
-    {
-        m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
-    }
+	{
+		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
+	}
 
 	if (fBallY  > m_iHeight - fHalfBallH)  //represents the situation when the ball has hit the bottom wall
-    {
-        m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
-    }
+	{
+		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
+	}
 
 }
 
-void CLevel::ProcessBallPaddle1Collision()
+void CLevel::ProcessBallPaddle1Collision(CBall* ballnum)
 {
-    float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-    float fBallX = m_pBall->GetX();
-    float fBallY = m_pBall->GetY(); 
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
-    float fPaddle1X = m_pPaddle1->GetX();
-    float fPaddle1Y = m_pPaddle1->GetY();
+	float fPaddle1X = m_pPaddle1->GetX();
+	float fPaddle1Y = m_pPaddle1->GetY();
 
-    float fPaddle1H = m_pPaddle1->GetHeight();
-    float fPaddle1W = m_pPaddle1->GetWidth();
+	float fPaddle1H = m_pPaddle1->GetHeight();
+	float fPaddle1W = m_pPaddle1->GetWidth();
 
-    if ((fBallX + fBallR > fPaddle1X - fPaddle1W / 2) && //ball.right > paddle.left
-        (fBallX - fBallR < fPaddle1X + fPaddle1W / 2) && //ball.left < paddle.right
-        (fBallY + fBallR > fPaddle1Y - fPaddle1H / 2) && //ball.bottom > paddle.top
-        (fBallY - fBallR < fPaddle1Y + fPaddle1H / 2))  //ball.top < paddle.bottom
-    {
-        m_pBall->SetX((fPaddle1X + fPaddle1W / 2) + fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
-        m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's X direction
-		
+	if ((fBallX + fBallR > fPaddle1X - fPaddle1W / 2) && //ball.right > paddle.left
+		(fBallX - fBallR < fPaddle1X + fPaddle1W / 2) && //ball.left < paddle.right
+		(fBallY + fBallR > fPaddle1Y - fPaddle1H / 2) && //ball.bottom > paddle.top
+		(fBallY - fBallR < fPaddle1Y + fPaddle1H / 2))  //ball.top < paddle.bottom
+	{
+		ballnum->SetVelocityX(ballnum->GetVelocityX() * -1); //Reverse ball's X direction
+
 
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
-		_sound.PlaySoundQ("hitSound");
 
 
-		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle1Y))
+		if ((ballnum->GetVelocityY() < 0) && (ballnum->GetY() > fPaddle1Y))
 		{
-			if (m_pBall->GetVelocityY() < -225.00f)
+			if (ballnum->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-225.00f);
+				ballnum->SetVelocityY(-225.00f);
 			}
 
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle1Y))
+		else if ((ballnum->GetVelocityY() > 0) && (ballnum->GetY() < fPaddle1Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 225.00f)
+			if (ballnum->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(225.00f);
+				ballnum->SetVelocityY(225.00f);
 			}
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
 		else
 		{
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
-    }
+		m_pLastPlayer = m_pPaddle1;
+		_sound.PlaySoundQ("hitSound");
+
+	}
 }
 
-void CLevel::ProcessBallPaddle2Collision()
+void CLevel::ProcessBallPaddle2Collision(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
 	float fPaddle2X = m_pPaddle2->GetX();
 	float fPaddle2Y = m_pPaddle2->GetY();
@@ -281,97 +514,459 @@ void CLevel::ProcessBallPaddle2Collision()
 	{
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
-		_sound.PlaySoundQ("hitSound");
 
-		m_pBall->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
-		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's Y direction
+		ballnum->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
+		ballnum->SetVelocityX(ballnum->GetVelocityX() * -1); //Reverse ball's Y direction
 
-		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle2Y))
+		if ((ballnum->GetVelocityY() < 0) && (ballnum->GetY() > fPaddle2Y))
 		{
-			if (m_pBall->GetVelocityY() < -225.00f)
+			if (ballnum->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-225.00f);
+				ballnum->SetVelocityY(-225.00f);
 			}
 
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle2Y))
+		else if ((ballnum->GetVelocityY() > 0) && (ballnum->GetY() < fPaddle2Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 225.00f)
+			if (ballnum->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(225.00f);
+				ballnum->SetVelocityY(225.00f);
 			}
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
 		else
 		{
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
-		
+		m_pLastPlayer = m_pPaddle2;
+		_sound.PlaySoundQ("hitSound");
+
 	}
 }
 
-void CLevel::ProcessBallBrickCollision()
+void CLevel::ProcessBallBrickCollision(CBall* ballnum)
 {
-    for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-    {
-        if (!m_vecBricks[i]->IsHit())
-        {
-            float fBallR = m_pBall->GetRadius();
 
-            float fBallX = m_pBall->GetX();
-            float fBallY = m_pBall->GetY(); 
+	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
+	{
+		if (!m_vecBricks[i]->IsHit())
+		{
+			float fBallR = ballnum->GetRadius();
 
-            float fBrickX = m_vecBricks[i]->GetX();
-            float fBrickY = m_vecBricks[i]->GetY();
+			float fBallX = ballnum->GetX();
+			float fBallY = ballnum->GetY();
 
-            float fBrickH = m_vecBricks[i]->GetHeight();
-            float fBrickW = m_vecBricks[i]->GetWidth();
+			float fBrickX = m_vecBricks[i]->GetX();
+			float fBrickY = m_vecBricks[i]->GetY();
 
-            if ((fBallX + fBallR > fBrickX - fBrickW / 2) &&
-                (fBallX - fBallR < fBrickX + fBrickW / 2) &&
-                (fBallY + fBallR > fBrickY - fBrickH / 2) &&
-                (fBallY - fBallR < fBrickY + fBrickH / 2))
-            {
-				int iDirection = rand() % 2;
+			float fBrickH = m_vecBricks[i]->GetHeight();
+			float fBrickW = m_vecBricks[i]->GetWidth();
 
-                //Hit the front side of the brick...
-                m_pBall->SetX((fBrickX + fBrickW / 2.0f) - fBallR);
-                m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
-				if (iDirection == 1)
+			if ((fBallX + fBallR > fBrickX - fBrickW / 2) &&
+				(fBallX - fBallR < fBrickX + fBrickW / 2) &&
+				(fBallY + fBallR > fBrickY - fBrickH / 2) &&
+				(fBallY - fBallR < fBrickY + fBrickH / 2))
+			{
+				//Hit the front side of the brick...
+
+				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
-					m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
+					ballnum->SetVelocityX(ballnum->GetVelocityX() * 1);
+					if (ballnum->GetVelocityX() >= 1)
+					{
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+					}
+					if (ballnum->GetVelocityX() <= -1)
+					{
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+					}
 				}
-                m_vecBricks[i]->SetHit(true);
+				else
+				{
+					ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
+					if (ballnum->GetVelocityX() >= 1)
+					{
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+					}
+					if (ballnum->GetVelocityX() <= -1)
+					{
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+					}
+				}
+
+				m_vecBricks[i]->SetHit(true);
 				_sound.PlaySoundQ("hitSound");
 
-                SetBricksRemaining(GetBricksRemaining() - 1);
-            }
-        }
-    }
+				SetBricksRemaining(GetBricksRemaining() - 1);
+				_sound.PlaySoundQ("hitSound");
+			}
+		}
+	}
 }
 
-void CLevel::ProcessBallBounds()
+void CLevel::ProcessBallBounds(CBall* ballnum)
 {
-	if (m_pBall->GetY() < 0)
-    {
-        m_pBall->SetY(0);
-    }
-	else if (m_pBall->GetY() > m_iHeight)
-    {
-        m_pBall->SetY(static_cast<float>(m_iHeight));
-    }
+	if (ballnum->GetY() < 0)
+	{
+		ballnum->SetY(ballnum->GetRadius());
+	}
+	else if (ballnum->GetY() > m_iHeight)
+	{
+		ballnum->SetY(m_iHeight - ballnum->GetRadius());
+	}
 
-    if (m_pBall->GetX() < 0)
-    {
-        m_pBall->SetX(0.0f);
-    }
-    else if (m_pBall->GetX() > m_iWidth)
-    {
-        /*CGame::GetInstance().GameOverLost();
-        m_pBall->SetX(static_cast<float>(m_iWidth));*/
-    }
+	if (ballnum->GetX() < 0)
+	{
+		ballnum->SetX(ballnum->GetRadius());
+	}
+	else if (ballnum->GetX() > m_iWidth)
+	{
+		/*CGame::GetInstance().GameOverLost();
+		ballnum->SetX(static_cast<float>(m_iWidth));*/
+	}
+}
+
+void CLevel::ProcessBallPowerup1()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPowerUp1X = m_Powerup1->GetX();
+	float fPowerUp1Y = m_Powerup1->GetY();
+	float fPowerUp2X = m_Powerup2->GetX();
+	float fPowerUp2Y = m_Powerup2->GetY();
+
+	float fPowerUp1H = m_Powerup1->GetHeight();
+	float fPowerUp1W = m_Powerup1->GetWidth();
+	float fPowerUp2H = m_Powerup2->GetHeight();
+	float fPowerUp2W = m_Powerup2->GetWidth();
+
+	if (m_iPowerUp1Identifier == 0 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			if (m_Powerup1->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(0);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(0);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(0);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(0);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_Powerup1->SetHit(true);
+
+			}
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 0 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			if (m_Powerup2->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(0);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(0);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(0);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(0);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_Powerup2->SetHit(true);
+			}
+		}
+	}
+
+}
+
+void CLevel::ProcessBallPowerup2()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPowerUp1X = m_Powerup1->GetX();
+	float fPowerUp1Y = m_Powerup1->GetY();
+	float fPowerUp2X = m_Powerup2->GetX();
+	float fPowerUp2Y = m_Powerup2->GetY();
+
+	float fPowerUp1H = m_Powerup1->GetHeight();
+	float fPowerUp1W = m_Powerup1->GetWidth();
+	float fPowerUp2H = m_Powerup2->GetHeight();
+	float fPowerUp2W = m_Powerup2->GetWidth();
+
+	if (m_iPowerUp1Identifier == 1 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			if (m_Powerup1->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->SpeedUp();
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(1);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(1);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->SpeedUp();
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(1);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(1);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+			}
+			m_Powerup1->SetHit(true);
+		}
+	}
+
+	if (m_iPowerUp2Identifier == 1 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			if (m_Powerup2->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					m_pPaddle1->SpeedUp();
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(1);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(1);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					m_pPaddle2->SpeedUp();
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(1);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(1);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_Powerup2->SetHit(true);
+			}
+		}
+	}
+}
+
+bool CLevel::ProcessBallPowerup3()
+{
+	float fBallR = m_pBall->GetRadius();
+
+	float fBallX = m_pBall->GetX();
+	float fBallY = m_pBall->GetY();
+
+	float fPowerUp1X = m_Powerup1->GetX();
+	float fPowerUp1Y = m_Powerup1->GetY();
+	float fPowerUp2X = m_Powerup2->GetX();
+	float fPowerUp2Y = m_Powerup2->GetY();
+
+	float fPowerUp1H = m_Powerup1->GetHeight();
+	float fPowerUp1W = m_Powerup1->GetWidth();
+	float fPowerUp2H = m_Powerup2->GetHeight();
+	float fPowerUp2W = m_Powerup2->GetWidth();
+
+	if (m_iPowerUp1Identifier == 2 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		{
+			if (m_Powerup1->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					if (m_pBall2 == nullptr)
+					{
+						m_pBall2 = new CBall();
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+					}
+					
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(2);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(2);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					if (m_pBall2 == nullptr)
+					{
+						m_pBall2 = new CBall();
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+					}
+					
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(2);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(2);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+			}
+			m_Powerup1->SetHit(true);
+		}
+	}
+	if (m_iPowerUp2Identifier == 2 && m_pLastPlayer != nullptr)
+	{
+		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		{
+			if (m_Powerup2->IsHit() == false)
+			{
+				if (m_pLastPlayer == m_pPaddle1)
+				{
+					if (m_pBall2 == nullptr)
+					{
+						m_pBall2 = new CBall();
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+					}
+					
+
+					if (m_pTimer1 == nullptr)
+					{
+						m_pTimer1 = new CTimer(2);
+						m_pTimer1->Initialise(20, m_iHeight - 100);
+					}
+					else if (m_pTimer1 != nullptr)
+					{
+						m_pTimer2 = new CTimer(2);
+						m_pTimer2->Initialise(100, m_iHeight - 100);
+					}
+				}
+				if (m_pLastPlayer == m_pPaddle2)
+				{
+					if (m_pBall2 == nullptr)
+					{
+						m_pBall2 = new CBall();
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+					}
+					
+
+					if (m_pTimerP2A == nullptr)
+					{
+						m_pTimerP2A = new CTimer(2);
+						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+					}
+					else if (m_pTimerP2A != nullptr)
+					{
+						m_pTimerP2B = new CTimer(2);
+						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+					}
+				}
+				m_Powerup2->SetHit(true);
+			}
+		}
+	}
+
+	return (true);
 }
 
 int CLevel::GetBricksRemaining() const
@@ -382,7 +977,6 @@ int CLevel::GetBricksRemaining() const
 void CLevel::SetBricksRemaining(int _i)
 {
     m_iBricksRemaining = _i;
-    UpdateScoreText();
 }
 
 void CLevel::DrawScore()
@@ -393,14 +987,7 @@ void CLevel::DrawScore()
     const int kiY = m_iHeight - 14;
 	SetBkMode(hdc, TRANSPARENT);
     
-    TextOutA(hdc, kiX, kiY, m_strScore.c_str(), static_cast<int>(m_strScore.size()));
 }
 
-void CLevel::UpdateScoreText()
-{
-    m_strScore = "Bricks Remaining: ";
-
-    m_strScore += ToString(GetBricksRemaining());
-}
 
 

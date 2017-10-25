@@ -21,11 +21,17 @@
 #include <vector>
 #include <string>
 #include "sounds.h"
+#include "powerup.h"
+#include "Timer.h"
 
 class CBall;
 class CPaddle;
 class CBrick;
 class CBackGround;
+class CPowerup;
+
+using namespace std::chrono;
+
 
 class CLevel
 {
@@ -43,13 +49,14 @@ public:
     int GetBricksRemaining() const;
 
 protected:
-    void ProcessBallWallCollision();
-    void ProcessBallPaddle1Collision();
-	void ProcessBallPaddle2Collision();
-    void ProcessBallBrickCollision();
-    void ProcessBallBounds();
-
-    void UpdateScoreText();
+	void ProcessBallWallCollision(CBall* ballnum);
+	void ProcessBallPaddle1Collision(CBall* ballnum);
+	void ProcessBallPaddle2Collision(CBall* ballnum);
+	void ProcessBallBrickCollision(CBall* ballnum);
+	void ProcessBallBounds(CBall* ballnum);
+	void ProcessBallPowerup1();
+	void ProcessBallPowerup2();
+	bool ProcessBallPowerup3();
     void DrawScore();
 
     void SetBricksRemaining(int _i);
@@ -60,17 +67,37 @@ private:
 protected:
 	CBackGround* m_pBackground;
     CBall* m_pBall;
+	CBall* m_pBall2;
     CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;
 	CSounds _sound;
+	CPaddle* m_pLastPlayer;
+	CPowerup* m_Powerup1;
+	CPowerup* m_Powerup2;
+	CTimer* m_pTimer1;
+	CTimer* m_pTimer2;
+	CTimer* m_pTimerP2A;
+	CTimer* m_pTimerP2B;
 
-    int m_iWidth;
-    int m_iHeight;
+	high_resolution_clock::time_point m_tpInitialTimer1;
+	high_resolution_clock::time_point m_tpInitialTimer2;
+	high_resolution_clock::time_point m_tpCheckTimer1;
+	high_resolution_clock::time_point m_tpCheckTimer2;
+	double m_dDuration1;
+	double m_dDuration2;
 
-    int m_iBricksRemaining;
+	int m_iPowerUp1Identifier;
+	int m_iPowerUp2Identifier;
+	int m_iPlayer1WinCount;
+	int m_iPlayer2WinCount;
+	int m_iNumberOfGamesPlayed;
 
-    std::string m_strScore;
+	int m_iWidth;
+	int m_iHeight;
+
+	int m_iBricksRemaining;
+
 };
 
 #endif    // __LEVEL_H__
