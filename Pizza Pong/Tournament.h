@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: Tournament.h
+// Description	: header file for tournament instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -21,31 +21,24 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include "sounds.h"
+#include "Timer.h"
 
 using namespace std::chrono;
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CBall;
 class CPaddle;
 class CBrick;
-class CFPSCounter;
 class CBackGround;
 class CPowerup;
 
 class CTournament
 {
-	// Member Functions
 public:
 	CTournament();
 	virtual ~CTournament();
 
-	virtual bool Initialise(int _iWidth, int _iHeight);
+	virtual bool Initialise(int _iWidth, int _iHeight, CSounds SoundEffect);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
@@ -61,39 +54,37 @@ public:
 	int GetBricksRemaining() const;
 
 protected:
-	void ProcessBallWallCollision();
-	void ProcessBallPaddle1Collision();
-	void ProcessBallPaddle2Collision();
-	void ProcessBallBrickCollision();
-	void ProcessBallBounds();
-	void ProcessBallPowerup1();
-	void ProcessBallPowerup2();
-	void ProcessBallPowerup3();
-
-	
+	void ProcessBallWallCollision(CBall* ballnum);
+	void ProcessBallPaddle1Collision(CBall* ballnum);
+	void ProcessBallPaddle2Collision(CBall* ballnum);
+	void ProcessBallBrickCollision(CBall* ballnum);
+	void ProcessBallBounds(CBall* ballnum);
+	void ProcessBallPowerup1(CBall* ballnum);
+	void ProcessBallPowerup2(CBall* ballnum);
+	bool ProcessBallPowerup3(CBall* ballnum);
 	void DrawScore();
-	//void DrawFPS();
 
 	void SetBricksRemaining(int _i);
 
 private:
 	CTournament(const CTournament& _kr);
 
-	// Member Variables
-public:
-
 protected:
 	CBackGround* m_pBackground;
 	CBall* m_pBall;
+	CBall* m_pBall2;
+	CBall* m_pBall3;
 	CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
 	CPaddle* m_pLastPlayer;
-	CPaddle* m_pSnapShot1;
-	CPaddle* m_pSnapShot2;
 	CPowerup* m_Powerup1;
 	CPowerup* m_Powerup2;
+	CTimer* m_pTimer1;
+	CTimer* m_pTimer2;
+	CTimer* m_pTimerP2A;
+	CTimer* m_pTimerP2B;
 	std::vector<CBrick*> m_vecBricks;
-	CFPSCounter* m_fpsCounter;
+	CSounds _sound;
 	
 	high_resolution_clock::time_point m_tpInitialTimer1;
 	high_resolution_clock::time_point m_tpInitialTimer2;
@@ -116,8 +107,6 @@ protected:
 	std::string m_strScore1;
 	std::string m_strScore2;
 	std::string m_strScore3;
-
-private:
 
 };
 

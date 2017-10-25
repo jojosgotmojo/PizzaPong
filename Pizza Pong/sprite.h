@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: sprite.h
+// Description	: header for the sprite instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -20,16 +20,9 @@
 // Library Includes
 #include "windows.h"
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CSprite
 {
-    // Member Functions
+
 public:
     CSprite();
     ~CSprite();
@@ -50,17 +43,11 @@ public:
     void TranslateRelative(int _iX, int _iY);
     void TranslateAbsolute(int _iX, int _iY);
 
-protected:
-
-
 private:
     CSprite(const CSprite& _kr);
 
-    // Member Variables
-public:
-
 protected:
-    //Center handle
+   
     int m_iX;
     int m_iY;
 
@@ -72,8 +59,6 @@ protected:
 
     static HDC s_hSharedSpriteDC;
     static int s_iRefCount;
-
-private:
 
 };
 

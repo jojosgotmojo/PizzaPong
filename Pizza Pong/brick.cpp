@@ -6,26 +6,21 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: brick.cpp
+// Description	: Brick instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
 
-// Library Includes
 
 // Local Includes
 #include "resource.h"
 #include "utils.h"
+#include "Dependencies\FMOD\fmod.hpp"
+#include "sounds.h"
 
 // This Include
 #include "Brick.h"
-
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
 
 CBrick::CBrick()
 : m_bHit(false)
@@ -67,6 +62,15 @@ void CBrick::Process(float _fDeltaTick)
     {
         CEntity::Process(_fDeltaTick);
     }
+}
+
+double CBrick::CheckTimeElapsed() const
+{
+	high_resolution_clock::time_point Temp = high_resolution_clock::now();
+
+	double dCheck = duration_cast<milliseconds>(Temp - m_tpFirst).count() / 10000.00;
+	return dCheck;
+
 }
 
 void CBrick::SetHit(bool _b)

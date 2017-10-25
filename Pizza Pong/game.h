@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: game.h
+// Description	: header file for the game instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -23,25 +23,21 @@
 #include <chrono>
 // Local Includes
 #include "clock.h"
+#include "sounds.h"
 
 using namespace std::chrono;
 
-// Types
-
-// Constants
-
-// Prototypes
 class CLevel;
 class CBackBuffer;
 class CTournament;
 
 class CGame
 {
-	// Member Functions
+
 public:
 	virtual ~CGame();
 
-	virtual bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight);
+	virtual bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
@@ -60,18 +56,14 @@ public:
 	void GameOverLostPlayer2();
 	void GameOverWinner();
 
-	// Singleton Methods
 	static CGame& GetInstance(bool _bMode);
 	static void DestroyInstance();
 
-protected:
 
 private:
 	CGame(bool _bMode);
 	CGame(const CGame& _kr);
 
-	// Member Variables
-public:
 
 protected:
 	CClock* m_pClock;
@@ -82,14 +74,10 @@ protected:
 
 	CBackBuffer* m_pBackBuffer;
 
-	//Application data
 	HINSTANCE m_hApplicationInstance;
 	HWND m_hMainWindow;
 
-	// Singleton Instance
 	static CGame* s_pGame;
-
-private:
 
 };
 

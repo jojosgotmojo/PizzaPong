@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: backbuffer.h
+// Description	: Header file for backbuffer
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -20,13 +20,6 @@
 // Library Includes
 #include <Windows.h>
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CBackBuffer
 {
     // Member Functions
@@ -44,13 +37,9 @@ public:
     void Clear();
     void Present();
 
-protected:
 
 private:
     CBackBuffer(const CBackBuffer& _kr);
-
-    // Member Variables
-public:
 
 protected:
     HWND m_hWnd;
@@ -59,8 +48,6 @@ protected:
     HBITMAP m_hOldObject;
     int m_iWidth;
     int m_iHeight;
-
-private:
 
 };
 

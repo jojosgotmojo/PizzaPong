@@ -6,36 +6,28 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: MainMenu.cpp
+// Description	: Menu windows initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
 
-// Library Includes
-
-// Local Includes
 #include "Game.h"
 #include "BackBuffer.h"
 #include "utils.h"
 #include "resource.h"
 
-// This include
 #include "MainMenu.h"
 
-// Static Variables
+
 HDC CMainMenu::s_hSharedMainMenuDC = 0;
 int CMainMenu::s_iRefCount = 0;
 CMainMenu* CMainMenu::s_pMain = 0;
-
-// Static Function Prototypes
-
-// Implementation
+CBackBuffer* CMainMenu::m_pBackBuffer = 0;
 
 CMainMenu::CMainMenu()
 	: m_iX(0)
 	, m_iY(0)
-	, m_pBackBuffer(0)
 {
 	++s_iRefCount;
 }
@@ -64,8 +56,6 @@ CBackBuffer* CMainMenu::GetBackBuffer()
 
 bool CMainMenu::Initialise(int _iMainMenuResourceID, int _iMaskResourceID, HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 {
-	
-
 	HINSTANCE hInstance = _hInstance;
 	hWnd = _hWnd;
 
@@ -102,6 +92,10 @@ void CMainMenu::DestroyInstance()
 {
 	delete s_pMain;
 	s_pMain = 0;
+
+	delete m_pBackBuffer;
+	m_pBackBuffer = 0;
+
 }
 
 void CMainMenu::Draw()
@@ -123,23 +117,14 @@ void CMainMenu::Draw()
 	HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
 
 	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
-	//BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
-
 
 	SelectObject(s_hSharedMainMenuDC, m_hMainMenu);
 
 	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
-	//BitBlt(hDC, iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
-
 
 	SelectObject(s_hSharedMainMenuDC, hOldObj);
 
 	m_pBackBuffer->Present();
-}
-
-void CMainMenu::Process(float _fDeltaTick)
-{
-
 }
 
 int CMainMenu::GetWidth() const

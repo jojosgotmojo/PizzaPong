@@ -6,13 +6,11 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: game.cpp
+// Description	: Game instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
-
-// Library Includes
 
 // Local Includes
 #include "Clock.h"
@@ -20,6 +18,7 @@
 #include "Tournament.h"
 #include "BackBuffer.h"
 #include "utils.h"
+#include "sounds.h"
 
 // This Include
 #include "Game.h"
@@ -27,9 +26,6 @@
 // Static Variables
 CGame* CGame::s_pGame = 0;
 
-// Static Function Prototypes
-
-// Implementation
 
 CGame::CGame(bool _bMode)
 	: m_pLevel(0)
@@ -55,7 +51,7 @@ CGame::~CGame()
 	m_pClock = 0;
 }
 
-bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
+bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect)
 {
 	m_hApplicationInstance = _hInstance;
 	m_hMainWindow = _hWnd;
@@ -70,12 +66,12 @@ bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeig
 	if (m_bIsTournament == false)
 	{
 		m_pLevel = new CLevel();
-		VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight));
+		VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight, SoundEffect));
 	}
 	else if (m_bIsTournament == true)
 	{
 		m_pTournament = new CTournament();
-		VALIDATE(m_pTournament->Initialise(_iWidth, _iHeight));
+		VALIDATE(m_pTournament->Initialise(_iWidth, _iHeight, SoundEffect));
 	}
 
 	

@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: utils.h
+// Description	: header for utils
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -20,13 +20,6 @@
 // Library Includes
 #include <strstream>
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 
 #define VALIDATE(a) if (!a) return (false)
 

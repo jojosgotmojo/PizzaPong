@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: level.h
+// Description	: header file for level instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -20,28 +20,26 @@
 // Library Includes
 #include <vector>
 #include <string>
+#include "sounds.h"
+#include "powerup.h"
+#include "Timer.h"
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CBall;
 class CPaddle;
 class CBrick;
-class CFPSCounter;
 class CBackGround;
+class CPowerup;
+
+using namespace std::chrono;
+
 
 class CLevel
 {
-    // Member Functions
 public:
     CLevel();
     virtual ~CLevel();
 
-    virtual bool Initialise(int _iWidth, int _iHeight);
+    virtual bool Initialise(int _iWidth, int _iHeight, CSounds _sound);
 
     virtual void Draw();
     virtual void Process(float _fDeltaTick);
@@ -51,40 +49,54 @@ public:
     int GetBricksRemaining() const;
 
 protected:
-    void ProcessBallWallCollision();
-    void ProcessBallPaddle1Collision();
-	void ProcessBallPaddle2Collision();
-    void ProcessBallBrickCollision();
-    void ProcessBallBounds();
-
-    void UpdateScoreText();
+	void ProcessBallWallCollision(CBall* ballnum);
+	void ProcessBallPaddle1Collision(CBall* ballnum);
+	void ProcessBallPaddle2Collision(CBall* ballnum);
+	void ProcessBallBrickCollision(CBall* ballnum);
+	void ProcessBallBounds(CBall* ballnum);
+	void ProcessBallPowerup1();
+	void ProcessBallPowerup2();
+	bool ProcessBallPowerup3();
     void DrawScore();
-	void DrawFPS();
 
     void SetBricksRemaining(int _i);
 
 private:
     CLevel(const CLevel& _kr);
 
-    // Member Variables
-public:
-
 protected:
 	CBackGround* m_pBackground;
     CBall* m_pBall;
+	CBall* m_pBall2;
     CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;
-	CFPSCounter* m_fpsCounter;
+	CSounds _sound;
+	CPaddle* m_pLastPlayer;
+	CPowerup* m_Powerup1;
+	CPowerup* m_Powerup2;
+	CTimer* m_pTimer1;
+	CTimer* m_pTimer2;
+	CTimer* m_pTimerP2A;
+	CTimer* m_pTimerP2B;
 
-    int m_iWidth;
-    int m_iHeight;
+	high_resolution_clock::time_point m_tpInitialTimer1;
+	high_resolution_clock::time_point m_tpInitialTimer2;
+	high_resolution_clock::time_point m_tpCheckTimer1;
+	high_resolution_clock::time_point m_tpCheckTimer2;
+	double m_dDuration1;
+	double m_dDuration2;
 
-    int m_iBricksRemaining;
+	int m_iPowerUp1Identifier;
+	int m_iPowerUp2Identifier;
+	int m_iPlayer1WinCount;
+	int m_iPlayer2WinCount;
+	int m_iNumberOfGamesPlayed;
 
-    std::string m_strScore;
+	int m_iWidth;
+	int m_iHeight;
 
-private:
+	int m_iBricksRemaining;
 
 };
 
