@@ -252,11 +252,20 @@ void CTournament::Process(float _fDeltaTick)
 	m_pPaddle2->Process(_fDeltaTick);
 	m_Powerup1->Process(_fDeltaTick);
 	m_Powerup2->Process(_fDeltaTick);
-	ProcessBallWallCollision();
-	ProcessBallPaddle1Collision();
-	ProcessBallPaddle2Collision();
-	ProcessBallBrickCollision();
-	ProcessBallBounds();
+	ProcessBallWallCollision(m_pBall);
+	ProcessBallPaddle1Collision(m_pBall);
+	ProcessBallPaddle2Collision(m_pBall);
+	ProcessBallBrickCollision(m_pBall);
+	ProcessBallBounds(m_pBall);
+	
+	if (m_pBall2 != nullptr)
+	{
+		ProcessBallWallCollision(m_pBall2);
+		ProcessBallPaddle1Collision(m_pBall2);
+		ProcessBallPaddle2Collision(m_pBall2);
+		ProcessBallBrickCollision(m_pBall2);
+		ProcessBallBounds(m_pBall2);
+	}
 	ProcessBallPowerup1();
 	ProcessBallPowerup2();
 	ProcessBallPowerup3();
@@ -461,12 +470,13 @@ CPaddle* CTournament::GetPaddle() const
 	return (m_pPaddle1);
 }
 
-void CTournament::ProcessBallWallCollision()
+void CTournament::ProcessBallWallCollision(CBall* ballnum)
 {
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-	float fBallW = m_pBall->GetWidth();
-	float fBallH = m_pBall->GetHeight();
+
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
+	float fBallW = ballnum->GetWidth();
+	float fBallH = ballnum->GetHeight();
 
 	float fHalfBallW = fBallW / 2;
 	float fHalfBallH = fBallH / 2;
@@ -475,8 +485,8 @@ void CTournament::ProcessBallWallCollision()
 	{
 		this->IncrementWinsPlayer2();
 		this->UpdateScoreText();
-		m_pBall->SetX(static_cast<float>(m_iWidth / 4.0f * 3));
-		m_pBall->SetVelocityY(DEFAULT_BALL_SPEED);
+		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f * 3));
+		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 		if (this->GetNumberOfGamesPlayed() >= 11)
 		{
 			CGame::GetInstance(true).GameOverWinner();
@@ -486,8 +496,8 @@ void CTournament::ProcessBallWallCollision()
 	{
 		this->IncrementWinsPlayer1();
 		this->UpdateScoreText();
-		m_pBall->SetX(static_cast<float>(m_iWidth / 4.0f));
-		m_pBall->SetVelocityY(DEFAULT_BALL_SPEED);
+		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f));
+		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		if ((this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() > this->GetNumberOfWinsPlayer2())) || (this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() < this->GetNumberOfWinsPlayer2())))
 		{
@@ -497,22 +507,22 @@ void CTournament::ProcessBallWallCollision()
 
 	if (fBallY < fHalfBallH) //represents the situation when the ball has hit the top wall
 	{
-		m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
+		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
 	}
 
 	if (fBallY  > m_iHeight - fHalfBallH)  //represents the situation when the ball has hit the bottom wall
 	{
-		m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1); //reverse the ball's y velocity
+		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
 	}
 
 }
 
-void CTournament::ProcessBallPaddle1Collision()
+void CTournament::ProcessBallPaddle1Collision(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
 	float fPaddle1X = m_pPaddle1->GetX();
 	float fPaddle1Y = m_pPaddle1->GetY();
@@ -525,34 +535,34 @@ void CTournament::ProcessBallPaddle1Collision()
 		(fBallY + fBallR > fPaddle1Y - fPaddle1H / 2) && //ball.bottom > paddle.top
 		(fBallY - fBallR < fPaddle1Y + fPaddle1H / 2))  //ball.top < paddle.bottom
 	{
-		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's X direction
+		ballnum->SetVelocityX(ballnum->GetVelocityX() * -1); //Reverse ball's X direction
 
 
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
 
 
-		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle1Y))
+		if ((ballnum->GetVelocityY() < 0) && (ballnum->GetY() > fPaddle1Y))
 		{
-			if (m_pBall->GetVelocityY() < -225.00f)
+			if (ballnum->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-225.00f);
+				ballnum->SetVelocityY(-225.00f);
 			}
 
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle1Y))
+		else if ((ballnum->GetVelocityY() > 0) && (ballnum->GetY() < fPaddle1Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 225.00f)
+			if (ballnum->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(225.00f);
+				ballnum->SetVelocityY(225.00f);
 			}
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
 		else
 		{
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
 		_sound.PlaySoundQ("hitSound");
@@ -560,12 +570,12 @@ void CTournament::ProcessBallPaddle1Collision()
 	}
 }
 
-void CTournament::ProcessBallPaddle2Collision()
+void CTournament::ProcessBallPaddle2Collision(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
 	float fPaddle2X = m_pPaddle2->GetX();
 	float fPaddle2Y = m_pPaddle2->GetY();
@@ -581,30 +591,30 @@ void CTournament::ProcessBallPaddle2Collision()
 		int iRand = rand() % 1 + 9;
 		float ReducedValue = static_cast<float>(iRand) / 10;
 
-		m_pBall->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
-		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1); //Reverse ball's Y direction
+		ballnum->SetX((fPaddle2X - fPaddle2W / 2) - fBallR);  //Set the ball.bottom = paddle.top; to prevent the ball from going through the paddle!
+		ballnum->SetVelocityX(ballnum->GetVelocityX() * -1); //Reverse ball's Y direction
 
-		if ((m_pBall->GetVelocityY() < 0) && (m_pBall->GetY() > fPaddle2Y))
+		if ((ballnum->GetVelocityY() < 0) && (ballnum->GetY() > fPaddle2Y))
 		{
-			if (m_pBall->GetVelocityY() < -225.00f)
+			if (ballnum->GetVelocityY() < -225.00f)
 			{
-				m_pBall->SetVelocityY(-225.00f);
+				ballnum->SetVelocityY(-225.00f);
 			}
 
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
-		else if ((m_pBall->GetVelocityY() > 0) && (m_pBall->GetY() < fPaddle2Y))
+		else if ((ballnum->GetVelocityY() > 0) && (ballnum->GetY() < fPaddle2Y))
 		{
 
-			if (m_pBall->GetVelocityY() > 225.00f)
+			if (ballnum->GetVelocityY() > 225.00f)
 			{
-				m_pBall->SetVelocityY(225.00f);
+				ballnum->SetVelocityY(225.00f);
 			}
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (-1 - ReducedValue)); //Reverse ball's Y direction
 		}
 		else
 		{
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * (1 + ReducedValue));
+			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
 		_sound.PlaySoundQ("hitSound");
@@ -612,17 +622,17 @@ void CTournament::ProcessBallPaddle2Collision()
 	}
 }
 
-void CTournament::ProcessBallBrickCollision()
+void CTournament::ProcessBallBrickCollision(CBall* ballnum)
 {
 
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
 		if (!m_vecBricks[i]->IsHit())
 		{
-			float fBallR = m_pBall->GetRadius();
+			float fBallR = ballnum->GetRadius();
 
-			float fBallX = m_pBall->GetX();
-			float fBallY = m_pBall->GetY();
+			float fBallX = ballnum->GetX();
+			float fBallY = ballnum->GetY();
 
 			float fBrickX = m_vecBricks[i]->GetX();
 			float fBrickY = m_vecBricks[i]->GetY();
@@ -639,26 +649,26 @@ void CTournament::ProcessBallBrickCollision()
 
 				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
 				{
-					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * 1);
-					if (m_pBall->GetVelocityX() >= 1)
+					ballnum->SetVelocityX(ballnum->GetVelocityX() * 1);
+					if (ballnum->GetVelocityX() >= 1)
 					{
-						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
 					}
-					if (m_pBall->GetVelocityX() <= -1)
+					if (ballnum->GetVelocityX() <= -1)
 					{
-						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
 					}
 				}
 				else
 				{
-					m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
-					if (m_pBall->GetVelocityX() >= 1)
+					ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
+					if (ballnum->GetVelocityX() >= 1)
 					{
-						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
 					}
-					if (m_pBall->GetVelocityX() <= -1)
+					if (ballnum->GetVelocityX() <= -1)
 					{
-						m_pBall->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
 					}
 				}
 				
@@ -672,25 +682,25 @@ void CTournament::ProcessBallBrickCollision()
 	}
 }
 
-void CTournament::ProcessBallBounds()
+void CTournament::ProcessBallBounds(CBall* ballnum)
 {
-	if (m_pBall->GetY() < 0)
+	if (ballnum->GetY() < 0)
 	{
-		m_pBall->SetY(m_pBall->GetRadius());
+		ballnum->SetY(ballnum->GetRadius());
 	}
-	else if (m_pBall->GetY() > m_iHeight)
+	else if (ballnum->GetY() > m_iHeight)
 	{
-		m_pBall->SetY(m_iHeight - m_pBall->GetRadius());
+		ballnum->SetY(m_iHeight - ballnum->GetRadius());
 	}
 
-	if (m_pBall->GetX() < 0)
+	if (ballnum->GetX() < 0)
 	{
-		m_pBall->SetX(m_pBall->GetRadius());
+		ballnum->SetX(ballnum->GetRadius());
 	}
-	else if (m_pBall->GetX() > m_iWidth)
+	else if (ballnum->GetX() > m_iWidth)
 	{
 		/*CGame::GetInstance().GameOverLost();
-		m_pBall->SetX(static_cast<float>(m_iWidth));*/
+		ballnum->SetX(static_cast<float>(m_iWidth));*/
 	}
 }
 

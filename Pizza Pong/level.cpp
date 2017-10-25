@@ -144,7 +144,6 @@ void CLevel::Draw()
 	m_pBall->Draw();
 
     DrawScore();
-	DrawFPS();
 }
 
 void CLevel::Process(float _fDeltaTick)

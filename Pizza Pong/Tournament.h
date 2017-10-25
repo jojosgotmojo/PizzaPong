@@ -54,11 +54,11 @@ public:
 	int GetBricksRemaining() const;
 
 protected:
-	void ProcessBallWallCollision();
-	void ProcessBallPaddle1Collision();
-	void ProcessBallPaddle2Collision();
-	void ProcessBallBrickCollision();
-	void ProcessBallBounds();
+	void ProcessBallWallCollision(CBall* ballnum);
+	void ProcessBallPaddle1Collision(CBall* ballnum);
+	void ProcessBallPaddle2Collision(CBall* ballnum);
+	void ProcessBallBrickCollision(CBall* ballnum);
+	void ProcessBallBounds(CBall* ballnum);
 	void ProcessBallPowerup1();
 	void ProcessBallPowerup2();
 	bool ProcessBallPowerup3();

@@ -60,7 +60,7 @@ void CEntity::Process(float _fDeltaTick)
     m_pSprite->Process(_fDeltaTick);
 }
 
-float  CEntity::GetX() const
+float CEntity::GetX() const
 {
     return (m_fX);
 }
