@@ -416,6 +416,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f * 3));
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
+		_sound.PlaySoundQ("WinSound");
 		CGame::GetInstance(false).GameOverLostPlayer1();
 		
 	}
@@ -425,6 +426,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetX(static_cast<float>(m_iWidth / 4.0f));
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
+		_sound.PlaySoundQ("WinSound");
 		CGame::GetInstance(false).GameOverLostPlayer2();
 		
 	}
@@ -489,7 +491,7 @@ void CLevel::ProcessBallPaddle1Collision(CBall* ballnum)
 			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
-		_sound.PlaySoundQ("hitSound");
+		_sound.PlaySoundQ("PaddleHit");
 
 	}
 }
@@ -541,7 +543,7 @@ void CLevel::ProcessBallPaddle2Collision(CBall* ballnum)
 			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
-		_sound.PlaySoundQ("hitSound");
+		_sound.PlaySoundQ("PaddleHit");
 
 	}
 }
@@ -685,6 +687,7 @@ void CLevel::ProcessBallPowerup1()
 					}
 				}
 				m_Powerup1->SetHit(true);
+				_sound.PlaySoundQ("PowerupStart");
 
 			}
 		}
@@ -729,6 +732,8 @@ void CLevel::ProcessBallPowerup1()
 						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
 					}
 				}
+				_sound.PlaySoundQ("PowerupStart");
+
 				m_Powerup2->SetHit(true);
 			}
 		}
@@ -794,6 +799,8 @@ void CLevel::ProcessBallPowerup2()
 				}
 			}
 			m_Powerup1->SetHit(true);
+			_sound.PlaySoundQ("PowerupStart");
+
 		}
 	}
 
@@ -836,6 +843,8 @@ void CLevel::ProcessBallPowerup2()
 						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
 					}
 				}
+				_sound.PlaySoundQ("PowerupStart");
+
 				m_Powerup2->SetHit(true);
 			}
 		}
@@ -910,6 +919,8 @@ bool CLevel::ProcessBallPowerup3()
 				}
 			}
 			m_Powerup1->SetHit(true);
+			_sound.PlaySoundQ("PowerupStart");
+
 		}
 	}
 	if (m_iPowerUp2Identifier == 2 && m_pLastPlayer != nullptr)
@@ -961,6 +972,8 @@ bool CLevel::ProcessBallPowerup3()
 						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
 					}
 				}
+				_sound.PlaySoundQ("PowerupStart");
+
 				m_Powerup2->SetHit(true);
 			}
 		}

@@ -489,6 +489,8 @@ void CTournament::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 		if (this->GetNumberOfGamesPlayed() >= 11)
 		{
+			_sound.PlaySoundQ("WinSound");
+
 			CGame::GetInstance(true).GameOverWinner();
 		}
 	}
@@ -501,6 +503,8 @@ void CTournament::ProcessBallWallCollision(CBall* ballnum)
 
 		if ((this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() > this->GetNumberOfWinsPlayer2())) || (this->GetNumberOfGamesPlayed() >= 11 && (this->GetNumberOfWinsPlayer1() < this->GetNumberOfWinsPlayer2())))
 		{
+			_sound.PlaySoundQ("WinSound");
+
 			CGame::GetInstance(true).GameOverWinner();
 		}
 	}
@@ -565,7 +569,7 @@ void CTournament::ProcessBallPaddle1Collision(CBall* ballnum)
 			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle1;
-		_sound.PlaySoundQ("hitSound");
+		_sound.PlaySoundQ("PaddleHit");
 
 	}
 }
@@ -617,7 +621,7 @@ void CTournament::ProcessBallPaddle2Collision(CBall* ballnum)
 			ballnum->SetVelocityY(ballnum->GetVelocityY() * (1 + ReducedValue));
 		}
 		m_pLastPlayer = m_pPaddle2;
-		_sound.PlaySoundQ("hitSound");
+		_sound.PlaySoundQ("PaddleHit");
 
 	}
 }
@@ -676,7 +680,6 @@ void CTournament::ProcessBallBrickCollision(CBall* ballnum)
 				_sound.PlaySoundQ("hitSound");
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
-				_sound.PlaySoundQ("hitSound");
 			}
 		}
 	}
@@ -761,7 +764,8 @@ void CTournament::ProcessBallPowerup1()
 					}
 				}
 				m_Powerup1->SetHit(true);
-				
+				_sound.PlaySoundQ("PowerupStart");
+
 			}
 		}
 	}
@@ -806,6 +810,8 @@ void CTournament::ProcessBallPowerup1()
 					}
 				}
 				m_Powerup2->SetHit(true);
+				_sound.PlaySoundQ("PowerupStart");
+
 			}
 		}
 	}
@@ -870,6 +876,8 @@ void CTournament::ProcessBallPowerup2()
 				}
 			}
 			m_Powerup1->SetHit(true);
+			_sound.PlaySoundQ("PowerupStart");
+
 		}
 	}
 
@@ -913,6 +921,8 @@ void CTournament::ProcessBallPowerup2()
 					}
 				}
 				m_Powerup2->SetHit(true);
+				_sound.PlaySoundQ("PowerupStart");
+
 			}
 		}
 	}
@@ -994,6 +1004,8 @@ bool CTournament::ProcessBallPowerup3()
 				}
 			}
 			m_Powerup1->SetHit(true);
+			_sound.PlaySoundQ("PowerupStart");
+
 		}
 	}
 	if (m_iPowerUp2Identifier == 2 && m_pLastPlayer != nullptr)
@@ -1054,6 +1066,8 @@ bool CTournament::ProcessBallPowerup3()
 					}
 				}
 				m_Powerup2->SetHit(true);
+				_sound.PlaySoundQ("PowerupStart");
+
 			}
 		}
 	}

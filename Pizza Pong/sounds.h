@@ -21,12 +21,15 @@ class CSounds
 {
 	public:
 	FMOD::System* _audio;
+
 	FMOD::Sound* hitSound;
-	
+	FMOD::Sound* paddleHit;
+	FMOD::Sound* WinSound;
+	FMOD::Sound* PowerupStart;
+	FMOD::Sound* PowerupEnd;
+
 	FMOD::Channel* channel;
 	FMOD_RESULT result;
-
-
 
 	bool InitFmod()
 	{
@@ -46,16 +49,44 @@ class CSounds
 	const bool LoadSound()
 	{
 		result = _audio->createSound("Sounds/hitsound.mp3", FMOD_DEFAULT, 0, &hitSound);
+		result = _audio->createSound("Sounds/hitsound.mp3", FMOD_DEFAULT, 0, &PowerupEnd);
+		result = _audio->createSound("Sounds/hitsound.mp3", FMOD_DEFAULT, 0, &PowerupStart);
+		result = _audio->createSound("Sounds/hitsound.mp3", FMOD_DEFAULT, 0, &paddleHit);
+		result = _audio->createSound("Sounds/hitsound.mp3", FMOD_DEFAULT, 0, &WinSound);
 
 		return true;
 	}
 
 		
 
-	const bool PlaySoundQ(std::string Music)
+	const bool PlaySoundQ(std::string Sound)
 	{
-		
-		_audio->playSound(hitSound, 0, false, &channel);
+		if (Sound == "hitSound")
+		{
+			_audio->playSound(hitSound, 0, false, &channel);
+
+		}
+		else if (Sound == "PowerupEnd")
+		{
+			_audio->playSound(PowerupEnd, 0, false, &channel);
+
+		}
+		else if (Sound == "PowerupStart")
+		{
+			_audio->playSound(PowerupStart, 0, false, &channel);
+
+		}
+		else if (Sound == "PaddleHit")
+		{
+			_audio->playSound(paddleHit, 0, false, &channel);
+
+		}
+		else if (Sound == "WinSound")
+		{
+			_audio->playSound(WinSound, 0, false, &channel);
+
+		}
+
 	
 		return true;
 	}
