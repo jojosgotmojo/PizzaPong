@@ -128,10 +128,10 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	m_iPowerUp1Identifier = rand() % 3;
 	m_iPowerUp2Identifier = rand() % 3;
 
-	int iRandomX1 = rand() % 550 + 50;
+	int iRandomX1 = rand() % 510 + 50;
 	int iRandomX2 = rand() % 550 + 680;
-	int iRandomY1 = rand() % 660 + 30;
-	int iRandomY2 = rand() % 660 + 30;
+	int iRandomY1 = rand() % 640 + 50;
+	int iRandomY2 = rand() % 640 + 50;
 
 	m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
 	m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
@@ -139,7 +139,7 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	VALIDATE(m_Powerup2->Initialise(iRandomX2, iRandomY2));
 
 	const int kiNumBricks = 45;
-	const int kg_iStartX = m_iWidth / 2 - 80;
+	const int kg_iStartX = m_iWidth / 2 - 52;
 	const int kg_iStartY = 30;
 	const int kiGap = 5;
 
@@ -181,8 +181,16 @@ void CTournament::Draw()
 	m_pPaddle1->Draw();
 	m_pPaddle2->Draw();
 
-	m_Powerup1->Draw();
-	m_Powerup2->Draw();
+	if (m_Powerup1 != nullptr)
+	{
+		m_Powerup1->Draw();
+	}
+	if (m_Powerup2 != nullptr)
+	{
+		m_Powerup2->Draw();
+	}
+
+
 
 	m_pBall->Draw();
 	if (m_pBall2 != nullptr)
@@ -250,14 +258,23 @@ void CTournament::Process(float _fDeltaTick)
 
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
-	m_Powerup1->Process(_fDeltaTick);
-	m_Powerup2->Process(_fDeltaTick);
+	if (m_Powerup1 != nullptr)
+	{
+		m_Powerup1->Process(_fDeltaTick);
+	}
+	if (m_Powerup2 != nullptr)
+	{
+		m_Powerup2->Process(_fDeltaTick);
+	}
 	ProcessBallWallCollision(m_pBall);
 	ProcessBallPaddle1Collision(m_pBall);
 	ProcessBallPaddle2Collision(m_pBall);
 	ProcessBallBrickCollision(m_pBall);
 	ProcessBallBounds(m_pBall);
-	
+	ProcessBallPowerup1(m_pBall);
+	ProcessBallPowerup2(m_pBall);
+	ProcessBallPowerup3(m_pBall);
+
 	if (m_pBall2 != nullptr)
 	{
 		ProcessBallWallCollision(m_pBall2);
@@ -265,19 +282,48 @@ void CTournament::Process(float _fDeltaTick)
 		ProcessBallPaddle2Collision(m_pBall2);
 		ProcessBallBrickCollision(m_pBall2);
 		ProcessBallBounds(m_pBall2);
+		ProcessBallPowerup1(m_pBall2);
+		ProcessBallPowerup2(m_pBall2);
+		ProcessBallPowerup3(m_pBall2);
 	}
-	ProcessBallPowerup1();
-	ProcessBallPowerup2();
-	ProcessBallPowerup3();
+	if (m_pBall3 != nullptr)
+	{
+		ProcessBallWallCollision(m_pBall3);
+		ProcessBallPaddle1Collision(m_pBall3);
+		ProcessBallPaddle2Collision(m_pBall3);
+		ProcessBallBrickCollision(m_pBall3);
+		ProcessBallBounds(m_pBall3);
+		ProcessBallPowerup1(m_pBall3);
+		ProcessBallPowerup2(m_pBall3);
+		ProcessBallPowerup3(m_pBall3);
+	}
+
+
+	int iRandomX1 = rand() % 550 + 50;
+	int iRandomX2 = rand() % 550 + 680;
+	int iRandomY1 = rand() % 660 + 30;
+	int iRandomY2 = rand() % 660 + 30;
 
 	if (m_pTimer1 != nullptr && m_pTimer1->IsActive() == false)
 	{
+
 		switch (m_iPowerUp1Identifier)
 		{
 			case 0:
 			{
 				m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
-				m_Powerup1->SetHit(false);
+				if (m_Powerup1 == nullptr)
+				{
+					m_iPowerUp1Identifier = rand() % 3;
+					m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+					m_Powerup1->Initialise(iRandomX1, iRandomY1);
+				}
+				else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+				{
+					m_iPowerUp2Identifier = rand() % 3;
+					m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+					m_Powerup2->Initialise(iRandomX2, iRandomY2);
+				}
 				delete m_pTimer1;
 				m_pTimer1 = nullptr;
 				break;
@@ -285,7 +331,18 @@ void CTournament::Process(float _fDeltaTick)
 			case 1:
 			{
 				m_pPaddle1->ResetSpeed();
-				m_Powerup1->SetHit(false);
+				if (m_Powerup1 == nullptr)
+				{
+					m_iPowerUp1Identifier = rand() % 3;
+					m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+					m_Powerup1->Initialise(iRandomX1, iRandomY1);
+				}
+				else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+				{
+					m_iPowerUp2Identifier = rand() % 3;
+					m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+					m_Powerup2->Initialise(iRandomX2, iRandomY2);
+				}
 				delete m_pTimer1;
 				m_pTimer1 = nullptr;
 				break;
@@ -302,7 +359,18 @@ void CTournament::Process(float _fDeltaTick)
 					delete m_pBall3;
 					m_pBall3 = nullptr;
 				}
-				m_Powerup1->SetHit(false);
+				if (m_Powerup1 == nullptr)
+				{
+					m_iPowerUp1Identifier = rand() % 3;
+					m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+					m_Powerup1->Initialise(iRandomX1, iRandomY1);
+				}
+				else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+				{
+					m_iPowerUp2Identifier = rand() % 3;
+					m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+					m_Powerup2->Initialise(iRandomX2, iRandomY2);
+				}
 				delete m_pTimer1;
 				m_pTimer1 = nullptr;
 				break;
@@ -317,7 +385,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 0:
 		{
 			m_pPaddle1->ChangeSprite(IDB_PADDLESPRITE, IDB_PADDLEMASK);
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimer2;
 			m_pTimer2 = nullptr;
 			break;
@@ -325,7 +404,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 1:
 		{
 			m_pPaddle1->ResetSpeed();
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimer2;
 			m_pTimer2 = nullptr;
 			break;
@@ -342,7 +432,18 @@ void CTournament::Process(float _fDeltaTick)
 				delete m_pBall3;
 				m_pBall3 = nullptr;
 			}
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimer2;
 			m_pTimer2 = nullptr;
 			break;
@@ -357,7 +458,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 0:
 		{
 			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2A;
 			m_pTimerP2A = nullptr;
 			break;
@@ -365,7 +477,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 1:
 		{
 			m_pPaddle2->ResetSpeed();
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2A;
 			m_pTimerP2A = nullptr;
 			break;
@@ -382,7 +505,18 @@ void CTournament::Process(float _fDeltaTick)
 				delete m_pBall3;
 				m_pBall3 = nullptr;
 			}
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2A;
 			m_pTimerP2A = nullptr;
 			break;
@@ -397,7 +531,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 0:
 		{
 			m_pPaddle2->ChangeSprite(IDB_PADDLESPRITEFLIPPED, IDB_PADDLESPRITEFLIPPEDMASK);
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2B;
 			m_pTimerP2B = nullptr;
 			break;
@@ -405,7 +550,18 @@ void CTournament::Process(float _fDeltaTick)
 		case 1:
 		{
 			m_pPaddle2->ResetSpeed();
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2B;
 			m_pTimerP2B = nullptr;
 			break;
@@ -422,7 +578,18 @@ void CTournament::Process(float _fDeltaTick)
 				delete m_pBall3;
 				m_pBall3 = nullptr;
 			}
-			m_Powerup2->SetHit(false);
+			if (m_Powerup1 == nullptr)
+			{
+				m_iPowerUp1Identifier = rand() % 3;
+				m_Powerup1 = new CPowerup(m_iPowerUp1Identifier);
+				m_Powerup1->Initialise(iRandomX1, iRandomY1);
+			}
+			else if (m_Powerup1 != nullptr && m_Powerup2 == nullptr)
+			{
+				m_iPowerUp2Identifier = rand() % 3;
+				m_Powerup2 = new CPowerup(m_iPowerUp2Identifier);
+				m_Powerup2->Initialise(iRandomX2, iRandomY2);
+			}
 			delete m_pTimerP2B;
 			m_pTimerP2B = nullptr;
 			break;
@@ -707,371 +874,390 @@ void CTournament::ProcessBallBounds(CBall* ballnum)
 	}
 }
 
-void CTournament::ProcessBallPowerup1()
+void CTournament::ProcessBallPowerup1(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-
-	float fPowerUp1X = m_Powerup1->GetX();
-	float fPowerUp1Y = m_Powerup1->GetY();
-	float fPowerUp2X = m_Powerup2->GetX();
-	float fPowerUp2Y = m_Powerup2->GetY();
-
-	float fPowerUp1H = m_Powerup1->GetHeight();
-	float fPowerUp1W = m_Powerup1->GetWidth();
-	float fPowerUp2H = m_Powerup2->GetHeight();
-	float fPowerUp2W = m_Powerup2->GetWidth();
-
-	if (m_iPowerUp1Identifier == 0 && m_pLastPlayer != nullptr)
+	if (m_Powerup1 != nullptr)
 	{
-		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
-			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
-			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
-			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		if (m_iPowerUp1Identifier == 0 && m_pLastPlayer != nullptr)
 		{
-			if (m_Powerup1->IsHit() == false)
+			float fPowerUp1X = m_Powerup1->GetX();
+			float fPowerUp1Y = m_Powerup1->GetY();
+			float fPowerUp1H = m_Powerup1->GetHeight();
+			float fPowerUp1W = m_Powerup1->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+				(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+				(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+				(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 			{
-				if (m_pLastPlayer == m_pPaddle1)
+				if (m_Powerup1->IsHit() == false)
 				{
-					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+					if (m_pLastPlayer == m_pPaddle1)
+					{
+						m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(0);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(0);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(0);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
 					}
-					else if (m_pTimer1 != nullptr)
+					if (m_pLastPlayer == m_pPaddle2)
 					{
-						m_pTimer2 = new CTimer(0);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
+						m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(0);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(0);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
 					}
+					delete m_Powerup1;
+					m_Powerup1 = 0;
+					_sound.PlaySoundQ("PowerupStart");
+
 				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(0);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(0);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-				m_Powerup1->SetHit(true);
-				_sound.PlaySoundQ("PowerupStart");
-
 			}
 		}
 	}
-
-	if (m_iPowerUp2Identifier == 0 && m_pLastPlayer != nullptr)
+	if (m_Powerup2 != nullptr)
 	{
-		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
-			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
-			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
-			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+		if (m_iPowerUp2Identifier == 0 && m_pLastPlayer != nullptr)
 		{
-			if (m_Powerup2->IsHit() == false)
+			float fPowerUp2X = m_Powerup2->GetX();
+			float fPowerUp2Y = m_Powerup2->GetY();
+			float fPowerUp2H = m_Powerup2->GetHeight();
+			float fPowerUp2W = m_Powerup2->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+				(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+				(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+				(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
 			{
-				if (m_pLastPlayer == m_pPaddle1)
+				if (m_Powerup2->IsHit() == false)
 				{
-					m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
+					if (m_pLastPlayer == m_pPaddle1)
+					{
+						m_pPaddle1->ChangeSprite(IDB_ENLARGEDPADDLE, IDB_ENLARGEDPADDLEMASK);
 
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(0);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(0);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(0);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
 					}
-					else if (m_pTimer1 != nullptr)
+					if (m_pLastPlayer == m_pPaddle2)
 					{
-						m_pTimer2 = new CTimer(0);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
+						m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(0);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(0);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
 					}
+					delete m_Powerup2;
+					m_Powerup2 = 0;
+					_sound.PlaySoundQ("PowerupStart");
+
 				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					m_pPaddle2->ChangeSprite(IDB_PADDLEFLIPPEDENLARGED, IDB_PADDLEFLIPPEDENLARGEDMASK);
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(0);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(0);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-				m_Powerup2->SetHit(true);
-				_sound.PlaySoundQ("PowerupStart");
-
-			}
-		}
-	}
-
-}
-
-void CTournament::ProcessBallPowerup2()
-{
-	float fBallR = m_pBall->GetRadius();
-
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-
-	float fPowerUp1X = m_Powerup1->GetX();
-	float fPowerUp1Y = m_Powerup1->GetY();
-	float fPowerUp2X = m_Powerup2->GetX();
-	float fPowerUp2Y = m_Powerup2->GetY();
-
-	float fPowerUp1H = m_Powerup1->GetHeight();
-	float fPowerUp1W = m_Powerup1->GetWidth();
-	float fPowerUp2H = m_Powerup2->GetHeight();
-	float fPowerUp2W = m_Powerup2->GetWidth();
-
-	if (m_iPowerUp1Identifier == 1 && m_pLastPlayer != nullptr)
-	{
-		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
-			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
-			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
-			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
-		{
-			if (m_Powerup1->IsHit() == false)
-			{
-				if (m_pLastPlayer == m_pPaddle1)
-				{
-					m_pPaddle1->SpeedUp();
-
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(1);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
-					}
-					else if (m_pTimer1 != nullptr)
-					{
-						m_pTimer2 = new CTimer(1);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
-					}
-				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					m_pPaddle2->SpeedUp();
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(1);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(1);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-			}
-			m_Powerup1->SetHit(true);
-			_sound.PlaySoundQ("PowerupStart");
-
-		}
-	}
-
-	if (m_iPowerUp2Identifier == 1 && m_pLastPlayer != nullptr)
-	{
-		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
-			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
-			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
-			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
-		{
-			if (m_Powerup2->IsHit() == false)
-			{
-				if (m_pLastPlayer == m_pPaddle1)
-				{
-					m_pPaddle1->SpeedUp();
-
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(1);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
-					}
-					else if (m_pTimer1 != nullptr)
-					{
-						m_pTimer2 = new CTimer(1);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
-					}
-				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					m_pPaddle2->SpeedUp();
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(1);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(1);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-				m_Powerup2->SetHit(true);
-				_sound.PlaySoundQ("PowerupStart");
-
 			}
 		}
 	}
 }
 
-bool CTournament::ProcessBallPowerup3()
+void CTournament::ProcessBallPowerup2(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-
-	float fPowerUp1X = m_Powerup1->GetX();
-	float fPowerUp1Y = m_Powerup1->GetY();
-	float fPowerUp2X = m_Powerup2->GetX();
-	float fPowerUp2Y = m_Powerup2->GetY();
-
-	float fPowerUp1H = m_Powerup1->GetHeight();
-	float fPowerUp1W = m_Powerup1->GetWidth();
-	float fPowerUp2H = m_Powerup2->GetHeight();
-	float fPowerUp2W = m_Powerup2->GetWidth();
-
-	if (m_iPowerUp1Identifier == 2 && m_pLastPlayer != nullptr)
+	if (m_Powerup1 != nullptr)
 	{
-		if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
-			(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
-			(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
-			(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+		if (m_iPowerUp1Identifier == 1 && m_pLastPlayer != nullptr)
 		{
-			if (m_Powerup1->IsHit() == false)
+			float fPowerUp1X = m_Powerup1->GetX();
+			float fPowerUp1Y = m_Powerup1->GetY();
+			float fPowerUp1H = m_Powerup1->GetHeight();
+			float fPowerUp1W = m_Powerup1->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+				(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+				(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+				(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
 			{
-				if (m_pLastPlayer == m_pPaddle1)
+				if (m_Powerup1->IsHit() == false)
 				{
-					if (m_pBall2 == nullptr)
+					if (m_pLastPlayer == m_pPaddle1)
 					{
-						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
-					}
-					else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
-					{
-						m_pBall3 = new CBall();
-						VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX()), (m_pBall->GetVelocityY() * -1)));
-					}
+						m_pPaddle1->SpeedUp();
 
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(2);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(1);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(1);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
 					}
-					else if (m_pTimer1 != nullptr)
+					if (m_pLastPlayer == m_pPaddle2)
 					{
-						m_pTimer2 = new CTimer(2);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
+						m_pPaddle2->SpeedUp();
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(1);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(1);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
 					}
 				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					if (m_pBall2 == nullptr)
-					{
-						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
-					}
-					else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
-					{
-						m_pBall3 = new CBall();
-						VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX()), (m_pBall->GetVelocityY() * -1)));
-					}
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(2);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(2);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-			}
-			m_Powerup1->SetHit(true);
-			_sound.PlaySoundQ("PowerupStart");
-
-		}
-	}
-	if (m_iPowerUp2Identifier == 2 && m_pLastPlayer != nullptr)
-	{
-		if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
-			(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
-			(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
-			(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
-		{
-			if (m_Powerup2->IsHit() == false)
-			{
-				if (m_pLastPlayer == m_pPaddle1)
-				{
-					if (m_pBall2 == nullptr)
-					{
-						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
-					}
-					else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
-					{
-						m_pBall3 = new CBall();
-						VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX()), (m_pBall->GetVelocityY() * -1)));
-					}
-
-					if (m_pTimer1 == nullptr)
-					{
-						m_pTimer1 = new CTimer(2);
-						m_pTimer1->Initialise(20, m_iHeight - 100);
-					}
-					else if (m_pTimer1 != nullptr)
-					{
-						m_pTimer2 = new CTimer(2);
-						m_pTimer2->Initialise(100, m_iHeight - 100);
-					}
-				}
-				if (m_pLastPlayer == m_pPaddle2)
-				{
-					if (m_pBall2 == nullptr)
-					{
-						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
-					}
-					else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
-					{
-						m_pBall3 = new CBall();
-						VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX()), (m_pBall->GetVelocityY() * -1)));
-					}
-
-					if (m_pTimerP2A == nullptr)
-					{
-						m_pTimerP2A = new CTimer(2);
-						m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
-					}
-					else if (m_pTimerP2A != nullptr)
-					{
-						m_pTimerP2B = new CTimer(2);
-						m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
-					}
-				}
-				m_Powerup2->SetHit(true);
+				delete m_Powerup1;
+				m_Powerup1 = 0;
 				_sound.PlaySoundQ("PowerupStart");
 
 			}
 		}
 	}
+	if (m_Powerup2 != nullptr)
+	{
+		if (m_iPowerUp2Identifier == 1 && m_pLastPlayer != nullptr)
+		{
 
+			float fPowerUp2X = m_Powerup2->GetX();
+			float fPowerUp2Y = m_Powerup2->GetY();
+			float fPowerUp2H = m_Powerup2->GetHeight();
+			float fPowerUp2W = m_Powerup2->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+				(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+				(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+				(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+			{
+				if (m_Powerup2->IsHit() == false)
+				{
+					if (m_pLastPlayer == m_pPaddle1)
+					{
+						m_pPaddle1->SpeedUp();
+
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(1);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(1);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
+					}
+					if (m_pLastPlayer == m_pPaddle2)
+					{
+						m_pPaddle2->SpeedUp();
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(1);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(1);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
+					}
+					delete m_Powerup2;
+					m_Powerup2 = 0;
+					_sound.PlaySoundQ("PowerupStart");
+
+				}
+			}
+		}
+	}
+}
+
+bool CTournament::ProcessBallPowerup3(CBall* ballnum)
+{
+	float fBallR = ballnum->GetRadius();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
+
+	if (m_Powerup1 != nullptr)
+	{
+		if (m_iPowerUp1Identifier == 2 && m_pLastPlayer != nullptr)
+		{
+			float fPowerUp1X = m_Powerup1->GetX();
+			float fPowerUp1Y = m_Powerup1->GetY();
+			float fPowerUp1H = m_Powerup1->GetHeight();
+			float fPowerUp1W = m_Powerup1->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp1X - fPowerUp1W / 2) &&
+				(fBallX - fBallR < fPowerUp1X + fPowerUp1W / 2) &&
+				(fBallY + fBallR > fPowerUp1Y - fPowerUp1H / 2) &&
+				(fBallY - fBallR < fPowerUp1Y + fPowerUp1H / 2))
+			{
+				if (m_Powerup1->IsHit() == false)
+				{
+					if (m_pLastPlayer == m_pPaddle1)
+					{
+						if (m_pBall2 == nullptr)
+						{
+							m_pBall2 = new CBall();
+							VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
+						}
+						else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
+						{
+							m_pBall3 = new CBall();
+							VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX()), (ballnum->GetVelocityY() * -1)));
+						}
+
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(2);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(2);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
+					}
+					if (m_pLastPlayer == m_pPaddle2)
+					{
+						if (m_pBall2 == nullptr)
+						{
+							m_pBall2 = new CBall();
+							VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
+						}
+						else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
+						{
+							m_pBall3 = new CBall();
+							VALIDATE(m_pBall3->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX()), (ballnum->GetVelocityY() * -1)));
+						}
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(2);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(2);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
+					}
+				}
+				delete m_Powerup1;
+				m_Powerup1 = 0;
+				_sound.PlaySoundQ("PowerupStart");
+
+			}
+		}
+	}
+	if (m_Powerup2 != nullptr)
+	{
+		if (m_iPowerUp2Identifier == 2 && m_pLastPlayer != nullptr)
+		{
+			float fPowerUp2X = m_Powerup2->GetX();
+			float fPowerUp2Y = m_Powerup2->GetY();
+			float fPowerUp2H = m_Powerup2->GetHeight();
+			float fPowerUp2W = m_Powerup2->GetWidth();
+
+			if ((fBallX + fBallR > fPowerUp2X - fPowerUp2W / 2) &&
+				(fBallX - fBallR < fPowerUp2X + fPowerUp2W / 2) &&
+				(fBallY + fBallR > fPowerUp2Y - fPowerUp2H / 2) &&
+				(fBallY - fBallR < fPowerUp2Y + fPowerUp2H / 2))
+			{
+				if (m_Powerup2->IsHit() == false)
+				{
+					if (m_pLastPlayer == m_pPaddle1)
+					{
+						if (m_pBall2 == nullptr)
+						{
+							m_pBall2 = new CBall();
+							VALIDATE(m_pBall2->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
+						}
+						else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
+						{
+							m_pBall3 = new CBall();
+							VALIDATE(m_pBall3->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX()), (ballnum->GetVelocityY() * -1)));
+						}
+
+						if (m_pTimer1 == nullptr)
+						{
+							m_pTimer1 = new CTimer(2);
+							m_pTimer1->Initialise(20, m_iHeight - 100);
+						}
+						else if (m_pTimer1 != nullptr)
+						{
+							m_pTimer2 = new CTimer(2);
+							m_pTimer2->Initialise(100, m_iHeight - 100);
+						}
+					}
+					if (m_pLastPlayer == m_pPaddle2)
+					{
+						if (m_pBall2 == nullptr)
+						{
+							m_pBall2 = new CBall();
+							VALIDATE(m_pBall2->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
+						}
+						else if (m_pBall2 != nullptr && m_pBall3 == nullptr)
+						{
+							m_pBall3 = new CBall();
+							VALIDATE(m_pBall3->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX()), (ballnum->GetVelocityY() * -1)));
+						}
+
+						if (m_pTimerP2A == nullptr)
+						{
+							m_pTimerP2A = new CTimer(2);
+							m_pTimerP2A->Initialise(m_iWidth - 80, m_iHeight - 100);
+						}
+						else if (m_pTimerP2A != nullptr)
+						{
+							m_pTimerP2B = new CTimer(2);
+							m_pTimerP2B->Initialise(m_iWidth - 160, m_iHeight - 100);
+						}
+					}
+					delete m_Powerup2;
+					m_Powerup2 = 0;
+					_sound.PlaySoundQ("PowerupStart");
+
+				}
+			}
+		}
+	}
+	
 	return (true);
 }
 
