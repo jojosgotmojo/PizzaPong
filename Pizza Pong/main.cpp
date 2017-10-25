@@ -16,6 +16,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <mmsystem.h>
+#include <time.h>
 
 //Local Includes
 #include "Game.h"
@@ -26,17 +27,14 @@
 #include "background.h"
 #include "backbuffer.h"
 #include "MainMenu.h"
-#include <time.h>
 #include "resource.h"
-#include "Credits.h"
 #include "sounds.h"
 #include "backgroundmusic.h"
 
 #include "Dependencies\FMOD\fmod.hpp"
 
 
-
-//#include <vld.h>
+//#include <vld.h>   //*VISUAL LEAK DETECTOR*
 
 //Global variables
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -48,11 +46,9 @@ POINT g_iStart;
 HFONT g_Font = CreateFont(18, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 	CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 
-CSounds SoundEffect;
-CBGMUSIC Back;
+CSounds SoundEffect; //all sound effects
+CBGMUSIC Back; //background music
 
-
-//CSounds SoundEffect;
 
 enum GameState
 {
@@ -88,15 +84,8 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 		case WM_CREATE:
 		{
 			SelectFont(GetDC(_hWnd), g_Font);
-
 		}
-		//Unused?
-		//case WM_MOUSEMOVE:
-		//{
-		//	int iMouseX = LOWORD(_lParam);
-		//	return (0);
-		//}
-		//break;
+		
 		case WM_LBUTTONDOWN:
 		{
 			g_iStart.x = LOWORD(_lParam);
@@ -146,11 +135,12 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 			}
 			else if (g_currentState == Instructions)
 			{
-				//back button
+				//main menu button
 				if ((g_iStart.x > 895) && (g_iStart.x < 1215) && (g_iStart.y > 585) && (g_iStart.y < 677))
 				{
 					g_currentState = MainMenu;
 				}
+				//next button
 				if ((g_iStart.x > 604) && (g_iStart.x < 858) && (g_iStart.y > 579) && (g_iStart.y < 666))
 				{
 					g_currentState = Instructions2;
@@ -158,11 +148,12 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 			}
 			else if (g_currentState == Instructions2)
 			{
-				//back button
+				//main menu button
 				if ((g_iStart.x > 895) && (g_iStart.x < 1215) && (g_iStart.y > 585) && (g_iStart.y < 677))
 				{
 					g_currentState = MainMenu;
 				}
+				//back button
 				if ((g_iStart.x > 604) && (g_iStart.x < 858) && (g_iStart.y > 579) && (g_iStart.y < 666))
 				{
 					g_currentState = Instructions;
@@ -238,7 +229,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, co
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
-	//Back.PlaySoundQ();
+	//Back.PlaySoundQ();  //Plays Background Music 
 
 
 	MSG msg;
@@ -254,6 +245,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		
 		switch (g_currentState)
 		{
+
 		case MainMenu:
 		{
 			ShowCursor(true);
@@ -286,7 +278,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			CGame& rGame = CGame::GetInstance(false);
 			GetClientRect(hwnd1, &_rect);
 
-			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
 			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
@@ -320,7 +311,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			CGame& rGame = CGame::GetInstance(true);
 			GetClientRect(hwnd1, &_rect);
 
-			//if (!rGame.Initialise(_hInstance, hwnd, g_kiWidth, g_kiHeight))
 			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
@@ -367,7 +357,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				if (g_currentState != Credits)
 				{
 					rMain.DestroyInstance();
-					//delete &rCredits;
+					
 					break;
 				}
 			}
@@ -400,6 +390,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			CMainMenu::DestroyInstance();
 			break;
 		}
+
 		case Instructions2:
 		{
 			ShowCursor(true);
@@ -419,7 +410,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				if (g_currentState != Credits)
 				{
 					rMain.DestroyInstance();
-					//delete &rInstruct2;
+					
 
 					break;
 				}

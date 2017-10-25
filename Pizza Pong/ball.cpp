@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: ball.cpp
+// Description	: Ball instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -20,12 +20,6 @@
 
 // This Includes
 #include "Ball.h"
-
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
 
 CBall::CBall()
 : m_fVelocityX(0.0f)

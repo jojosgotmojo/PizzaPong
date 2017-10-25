@@ -6,13 +6,12 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: brick.cpp
+// Description	: Brick instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
 
-// Library Includes
 
 // Local Includes
 #include "resource.h"
@@ -20,16 +19,8 @@
 #include "Dependencies\FMOD\fmod.hpp"
 #include "sounds.h"
 
-
 // This Include
 #include "Brick.h"
-
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
-
 
 CBrick::CBrick()
 : m_bHit(false)
@@ -44,7 +35,6 @@ CBrick::~CBrick()
 
 bool CBrick::Initialise()
 {
-	
     VALIDATE(CEntity::Initialise(IDB_BRICKSPRITE, IDB_BRICKMASK));
 
     return (true);

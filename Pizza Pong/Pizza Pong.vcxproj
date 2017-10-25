@@ -90,9 +90,7 @@
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="clock.cpp" />
-    <ClCompile Include="Credits.cpp" />
     <ClCompile Include="entity.cpp" />
-    <ClCompile Include="framecounter.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
@@ -110,9 +108,7 @@
     <ClInclude Include="ball.h" />
     <ClInclude Include="brick.h" />
     <ClInclude Include="clock.h" />
-    <ClInclude Include="Credits.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="framecounter.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="MainMenu.h" />

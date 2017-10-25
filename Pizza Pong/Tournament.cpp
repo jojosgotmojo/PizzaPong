@@ -6,13 +6,11 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: Tournament.cpp
+// Description	: Tournament instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
-
-// Library Includes
 
 // Local Includes
 #include "Game.h"
@@ -21,7 +19,6 @@
 #include "Ball.h"
 #include "utils.h"
 #include "backbuffer.h"
-#include "framecounter.h"
 #include "background.h"
 #include "powerup.h"
 #include "resource.h"
@@ -30,15 +27,6 @@
 // This Include
 #include "Tournament.h"
 
-// Static Variables
-
-// Static Function Prototypes
-
-//CSounds SoundEffect;
-
-// Implementation
-
-//#define CHEAT_BOUNCE_ON_BACK_WALL
 #define DEFAULT_BALL_SPEED 75.00
 
 CTournament::CTournament()
@@ -50,7 +38,6 @@ CTournament::CTournament()
 	, m_pBall3(0)
 	, m_iWidth(0)
 	, m_iHeight(0)
-	, m_fpsCounter(0)
 	, m_iPlayer1WinCount(0)
 	, m_iPlayer2WinCount(0)
 	, m_iNumberOfGamesPlayed(1)
@@ -99,9 +86,6 @@ CTournament::~CTournament()
 
 	delete m_pTimerP2B;
 	m_pTimerP2B = 0;
-
-	delete m_fpsCounter;
-	m_fpsCounter = 0;
 
 	delete m_pBackground;
 	m_pBackground = 0;
@@ -182,8 +166,6 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	}
 
 	SetBricksRemaining(kiNumBricks);
-	m_fpsCounter = new CFPSCounter();
-	VALIDATE(m_fpsCounter->Initialise());
 
 	return (true);
 }
@@ -230,7 +212,6 @@ void CTournament::Draw()
 	}
 
 	DrawScore();
-	//DrawFPS();
 }
 
 void CTournament::Process(float _fDeltaTick)
@@ -446,7 +427,6 @@ void CTournament::Process(float _fDeltaTick)
 		m_vecBricks[i]->Process(_fDeltaTick);
 	}
 
-	m_fpsCounter->CountFramesPerSecond(_fDeltaTick);
 }
 
 int CTournament::GetNumberOfGamesPlayed()

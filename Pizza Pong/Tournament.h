@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: Tournament.h
+// Description	: header file for tournament instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -26,23 +26,14 @@
 
 using namespace std::chrono;
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CBall;
 class CPaddle;
 class CBrick;
-class CFPSCounter;
 class CBackGround;
 class CPowerup;
 
 class CTournament
 {
-	// Member Functions
 public:
 	CTournament();
 	virtual ~CTournament();
@@ -71,17 +62,12 @@ protected:
 	void ProcessBallPowerup1();
 	void ProcessBallPowerup2();
 	bool ProcessBallPowerup3();
-
-	
 	void DrawScore();
 
 	void SetBricksRemaining(int _i);
 
 private:
 	CTournament(const CTournament& _kr);
-
-	// Member Variables
-public:
 
 protected:
 	CBackGround* m_pBackground;
@@ -98,7 +84,6 @@ protected:
 	CTimer* m_pTimerP2A;
 	CTimer* m_pTimerP2B;
 	std::vector<CBrick*> m_vecBricks;
-	CFPSCounter* m_fpsCounter;
 	CSounds _sound;
 	
 	high_resolution_clock::time_point m_tpInitialTimer1;
@@ -122,8 +107,6 @@ protected:
 	std::string m_strScore1;
 	std::string m_strScore2;
 	std::string m_strScore3;
-
-private:
 
 };
 

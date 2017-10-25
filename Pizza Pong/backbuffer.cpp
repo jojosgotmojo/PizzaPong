@@ -6,24 +6,15 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: backbuffer.cpp
+// Description	: Backbuffer initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
 
-// Library Includes
-
-// Local Includes
 
 // This include
 #include "BackBuffer.h"
-
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
 
 CBackBuffer::CBackBuffer()
 : m_hWnd(0)
@@ -42,8 +33,6 @@ CBackBuffer::~CBackBuffer()
 
     DeleteObject(m_hSurface);
     DeleteObject(m_hDC);
-
-	
 }
 
 bool CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)

@@ -6,13 +6,11 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: game.cpp
+// Description	: Game instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
-
-// Library Includes
 
 // Local Includes
 #include "Clock.h"
@@ -28,9 +26,6 @@
 // Static Variables
 CGame* CGame::s_pGame = 0;
 
-// Static Function Prototypes
-
-// Implementation
 
 CGame::CGame(bool _bMode)
 	: m_pLevel(0)

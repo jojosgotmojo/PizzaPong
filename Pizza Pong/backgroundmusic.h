@@ -1,5 +1,17 @@
-#pragma once
-#pragma once
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2017 Media Design School.
+//
+// File Name	: backgroundmusic.h
+// Description	: Initiates, loads and plays the background music
+// Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
+// Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
+//
+
 #include "Dependencies\FMOD\fmod.hpp"
 #include <string>
 
@@ -11,9 +23,9 @@ public:
 	FMOD::Channel* channel;
 	FMOD_RESULT result;
 
+	//initialises FMOD 
 	bool InitFmod()
 	{
-
 		result = FMOD::System_Create(&_audioMgr);
 		if (result != FMOD_OK)
 		{
@@ -27,6 +39,7 @@ public:
 		return true;
 	}
 
+	//loads the background music
 	const bool LoadSound()
 	{
 		result = _audioMgr->createSound("Sounds/win.wav", FMOD_DEFAULT, 0, &bgMusic);
@@ -36,7 +49,7 @@ public:
 		return true;
 	}
 
-
+	//Plays the music
 	const bool PlaySoundQ()
 	{
 		InitFmod();

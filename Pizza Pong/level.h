@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: level.h
+// Description	: header file for level instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -22,22 +22,13 @@
 #include <string>
 #include "sounds.h"
 
-// Local Includes
-
-// Types
-
-// Constants
-
-// Prototypes
 class CBall;
 class CPaddle;
 class CBrick;
-class CFPSCounter;
 class CBackGround;
 
 class CLevel
 {
-    // Member Functions
 public:
     CLevel();
     virtual ~CLevel();
@@ -60,15 +51,11 @@ protected:
 
     void UpdateScoreText();
     void DrawScore();
-	void DrawFPS();
 
     void SetBricksRemaining(int _i);
 
 private:
     CLevel(const CLevel& _kr);
-
-    // Member Variables
-public:
 
 protected:
 	CBackGround* m_pBackground;
@@ -76,7 +63,6 @@ protected:
     CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;
-	CFPSCounter* m_fpsCounter;
 	CSounds _sound;
 
     int m_iWidth;
@@ -85,9 +71,6 @@ protected:
     int m_iBricksRemaining;
 
     std::string m_strScore;
-
-private:
-
 };
 
 #endif    // __LEVEL_H__

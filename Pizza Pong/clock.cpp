@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: clock.cpp
+// Description	: Clock instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -18,11 +18,6 @@
 // Local Includes
 #include "Clock.h"
 
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
 
 CClock::CClock()
 : m_fTimeElapsed(0.0)
@@ -76,46 +71,7 @@ void CClock::Process()
 	m_fTimeElapsed += m_fDeltaTime;
 }
 
-//void
-//CClock::Process()
-//{
-//	m_fLastTime = m_fCurrentTime;
-//
-//	m_fCurrentTime = static_cast<float>(timeGetTime());
-//
-//	if (m_fLastTime == 0.0f)
-//	{
-//		m_fLastTime = m_fCurrentTime;
-//	}
-//
-//	m_fDeltaTime = m_fCurrentTime - m_fLastTime;
-//
-//	m_fTimeElapsed += m_fDeltaTime;
-//}
-
-
-//float
-//CClock::GetDeltaTick()
-//{
-//	return (float)(m_fDeltaTime / 1000.0f);
-//}
-
 float CClock::GetDeltaTick()
 {
 	return static_cast<float>(m_fDeltaTime);
 }
-
-
-//int
-//CClock::CountFramesPerSecond(float m_fDeltaTime)
-//{
-//	m_iFrameCount++;
-//	m_fTimeElapsed += m_fDeltaTime;
-//
-//	if (m_fTimeElapsed >= 1.0f)
-//	{
-//		m_iFrameCount = 0;
-//		m_fTimeElapsed = 0.0f;
-//	}
-//	return m_iFrameCount;
-//}

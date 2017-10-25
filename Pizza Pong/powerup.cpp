@@ -6,13 +6,11 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: powerup.cpp
+// Description	: Powerup instance initialisation
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
-
-// Library Includes
 
 // Local Includes
 #include "resource.h"
@@ -20,12 +18,6 @@
 
 // This Include
 #include "powerup.h"
-
-// Static Variables
-
-// Static Function Prototypes
-
-// Implementation
 
 CPowerup::CPowerup(int _iRandomNumber)
 	: m_iPowerUpNumber(_iRandomNumber)

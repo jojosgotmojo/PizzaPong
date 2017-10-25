@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: Timer.h
+// Description	: header file for timer instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -16,7 +16,6 @@
 
 #if !defined(__TIMER_H__)
 #define __TIMER_H__
-// Library Includes
 
 // Local Includes
 #include "entity.h"
@@ -25,14 +24,9 @@
 #include <chrono>
 
 using namespace std::chrono;
-// Types
 
-// Constants
-
-// Prototypes
 class CTimer : public CEntity
 {
-	// Member Functions
 public:
 	CTimer(int _iPowerUpNumber);
 	virtual ~CTimer();
@@ -44,15 +38,8 @@ public:
 	void SetActive(bool _bIsActive);
 	bool IsActive() const;
 
-protected:
-
 private:
 	CTimer(const CTimer& _kr);
-
-	// Member Variables
-public:
-
-protected:
 
 private:
 	int m_iPowerUpNumber;

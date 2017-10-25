@@ -6,8 +6,8 @@
 //
 // (c) 2017 Media Design School.
 //
-// File Name	: main.cpp
-// Description	: Base window initialisation
+// File Name	: MainMenu.h
+// Description	:header file for the main menu instance
 // Author		: Pizza Party - Aimee Constable, Chloe Cantwell, Joseph Maton, Nick Lacy
 // Mail			: aimee.con6886@mediadesign.school.nz, chloe.can6956@mediadesign.school.nz, joseph.mat3620@mediadesign.school.nz, darcy.lac6935@mediadesign.school.nz
 //
@@ -21,10 +21,8 @@
 #include "windows.h"
 #include "backbuffer.h"
 
-// Prototypes
 class CMainMenu
 {
-	// Member Functions
 public:
 	CMainMenu();
 	~CMainMenu();
@@ -48,18 +46,11 @@ public:
 	void TranslateRelative(int _iX, int _iY);
 	void TranslateAbsolute(int _iX, int _iY);
 
-protected:
-
 
 private:
 	CMainMenu(const CMainMenu& _kr);
-	//CBackBuffer* m_pBackBuffer;
-
-	// Member Variables
-public:
 
 protected:
-	//Center handle
 
 	HWND hWnd;
 
@@ -78,7 +69,6 @@ protected:
 	static CBackBuffer* m_pBackBuffer;
 
 	static CMainMenu* s_pMain;
-private:
 
 };
 
