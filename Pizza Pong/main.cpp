@@ -28,6 +28,8 @@
 #include "MainMenu.h"
 #include <time.h>
 
+//#include "C:\Program Files (x86)\Visual Leak Detector\include\vld.h" 
+
 #include "resource.h"
 
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -275,7 +277,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 			
-			CMainMenu::DestroyInstance();
 
 			
 			break;
@@ -374,7 +375,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 
-			CMainMenu::DestroyInstance();
+			
 			//return(static_cast<int>(msg.wParam));
 
 			break;
@@ -402,7 +403,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 
-			CMainMenu::DestroyInstance();
+			
 			//return(static_cast<int>(msg.wParam));
 
 			break;
@@ -430,7 +431,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 			}
 
-			CMainMenu::DestroyInstance();
+			
 			//return(static_cast<int>(msg.wParam));
 
 			break;
