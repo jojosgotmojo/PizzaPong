@@ -56,8 +56,7 @@ public:
 	void GameOverLostPlayer2();
 	void GameOverWinner();
 
-	static CGame& GetInstance(bool _bMode);
-	static void DestroyInstance();
+	static CGame* GetInstance(bool _bMode);
 
 
 private:

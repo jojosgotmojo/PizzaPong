@@ -53,7 +53,7 @@ void CBrick::Process(float _fDeltaTick)
 	m_tpCheck = high_resolution_clock::now();
 	double check = duration_cast<milliseconds>(m_tpCheck - m_tpFirst).count() / 1000.00;
 
-	if (check > 20.00 && this->IsHit())
+	if (check > 60.00 && this->IsHit())
 	{
 		this->SetHit(false);
 	}

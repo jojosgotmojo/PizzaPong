@@ -417,7 +417,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		_sound.PlaySoundQ("WinSound");
-		CGame::GetInstance(false).GameOverLostPlayer1();
+		CGame::GetInstance(false)->GameOverLostPlayer1();
 		
 	}
 	else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
@@ -427,7 +427,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		_sound.PlaySoundQ("WinSound");
-		CGame::GetInstance(false).GameOverLostPlayer2();
+		CGame::GetInstance(false)->GameOverLostPlayer2();
 		
 	}
 
@@ -994,7 +994,7 @@ void CLevel::SetBricksRemaining(int _i)
 
 void CLevel::DrawScore()
 {
-    HDC hdc = CGame::GetInstance(false).GetBackBuffer()->GetBFDC();
+    HDC hdc = CGame::GetInstance(false)->GetBackBuffer()->GetBFDC();
 
     const int kiX = 0;
     const int kiY = m_iHeight - 14;

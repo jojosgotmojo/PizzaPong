@@ -49,6 +49,9 @@ CGame::~CGame()
 
 	delete m_pClock;
 	m_pClock = 0;
+
+	delete s_pGame;
+	s_pGame = 0;
 }
 
 bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect)
@@ -120,14 +123,14 @@ void CGame::ExecuteOneFrame()
 	Sleep(1);
 }
 
-CGame& CGame::GetInstance(bool _bMode)
+CGame* CGame::GetInstance(bool _bMode)
 {
 	if (s_pGame == 0)
 	{
 		s_pGame = new CGame(_bMode);
 	}
 
-	return (*s_pGame);
+	return (s_pGame);
 }
 
 void CGame::GameOverLostPlayer1()
@@ -153,12 +156,6 @@ void CGame::GameOverWinner()
 		MessageBox(m_hMainWindow, L"Player 2 wins the Tournament!", L"Winner!", MB_OK);
 	}
 	m_bIsLevelOver = true;
-}
-
-void CGame::DestroyInstance()
-{
-	delete s_pGame;
-	s_pGame = 0;
 }
 
 CBackBuffer* CGame::GetBackBuffer()

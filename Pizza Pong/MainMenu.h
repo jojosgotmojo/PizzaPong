@@ -40,8 +40,7 @@ public:
 	void SetY(int _i);
 
 	CBackBuffer* GetBackBuffer();
-	static CMainMenu& GetInstance();
-	static void DestroyInstance();
+	static CMainMenu* GetInstance();
 
 	void TranslateRelative(int _iX, int _iY);
 	void TranslateAbsolute(int _iX, int _iY);

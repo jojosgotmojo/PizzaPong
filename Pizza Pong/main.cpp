@@ -20,7 +20,6 @@
 
 //Local Includes
 #include "Game.h"
-#include "Clock.h"
 #include "utils.h"
 #include "level.h"
 #include "paddle.h"
@@ -248,9 +247,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 		case MainMenu:
 		{
+			CMainMenu* rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain->Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -260,35 +259,37 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rMain->Draw();
 				}
 				if (g_currentState != MainMenu)
 				{
-					rMain.DestroyInstance();
-				
+					delete rMain;
+					rMain = 0;
 					break;
 				}
 			}
-					
+				
 			break;
 		}
 		case QuickGame:
 		{
-			ShowCursor(false);
-			CGame& rGame = CGame::GetInstance(false);
+			
+			CGame* rGame = CGame::GetInstance(false);
 			GetClientRect(hwnd1, &_rect);
 
-			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
+			if (!rGame->Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
 				return (0);
 			}
-
+			ShowCursor(false);
 			while (msg.message != WM_QUIT)
 			{
-				if (rGame.GetGameState() == true)
+				if (rGame->GetGameState() == true)
 				{
 					g_currentState = MainMenu;
+					delete rGame;
+					rGame = 0;
 					break;
 				}
 
@@ -299,29 +300,30 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rGame.ExecuteOneFrame();
+					rGame->ExecuteOneFrame();
 				}
 			}
-			CGame::DestroyInstance();
 			break;
 		}
 		case Tournament:
 		{
-			ShowCursor(false);
-			CGame& rGame = CGame::GetInstance(true);
+		
+			CGame* rGame = CGame::GetInstance(true);
 			GetClientRect(hwnd1, &_rect);
 
-			if (!rGame.Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
+			if (!rGame->Initialise(_hInstance, hwnd1, _rect.right, _rect.bottom, SoundEffect))
 			{
 				// Failed
 				return (0);
 			}
-
+			ShowCursor(false);
 			while (msg.message != WM_QUIT)
 			{
-				if (rGame.GetGameState() == true)
+				if (rGame->GetGameState() == true)
 				{
 					g_currentState = MainMenu;
+					delete rGame;
+					rGame = 0;
 					break;
 				}
 
@@ -332,17 +334,17 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rGame.ExecuteOneFrame();
+					rGame->ExecuteOneFrame();
 				}
 			}
-			CGame::DestroyInstance();
 			break;
 		}
 		case Credits:
 		{
+			
+			CMainMenu* rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain->Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -352,23 +354,23 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rMain->Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rMain.DestroyInstance();
-					
+					delete rMain;
+					rMain = 0;
 					break;
 				}
 			}
-			CMainMenu::DestroyInstance();
 			break;
 		}
 		case Instructions:
 		{
+			
+			CMainMenu* rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain->Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -378,24 +380,24 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rMain->Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rMain.DestroyInstance();
-					
+					delete rMain;
+					rMain = 0;
 					break;
 				}
 			}
-			CMainMenu::DestroyInstance();
 			break;
 		}
 
 		case Instructions2:
 		{
+			
+			CMainMenu* rMain = CMainMenu::GetInstance();
+			VALIDATE(rMain->Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			ShowCursor(true);
-			CMainMenu& rMain = CMainMenu::GetInstance();
-			VALIDATE(rMain.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -405,26 +407,27 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				else
 				{
-					rMain.Draw();
+					rMain->Draw();
 				}
 				if (g_currentState != Credits)
 				{
-					rMain.DestroyInstance();
-					
+					delete rMain;
+					rMain = 0;
 
 					break;
 				}
 			}
-			CMainMenu::DestroyInstance();
 			break;
 		}
 		case QuitGame:
 		{
 			return(static_cast<int>(msg.wParam));
+			break;
 		}
 		default:
 		{
-			return 0;
+			g_currentState = g_currentState;
+			break;
 		}
 		}
 	}

@@ -50,7 +50,6 @@ public:
 	void IncrementWinsPlayer2();
 	CPaddle* GetPaddle() const;
 	void UpdateScoreText();
-
 	int GetBricksRemaining() const;
 
 protected:
@@ -63,7 +62,6 @@ protected:
 	void ProcessBallPowerup2(CBall* ballnum);
 	bool ProcessBallPowerup3(CBall* ballnum);
 	void DrawScore();
-
 	void SetBricksRemaining(int _i);
 
 private:
@@ -85,13 +83,6 @@ protected:
 	CTimer* m_pTimerP2B;
 	std::vector<CBrick*> m_vecBricks;
 	CSounds _sound;
-	
-	high_resolution_clock::time_point m_tpInitialTimer1;
-	high_resolution_clock::time_point m_tpInitialTimer2;
-	high_resolution_clock::time_point m_tpCheckTimer1;
-	high_resolution_clock::time_point m_tpCheckTimer2;
-	double m_dDuration1;
-	double m_dDuration2;
 
 	int m_iPowerUp1Identifier;
 	int m_iPowerUp2Identifier;

@@ -84,7 +84,7 @@ void CTimer::Draw()
 	}
 
 
-	HDC hdc = CGame::GetInstance(true).GetBackBuffer()->GetBFDC();
+	HDC hdc = CGame::GetInstance(true)->GetBackBuffer()->GetBFDC();
 	HFONT font = CreateFont(46, 20, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 		CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 	SetBkMode(hdc, TRANSPARENT);

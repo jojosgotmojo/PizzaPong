@@ -47,6 +47,7 @@ CMainMenu::~CMainMenu()
 		DeleteDC(s_hSharedMainMenuDC);
 		s_hSharedMainMenuDC = 0;
 	}
+	s_pMain = 0;
 }
 
 CBackBuffer* CMainMenu::GetBackBuffer()
@@ -78,24 +79,14 @@ bool CMainMenu::Initialise(int _iMainMenuResourceID, int _iMaskResourceID, HINST
 	return (true);
 }
 
-CMainMenu& CMainMenu::GetInstance()
+CMainMenu* CMainMenu::GetInstance()
 {
 	if (s_pMain == 0)
 	{
 		s_pMain = new CMainMenu();
 	}
 
-	return (*s_pMain);
-}
-
-void CMainMenu::DestroyInstance()
-{
-	delete s_pMain;
-	s_pMain = 0;
-
-	delete m_pBackBuffer;
-	m_pBackBuffer = 0;
-
+	return (s_pMain);
 }
 
 void CMainMenu::Draw()
@@ -112,7 +103,7 @@ void CMainMenu::Draw()
 
 	HDC hDC = CreateCompatibleDC(hWindowDC);
 
-	CBackBuffer* pBackBuffer = CMainMenu::GetInstance().GetBackBuffer();
+	CBackBuffer* pBackBuffer = CMainMenu::GetInstance()->GetBackBuffer();
 
 	HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
 

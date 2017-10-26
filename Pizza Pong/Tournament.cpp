@@ -33,6 +33,7 @@ CTournament::CTournament()
 	: m_iBricksRemaining(0)
 	, m_pPaddle1(0)
 	, m_pPaddle2(0)
+	, m_pLastPlayer(0)
 	, m_pBall(0)
 	, m_pBall2(0)
 	, m_pBall3(0)
@@ -60,12 +61,6 @@ CTournament::~CTournament()
 		delete pBrick;
 	}
 
-	delete m_pPaddle1;
-	m_pPaddle1 = 0;
-
-	delete m_pPaddle2;
-	m_pPaddle2 = 0;
-
 	delete m_pBall;
 	m_pBall = 0;
 
@@ -74,6 +69,20 @@ CTournament::~CTournament()
 
 	delete m_pBall3;
 	m_pBall3 = 0;
+
+	delete m_pPaddle1;
+	m_pPaddle1 = 0;
+
+	delete m_pPaddle2;
+	m_pPaddle2 = 0;
+
+	m_pLastPlayer = 0;
+
+	delete m_Powerup1;
+	m_Powerup1 = 0;
+
+	delete m_Powerup2;
+	m_Powerup2 = 0;
 
 	delete m_pTimer1;
 	m_pTimer1 = 0;
@@ -163,6 +172,10 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 		}
 
 		m_vecBricks.push_back(pBrick);
+		if (i <= 14 || i >= 30)
+		{
+			m_vecBricks[i]->SetHit(true);
+		}
 	}
 
 	SetBricksRemaining(kiNumBricks);
@@ -299,10 +312,10 @@ void CTournament::Process(float _fDeltaTick)
 	}
 
 
-	int iRandomX1 = rand() % 550 + 50;
+	int iRandomX1 = rand() % 510 + 50;
 	int iRandomX2 = rand() % 550 + 680;
-	int iRandomY1 = rand() % 660 + 30;
-	int iRandomY2 = rand() % 660 + 30;
+	int iRandomY1 = rand() % 640 + 50;
+	int iRandomY2 = rand() % 640 + 50;
 
 	if (m_pTimer1 != nullptr && m_pTimer1->IsActive() == false)
 	{
@@ -352,7 +365,15 @@ void CTournament::Process(float _fDeltaTick)
 				if (m_pBall2 != nullptr)
 				{
 					delete m_pBall2;
-					m_pBall2 = nullptr;
+					if (m_pBall3 != nullptr)
+					{
+						m_pBall2 = m_pBall3;
+						m_pBall3 = 0;
+					}
+					else
+					{
+						m_pBall2 = 0;
+					}
 				}
 				if (m_pBall3 != nullptr)
 				{
@@ -425,7 +446,15 @@ void CTournament::Process(float _fDeltaTick)
 			if (m_pBall2 != nullptr)
 			{
 				delete m_pBall2;
-				m_pBall2 = nullptr;
+				if (m_pBall3 != nullptr)
+				{
+					m_pBall2 = m_pBall3;
+					m_pBall3 = 0;
+				}
+				else
+				{
+					m_pBall2 = 0;
+				}
 			}
 			if (m_pBall3 != nullptr)
 			{
@@ -498,7 +527,15 @@ void CTournament::Process(float _fDeltaTick)
 			if (m_pBall2 != nullptr)
 			{
 				delete m_pBall2;
-				m_pBall2 = nullptr;
+				if (m_pBall3 != nullptr)
+				{
+					m_pBall2 = m_pBall3;
+					m_pBall3 = 0;
+				}
+				else
+				{
+					m_pBall2 = 0;
+				}
 			}
 			if (m_pBall3 != nullptr)
 			{
@@ -571,7 +608,15 @@ void CTournament::Process(float _fDeltaTick)
 			if (m_pBall2 != nullptr)
 			{
 				delete m_pBall2;
-				m_pBall2 = nullptr;
+				if (m_pBall3 != nullptr)
+				{
+					m_pBall2 = m_pBall3;
+					m_pBall3 = 0;
+				}
+				else
+				{
+					m_pBall2 = 0;
+				}
 			}
 			if (m_pBall3 != nullptr)
 			{
@@ -658,7 +703,7 @@ void CTournament::ProcessBallWallCollision(CBall* ballnum)
 		{
 			_sound.PlaySoundQ("WinSound");
 
-			CGame::GetInstance(true).GameOverWinner();
+			CGame::GetInstance(true)->GameOverWinner();
 		}
 	}
 	else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
@@ -672,7 +717,7 @@ void CTournament::ProcessBallWallCollision(CBall* ballnum)
 		{
 			_sound.PlaySoundQ("WinSound");
 
-			CGame::GetInstance(true).GameOverWinner();
+			CGame::GetInstance(true)->GameOverWinner();
 		}
 	}
 
@@ -816,33 +861,17 @@ void CTournament::ProcessBallBrickCollision(CBall* ballnum)
 				(fBallY + fBallR > fBrickY - fBrickH / 2) &&
 				(fBallY - fBallR < fBrickY + fBrickH / 2))
 			{
-				//Hit the front side of the brick...
+		
+				if (ballnum->GetVelocityX() >= 1)
+				{
+					ballnum->SetX((fBrickX - (fBrickW / 2.0f)) - fBallR);
+				}
+				if (ballnum->GetVelocityX() <= -1)
+				{
+					ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
+				}
+				ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
 
-				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
-				{
-					ballnum->SetVelocityX(ballnum->GetVelocityX() * 1);
-					if (ballnum->GetVelocityX() >= 1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
-					}
-					if (ballnum->GetVelocityX() <= -1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
-					}
-				}
-				else
-				{
-					ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
-					if (ballnum->GetVelocityX() >= 1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
-					}
-					if (ballnum->GetVelocityX() <= -1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
-					}
-				}
-				
 				m_vecBricks[i]->SetHit(true);
 				_sound.PlaySoundQ("hitSound");
 
@@ -1274,7 +1303,7 @@ void CTournament::SetBricksRemaining(int _i)
 
 void CTournament::DrawScore()
 {
-	HDC hdc = CGame::GetInstance(true).GetBackBuffer()->GetBFDC();
+	HDC hdc = CGame::GetInstance(true)->GetBackBuffer()->GetBFDC();
 	HFONT font = CreateFont(46, 20, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 		CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Courier New"));
 	const int kiX = 0;
