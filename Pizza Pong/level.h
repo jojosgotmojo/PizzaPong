@@ -54,9 +54,9 @@ protected:
 	void ProcessBallPaddle2Collision(CBall* ballnum);
 	void ProcessBallBrickCollision(CBall* ballnum);
 	void ProcessBallBounds(CBall* ballnum);
-	void ProcessBallPowerup1();
-	void ProcessBallPowerup2();
-	bool ProcessBallPowerup3();
+	void ProcessBallPowerup1(CBall* ballnum);
+	void ProcessBallPowerup2(CBall* ballnum);
+	bool ProcessBallPowerup3(CBall* ballnum);
     void DrawScore();
 
     void SetBricksRemaining(int _i);
@@ -68,6 +68,7 @@ protected:
 	CBackGround* m_pBackground;
     CBall* m_pBall;
 	CBall* m_pBall2;
+	CBall* m_pBall3;
     CPaddle* m_pPaddle1;
 	CPaddle* m_pPaddle2;
     std::vector<CBrick*> m_vecBricks;

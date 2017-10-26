@@ -40,6 +40,7 @@ CLevel::CLevel()
 , m_pPaddle2(0)
 , m_pBall(0)
 , m_pBall2(0)
+, m_pBall3(0)
 , m_iWidth(0)
 , m_iHeight(0)
 {
@@ -68,11 +69,12 @@ CLevel::~CLevel()
 	delete m_pBackground;
 	m_pBackground = 0;
 
-	delete m_pBall;
-	m_pBall = 0;
-
 	delete m_pBall2;
 	m_pBall2 = 0;
+
+
+	delete m_pBall3;
+	m_pBall3 = 0;
 
 	delete m_pTimer1;
 	m_pTimer1 = 0;
@@ -189,6 +191,10 @@ void CLevel::Draw()
 	{
 		m_pBall2->Draw();
 	}
+	if (m_pBall3 != nullptr)
+	{
+		m_pBall3->Draw();
+	}
 	if (m_pTimer1 != nullptr)
 	{
 		m_pTimer1->Draw();
@@ -220,6 +226,10 @@ void CLevel::Process(float _fDeltaTick)
 	{
 		m_pBall2->Process(_fDeltaTick);
 	}
+	if (m_pBall3 != nullptr)
+	{
+		m_pBall3->Process(_fDeltaTick);
+	}
 	
 	m_pPaddle1->Process(_fDeltaTick);
 	m_pPaddle2->Process(_fDeltaTick);
@@ -230,6 +240,9 @@ void CLevel::Process(float _fDeltaTick)
 	ProcessBallPaddle2Collision(m_pBall);
 	ProcessBallBrickCollision(m_pBall);
 	ProcessBallBounds(m_pBall);
+	ProcessBallPowerup1(m_pBall);
+	ProcessBallPowerup2(m_pBall);
+	ProcessBallPowerup3(m_pBall);
 
 	if (m_pBall2 != nullptr)
 	{
@@ -238,10 +251,22 @@ void CLevel::Process(float _fDeltaTick)
 		ProcessBallPaddle2Collision(m_pBall2);
 		ProcessBallBrickCollision(m_pBall2);
 		ProcessBallBounds(m_pBall2);
+		ProcessBallPowerup1(m_pBall2);
+		ProcessBallPowerup2(m_pBall2);
+		ProcessBallPowerup3(m_pBall2);
 	}
-	ProcessBallPowerup1();
-	ProcessBallPowerup2();
-	ProcessBallPowerup3();
+	if (m_pBall3 != nullptr)
+	{
+		ProcessBallWallCollision(m_pBall3);
+		ProcessBallPaddle1Collision(m_pBall3);
+		ProcessBallPaddle2Collision(m_pBall3);
+		ProcessBallBrickCollision(m_pBall3);
+		ProcessBallBounds(m_pBall3);
+		ProcessBallPowerup1(m_pBall3);
+		ProcessBallPowerup2(m_pBall3);
+		ProcessBallPowerup3(m_pBall3);
+	}
+	
 
 	if (m_pTimer1 != nullptr && m_pTimer1->IsActive() == false)
 	{
@@ -630,12 +655,12 @@ void CLevel::ProcessBallBounds(CBall* ballnum)
 	}
 }
 
-void CLevel::ProcessBallPowerup1()
+void CLevel::ProcessBallPowerup1(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
 	float fPowerUp1X = m_Powerup1->GetX();
 	float fPowerUp1Y = m_Powerup1->GetY();
@@ -741,9 +766,9 @@ void CLevel::ProcessBallPowerup1()
 
 }
 
-void CLevel::ProcessBallPowerup2()
+void CLevel::ProcessBallPowerup2(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
 	float fBallX = m_pBall->GetX();
 	float fBallY = m_pBall->GetY();
@@ -851,12 +876,12 @@ void CLevel::ProcessBallPowerup2()
 	}
 }
 
-bool CLevel::ProcessBallPowerup3()
+bool CLevel::ProcessBallPowerup3(CBall* ballnum)
 {
-	float fBallR = m_pBall->GetRadius();
+	float fBallR = ballnum->GetRadius();
 
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
+	float fBallX = ballnum->GetX();
+	float fBallY = ballnum->GetY();
 
 	float fPowerUp1X = m_Powerup1->GetX();
 	float fPowerUp1Y = m_Powerup1->GetY();
