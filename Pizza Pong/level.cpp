@@ -442,7 +442,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		_sound.PlaySoundQ("WinSound");
-		CGame::GetInstance(false).GameOverLostPlayer1();
+		CGame::GetInstance(false)->GameOverLostPlayer1();
 		
 	}
 	else if (fBallX > m_iWidth - fHalfBallW) //represents the situation when the ball has hit the right wall
@@ -452,7 +452,7 @@ void CLevel::ProcessBallWallCollision(CBall* ballnum)
 		ballnum->SetVelocityY(DEFAULT_BALL_SPEED);
 
 		_sound.PlaySoundQ("WinSound");
-		CGame::GetInstance(false).GameOverLostPlayer2();
+		CGame::GetInstance(false)->GameOverLostPlayer2();
 		
 	}
 
