@@ -59,7 +59,7 @@ void CPaddle::Process(float _fDeltaTick)
 	GetClientRect(hwnd, &rect);
 
 
-	float fHalfPaddleH = m_pSprite->GetHeight() / 2.0;
+	float fHalfPaddleH = this->GetHeight() / 2.0;
 
 	if (m_iPlayerNumber == 1)
 	{

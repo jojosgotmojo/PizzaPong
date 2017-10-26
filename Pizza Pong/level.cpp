@@ -35,14 +35,22 @@
 
 
 CLevel::CLevel()
-: m_iBricksRemaining(0)
-, m_pPaddle1(0)
-, m_pPaddle2(0)
-, m_pBall(0)
-, m_pBall2(0)
-, m_pBall3(0)
-, m_iWidth(0)
-, m_iHeight(0)
+	: m_iBricksRemaining(0)
+	, m_pBackground(0)
+	, m_pPaddle1(0)
+	, m_pPaddle2(0)
+	, m_pLastPlayer(0)
+	, m_pBall(0)
+	, m_pBall2(0)
+	, m_pBall3(0)
+	, m_iWidth(0)
+	, m_iHeight(0)
+	, m_pTimer1(0)
+	, m_pTimer2(0)
+	, m_pTimerP2A(0)
+	, m_pTimerP2B(0)
+	, m_Powerup1(0)
+	, m_Powerup2(0)
 {
 }
 
@@ -57,21 +65,22 @@ CLevel::~CLevel()
         delete pBrick;
     }
 
+	delete m_pBackground;
+	m_pBackground = 0;
+
     delete m_pPaddle1;
     m_pPaddle1 = 0;
 
 	delete m_pPaddle2;
 	m_pPaddle2 = 0;
 
+	m_pLastPlayer = 0;
+
     delete m_pBall;
     m_pBall = 0;
 
-	delete m_pBackground;
-	m_pBackground = 0;
-
 	delete m_pBall2;
 	m_pBall2 = 0;
-
 
 	delete m_pBall3;
 	m_pBall3 = 0;
@@ -88,6 +97,11 @@ CLevel::~CLevel()
 	delete m_pTimerP2B;
 	m_pTimerP2B = 0;
 
+	delete m_Powerup1;
+	m_Powerup1 = 0;
+
+	delete m_Powerup2;
+	m_Powerup2 = 0;
 
 }
 
@@ -165,6 +179,10 @@ bool CLevel::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 		}
 
 		m_vecBricks.push_back(pBrick);
+		if (i <= 14 || i >= 30)
+		{
+			m_vecBricks[i]->SetHit(true);
+		}
 	}
 
 	SetBricksRemaining(kiNumBricks);
@@ -598,36 +616,20 @@ void CLevel::ProcessBallBrickCollision(CBall* ballnum)
 			{
 				//Hit the front side of the brick...
 
-				if (m_vecBricks[(i > 0 ? i - 1 : i)]->CheckTimeElapsed() <= 2.00)// || (m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->IsHit() && m_vecBricks[(i < m_vecBricks.size() ? i : i - 1)]->timeElapsed() <= 2.00))
+				if (ballnum->GetVelocityX() >= 1)
 				{
-					ballnum->SetVelocityX(ballnum->GetVelocityX() * 1);
-					if (ballnum->GetVelocityX() >= 1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
-					}
-					if (ballnum->GetVelocityX() <= -1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
-					}
+					ballnum->SetX((fBrickX - (fBrickW / 2.0f)) - fBallR);
 				}
-				else
+				if (ballnum->GetVelocityX() <= -1)
 				{
-					ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
-					if (ballnum->GetVelocityX() >= 1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) - fBallR);
-					}
-					if (ballnum->GetVelocityX() <= -1)
-					{
-						ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
-					}
+					ballnum->SetX((fBrickX + (fBrickW / 2.0f)) + fBallR);
 				}
+				ballnum->SetVelocityX(ballnum->GetVelocityX() * -1);
 
 				m_vecBricks[i]->SetHit(true);
 				_sound.PlaySoundQ("hitSound");
 
 				SetBricksRemaining(GetBricksRemaining() - 1);
-				_sound.PlaySoundQ("hitSound");
 			}
 		}
 	}
@@ -907,10 +909,9 @@ bool CLevel::ProcessBallPowerup3(CBall* ballnum)
 					if (m_pBall2 == nullptr)
 					{
 						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
 					}
 					
-
 					if (m_pTimer1 == nullptr)
 					{
 						m_pTimer1 = new CTimer(2);
@@ -927,7 +928,7 @@ bool CLevel::ProcessBallPowerup3(CBall* ballnum)
 					if (m_pBall2 == nullptr)
 					{
 						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
 					}
 					
 
@@ -962,7 +963,7 @@ bool CLevel::ProcessBallPowerup3(CBall* ballnum)
 					if (m_pBall2 == nullptr)
 					{
 						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+						VALIDATE(m_pBall2->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
 					}
 					
 
@@ -982,7 +983,7 @@ bool CLevel::ProcessBallPowerup3(CBall* ballnum)
 					if (m_pBall2 == nullptr)
 					{
 						m_pBall2 = new CBall();
-						VALIDATE(m_pBall2->Initialise(fPowerUp1X, fPowerUp1Y, (m_pBall->GetVelocityX() * -1), (m_pBall->GetVelocityY() * -1)));
+						VALIDATE(m_pBall2->Initialise(fPowerUp2X, fPowerUp2Y, (ballnum->GetVelocityX() * -1), (ballnum->GetVelocityY() * -1)));
 					}
 					
 
@@ -1026,6 +1027,3 @@ void CLevel::DrawScore()
 	SetBkMode(hdc, TRANSPARENT);
     
 }
-
-
-

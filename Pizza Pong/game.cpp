@@ -41,19 +41,23 @@ CGame::CGame(bool _bMode)
 
 CGame::~CGame()
 {
-	delete m_pLevel;
-	m_pLevel = 0;
+	if (m_pLevel != nullptr)
+	{
+		delete m_pLevel;
+		m_pLevel = 0;
+	}
+
+	if (m_pTournament != nullptr)
+	{
+		delete m_pTournament;
+		m_bIsTournament = 0;
+	}
 
 	delete m_pBackBuffer;
 	m_pBackBuffer = 0;
 
 	delete m_pClock;
 	m_pClock = 0;
-
-	m_hApplicationInstance = 0;
-	m_hMainWindow = 0;
-	m_bIsLevelOver = false;
-	m_bIsTournament = 0;
 
 	s_pGame = 0;
 }

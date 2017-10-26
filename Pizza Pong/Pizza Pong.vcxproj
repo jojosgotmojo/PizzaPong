@@ -42,8 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\Dependencies\FMOD;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir);$(ProjectDir)\Dependencies\FMOD;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Dependencies\FMOD;C:\apps\vld\2.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Dependencies\FMOD;C:\apps\vld\2.5\lib\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;fmod_vc.lib;vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

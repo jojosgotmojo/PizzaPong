@@ -81,13 +81,6 @@ protected:
 	CTimer* m_pTimerP2A;
 	CTimer* m_pTimerP2B;
 
-	high_resolution_clock::time_point m_tpInitialTimer1;
-	high_resolution_clock::time_point m_tpInitialTimer2;
-	high_resolution_clock::time_point m_tpCheckTimer1;
-	high_resolution_clock::time_point m_tpCheckTimer2;
-	double m_dDuration1;
-	double m_dDuration2;
-
 	int m_iPowerUp1Identifier;
 	int m_iPowerUp2Identifier;
 	int m_iPlayer1WinCount;

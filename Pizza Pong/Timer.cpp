@@ -41,24 +41,24 @@ bool CTimer::Initialise(int _iX, int _iY)
 	{
 		//Increase paddle size
 		VALIDATE(CEntity::Initialise(IDB_TOMATOSPRITE, IDB_TOMATOMASK));
-		this->m_fX = _iX;
-		this->m_fY = _iY;
+		m_fX = _iX;
+		m_fY = _iY;
 		break;
 	}
 	case 1:
 	{
 		//Paddle speed up
 		VALIDATE(CEntity::Initialise(IDB_CHILIMASK, IDB_CHILISPRITE));
-		this->m_fX = _iX;
-		this->m_fY = _iY;
+		m_fX = _iX;
+		m_fY = _iY;
 		break;
 	}
 	case 2:
 	{
 		//Add extra ball
 		VALIDATE(CEntity::Initialise(IDB_GREENPEPPERSPRITE, IDB_GREENPEPPERMASK));
-		this->m_fX = _iX;
-		this->m_fY = _iY;
+		m_fX = _iX;
+		m_fY = _iY;
 		break;
 	}
 	default: break;
