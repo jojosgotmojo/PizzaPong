@@ -17,7 +17,15 @@
 
 class CBGMUSIC
 {
+	
+
 public:
+
+	CBGMUSIC::~CBGMUSIC()
+	{
+	
+	}
+
 	FMOD::System* _audioMgr;
 	FMOD::Sound* bgMusic;
 	FMOD::Channel* channel;
@@ -56,6 +64,8 @@ public:
 		LoadSound();
 
 		_audioMgr->playSound(bgMusic, 0, false, &channel);
+		result = channel->setVolume(0.4);
+
 
 		return true;
 	}

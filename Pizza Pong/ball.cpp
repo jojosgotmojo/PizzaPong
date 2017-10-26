@@ -30,7 +30,8 @@ CBall::CBall()
 
 CBall::~CBall()
 {
-
+	m_fVelocityX = 0;
+	m_fVelocityY = 0;
 }
 
 bool CBall::Initialise(float _fPosX, float _fPosY, float _fVelocityX, float _fVelocityY)

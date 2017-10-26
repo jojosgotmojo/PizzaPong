@@ -239,6 +239,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 	srand(time(NULL));
 	
 	hwnd1 = CreateAndRegisterWindow(_hInstance, g_kiWidth, g_kiHeight, L"Pizza Pong");
+	ShowCursor(true);
+
 
 	while (g_currentState != QuitGame)
 	{
@@ -248,9 +250,10 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 		case MainMenu:
 		{
-			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
+			ShowCursor(true);
+
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -274,7 +277,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case QuickGame:
 		{
-			ShowCursor(false);
 			CGame& rGame = CGame::GetInstance(false);
 			GetClientRect(hwnd1, &_rect);
 
@@ -283,6 +285,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				// Failed
 				return (0);
 			}
+			ShowCursor(false);
+
 
 			while (msg.message != WM_QUIT)
 			{
@@ -307,7 +311,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case Tournament:
 		{
-			ShowCursor(false);
 			CGame& rGame = CGame::GetInstance(true);
 			GetClientRect(hwnd1, &_rect);
 
@@ -316,6 +319,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				// Failed
 				return (0);
 			}
+			ShowCursor(false);
+
 
 			while (msg.message != WM_QUIT)
 			{
@@ -340,9 +345,10 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case Credits:
 		{
-			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
+			ShowCursor(true);
+
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -366,9 +372,10 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		case Instructions:
 		{
-			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
+			ShowCursor(true);
+
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -393,9 +400,10 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 
 		case Instructions2:
 		{
-			ShowCursor(true);
 			CMainMenu& rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain.Initialise(IDB_INSTRUCTIONS2, IDB_INSTRUCTIONS2, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
+			ShowCursor(true);
+
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -428,4 +436,5 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 		}
 	}
+	return 0;
 }
