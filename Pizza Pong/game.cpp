@@ -50,8 +50,10 @@ CGame::~CGame()
 	delete m_pClock;
 	m_pClock = 0;
 
-	delete s_pGame;
-	s_pGame = 0;
+	m_hApplicationInstance = 0;
+	m_hMainWindow = 0;
+	m_bIsLevelOver = false;
+	m_bIsTournament = 0;
 }
 
 bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect)

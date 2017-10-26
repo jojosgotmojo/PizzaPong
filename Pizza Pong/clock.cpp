@@ -30,7 +30,10 @@ CClock::CClock()
 
 CClock::~CClock()
 {
-
+	m_fTimeElapsed = 0;
+	m_fDeltaTime = 0;
+	m_fLastTime = 0;
+	m_fCurrentTime = 0;
 }
 
 bool CClock::Initialise()

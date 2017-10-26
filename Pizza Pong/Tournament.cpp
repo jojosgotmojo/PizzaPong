@@ -99,6 +99,7 @@ CTournament::~CTournament()
 	delete m_pBackground;
 	m_pBackground = 0;
 
+
 }
 
 bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
