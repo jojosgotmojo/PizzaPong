@@ -54,6 +54,8 @@ CGame::~CGame()
 	m_hMainWindow = 0;
 	m_bIsLevelOver = false;
 	m_bIsTournament = 0;
+
+	s_pGame = 0;
 }
 
 bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight, CSounds SoundEffect)
