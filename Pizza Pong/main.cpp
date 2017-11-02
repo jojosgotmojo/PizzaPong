@@ -249,7 +249,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		{
 			CMainMenu* rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain->Initialise(IDB_MAINTEST, IDB_MAINTEST, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
-			ShowCursor(true);
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -260,6 +259,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				else
 				{
 					rMain->Draw();
+					ShowCursor(true);
 				}
 				if (g_currentState != MainMenu)
 				{
@@ -345,7 +345,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			
 			CMainMenu* rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain->Initialise(IDB_CREDITS, IDB_CREDITS, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
-			ShowCursor(true);
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -356,6 +355,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				else
 				{
 					rMain->Draw();
+					ShowCursor(true);
 				}
 				if (g_currentState != Credits)
 				{
@@ -371,7 +371,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 			
 			CMainMenu* rMain = CMainMenu::GetInstance();
 			VALIDATE(rMain->Initialise(IDB_INSTRUCT, IDB_INSTRUCT, _hInstance, hwnd1, g_kiWidth, g_kiHeight));
-			ShowCursor(true);
 			while (msg.message != WM_QUIT)
 			{
 				if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -382,6 +381,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				else
 				{
 					rMain->Draw();
+					ShowCursor(true);
 				}
 				if (g_currentState != Credits)
 				{

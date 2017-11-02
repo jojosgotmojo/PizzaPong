@@ -53,7 +53,7 @@ class CSounds
 		//result = _audio->createSound("Sounds/hitsound.wav", FMOD_DEFAULT, 0, &PowerupEnd);
 		result = _audio->createSound("Sounds/powerupstart.mp3", FMOD_DEFAULT, 0, &PowerupStart);
 		result = _audio->createSound("Sounds/hitsound2.mp3", FMOD_DEFAULT, 0, &paddleHit);
-		result = _audio->createSound("Sounds/winsound.wav", FMOD_DEFAULT, 0, &WinSound);
+		result = _audio->createSound("Sounds/winsound.mp3", FMOD_DEFAULT, 0, &WinSound);
 
 		return true;
 	}

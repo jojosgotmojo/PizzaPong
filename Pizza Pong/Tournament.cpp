@@ -111,8 +111,8 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	_sound.InitFmod();
 	_sound.LoadSound();
 
-	const float fBallVelX = 200.0f;
-	const float fBallVelY = 75.0f;
+	float fBallVelX = 200.0f;
+	float fBallVelY = 75.0f;
 
 	m_pBackground = new CBackGround();
 	VALIDATE(m_pBackground->Initialise());
@@ -120,8 +120,27 @@ bool CTournament::Initialise(int _iWidth, int _iHeight, CSounds SoundEffect)
 	m_pBackground->SetX((float)m_iWidth / 2);
 	m_pBackground->SetY((float)m_iHeight / 2);
 
+	int iXRandom = rand() % 2;
+	int iYVelRandom = rand() % 2;
+	int iXStartCoord;
+
+	if (iYVelRandom == 0)
+	{
+		fBallVelY *= -1;
+	}
+
+	if (iXRandom == 0)
+	{
+		iXStartCoord = rand() % 510 + 50;
+		fBallVelX *= -1;
+	}
+	else
+	{
+		iXStartCoord = rand() % 550 + 680;
+	}
+
 	m_pBall = new CBall();
-	VALIDATE(m_pBall->Initialise(m_iWidth / 4.0f, m_iHeight / 2.0f, -fBallVelX, fBallVelY));
+	VALIDATE(m_pBall->Initialise(iXStartCoord, m_iHeight / 2.0f, fBallVelX, fBallVelY));
 
 	m_pPaddle1 = new CPaddle(0);
 	m_pPaddle2 = new CPaddle(1);
@@ -284,7 +303,6 @@ void CTournament::Process(float _fDeltaTick)
 	ProcessBallPaddle1Collision(m_pBall);
 	ProcessBallPaddle2Collision(m_pBall);
 	ProcessBallBrickCollision(m_pBall);
-	ProcessBallBounds(m_pBall);
 	ProcessBallPowerup1(m_pBall);
 	ProcessBallPowerup2(m_pBall);
 	ProcessBallPowerup3(m_pBall);
@@ -295,7 +313,6 @@ void CTournament::Process(float _fDeltaTick)
 		ProcessBallPaddle1Collision(m_pBall2);
 		ProcessBallPaddle2Collision(m_pBall2);
 		ProcessBallBrickCollision(m_pBall2);
-		ProcessBallBounds(m_pBall2);
 		ProcessBallPowerup1(m_pBall2);
 		ProcessBallPowerup2(m_pBall2);
 		ProcessBallPowerup3(m_pBall2);
@@ -306,7 +323,6 @@ void CTournament::Process(float _fDeltaTick)
 		ProcessBallPaddle1Collision(m_pBall3);
 		ProcessBallPaddle2Collision(m_pBall3);
 		ProcessBallBrickCollision(m_pBall3);
-		ProcessBallBounds(m_pBall3);
 		ProcessBallPowerup1(m_pBall3);
 		ProcessBallPowerup2(m_pBall3);
 		ProcessBallPowerup3(m_pBall3);
@@ -724,11 +740,13 @@ void CTournament::ProcessBallWallCollision(CBall* ballnum)
 
 	if (fBallY < fHalfBallH) //represents the situation when the ball has hit the top wall
 	{
+		ballnum->SetY(ballnum->GetRadius());
 		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
 	}
 
 	if (fBallY  > m_iHeight - fHalfBallH)  //represents the situation when the ball has hit the bottom wall
 	{
+		ballnum->SetY(m_iHeight - ballnum->GetRadius());
 		ballnum->SetVelocityY(ballnum->GetVelocityY() * -1); //reverse the ball's y velocity
 	}
 
@@ -879,28 +897,6 @@ void CTournament::ProcessBallBrickCollision(CBall* ballnum)
 				SetBricksRemaining(GetBricksRemaining() - 1);
 			}
 		}
-	}
-}
-
-void CTournament::ProcessBallBounds(CBall* ballnum)
-{
-	if (ballnum->GetY() < 0)
-	{
-		ballnum->SetY(ballnum->GetRadius());
-	}
-	else if (ballnum->GetY() > m_iHeight)
-	{
-		ballnum->SetY(m_iHeight - ballnum->GetRadius());
-	}
-
-	if (ballnum->GetX() < 0)
-	{
-		ballnum->SetX(ballnum->GetRadius());
-	}
-	else if (ballnum->GetX() > m_iWidth)
-	{
-		/*CGame::GetInstance().GameOverLost();
-		ballnum->SetX(static_cast<float>(m_iWidth));*/
 	}
 }
 

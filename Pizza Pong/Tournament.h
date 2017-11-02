@@ -58,7 +58,6 @@ protected:
 	void ProcessBallPaddle1Collision(CBall* ballnum);
 	void ProcessBallPaddle2Collision(CBall* ballnum);
 	void ProcessBallBrickCollision(CBall* ballnum);
-	void ProcessBallBounds(CBall* ballnum);
 	void ProcessBallPowerup1(CBall* ballnum);
 	void ProcessBallPowerup2(CBall* ballnum);
 	bool ProcessBallPowerup3(CBall* ballnum);
