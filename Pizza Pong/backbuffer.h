@@ -20,6 +20,7 @@
 // Library Includes
 #include <Windows.h>
 
+
 class CBackBuffer
 {
     // Member Functions

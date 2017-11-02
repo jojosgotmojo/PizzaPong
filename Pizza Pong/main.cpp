@@ -31,7 +31,7 @@
 #include "backgroundmusic.h"
 
 #include "Dependencies\FMOD\fmod.hpp"
-#include <vld.h>
+
 
 //Global variables
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);

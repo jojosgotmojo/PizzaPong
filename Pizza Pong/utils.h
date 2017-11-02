@@ -19,8 +19,6 @@
 
 // Library Includes
 #include <strstream>
-
-
 #define VALIDATE(a) if (!a) return (false)
 
 template<typename T>

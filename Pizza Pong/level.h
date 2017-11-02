@@ -24,6 +24,7 @@
 #include "powerup.h"
 #include "Timer.h"
 
+
 class CBall;
 class CPaddle;
 class CBrick;

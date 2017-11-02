@@ -20,6 +20,7 @@
 // Library Includes
 #include "windows.h"
 
+
 class CSprite
 {
 

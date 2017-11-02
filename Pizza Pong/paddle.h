@@ -21,6 +21,7 @@
 #include "entity.h"
 #include "Sprite.h"
 
+
 class CPaddle : public CEntity
 {
 public:

@@ -17,6 +17,8 @@
 #if !defined(__ENTITY_H__)
 #define __ENTITY_H__
 
+
+
 class CSprite;
 
 class CEntity

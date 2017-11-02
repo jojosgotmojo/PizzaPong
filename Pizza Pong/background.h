@@ -20,6 +20,7 @@
 // Local Includes
 #include "entity.h"
 
+
 class CSprite;
 
 class CBackGround : public CEntity

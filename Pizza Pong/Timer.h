@@ -23,6 +23,7 @@
 #include <string>
 #include <chrono>
 
+
 using namespace std::chrono;
 
 class CTimer : public CEntity
@@ -31,7 +32,8 @@ public:
 	CTimer(int _iPowerUpNumber);
 	virtual ~CTimer();
 
-	virtual bool Initialise(int _iX, int _iY);
+	bool Initialise(int _iX, int _iY);
+
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);

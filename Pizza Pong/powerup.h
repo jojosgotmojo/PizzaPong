@@ -21,6 +21,7 @@
 #include "entity.h"
 #include "Sprite.h"
 
+
 class CPowerup : public CEntity
 {
 	
@@ -28,7 +29,7 @@ public:
 	CPowerup(int _iRandomNumber);
 	virtual ~CPowerup();
 
-	virtual bool Initialise(int _iX, int _iY);
+	bool Initialise(int _iX, int _iY);
 
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
