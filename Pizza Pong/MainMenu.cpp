@@ -27,6 +27,7 @@ CMainMenu* CMainMenu::s_pMain = 0;
 CMainMenu::CMainMenu()
 	: m_iX(0)
 	, m_iY(0)
+	, m_bIsDrawn(false)
 {
 	++s_iRefCount;
 }
@@ -47,6 +48,7 @@ CMainMenu::~CMainMenu()
 		s_hSharedMainMenuDC = 0;
 	}
 	s_pMain = 0;
+	m_bIsDrawn = false;
 }
 
 CBackBuffer* CMainMenu::GetBackBuffer()
@@ -87,34 +89,46 @@ CMainMenu* CMainMenu::GetInstance()
 
 	return (s_pMain);
 }
+
+void CMainMenu::DestroyInstance()
+{
+	if (s_pMain != nullptr)
+	{
+		delete s_pMain;
+		s_pMain = 0;
+	}
 
+}
 void CMainMenu::Draw()
 {
-	m_pBackBuffer->Clear();
+	if (m_bIsDrawn == false)
+	{
+		m_pBackBuffer->Clear();
 
-	int iW = GetWidth();
-	int iH = GetHeight();
+		int iW = GetWidth();
+		int iH = GetHeight();
 
-	int iX = m_iX;
-	int iY = m_iY;
+		int iX = m_iX;
+		int iY = m_iY;
 
-	HDC hWindowDC = ::GetDC(hWnd);
+		HDC hWindowDC = GetDC(hWnd);
 
-	HDC hDC = CreateCompatibleDC(hWindowDC);
+		HDC hDC = CreateCompatibleDC(hWindowDC);
 
-	CBackBuffer* pBackBuffer = CMainMenu::GetInstance()->GetBackBuffer();
+		HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
 
-	HGDIOBJ hOldObj = SelectObject(s_hSharedMainMenuDC, m_hMask);
+		BitBlt(m_pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
 
-	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCAND);
+		SelectObject(s_hSharedMainMenuDC, m_hMainMenu);
 
-	SelectObject(s_hSharedMainMenuDC, m_hMainMenu);
+		BitBlt(m_pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
 
-	BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedMainMenuDC, 0, 0, SRCPAINT);
+		SelectObject(s_hSharedMainMenuDC, hOldObj);
 
-	SelectObject(s_hSharedMainMenuDC, hOldObj);
-
-	m_pBackBuffer->Present();
+		m_pBackBuffer->Present();
+		m_bIsDrawn = true;
+	}
+	
 }
 
 int CMainMenu::GetWidth() const

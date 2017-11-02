@@ -31,7 +31,7 @@
 #include "backgroundmusic.h"
 
 #include "Dependencies\FMOD\fmod.hpp"
-//#include <vld.h>
+#include <vld.h>
 
 //Global variables
 HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -263,7 +263,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				if (g_currentState != MainMenu)
 				{
-					delete rMain;
+					CMainMenu::DestroyInstance();
 					rMain = 0;
 					break;
 				}
@@ -359,7 +359,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				if (g_currentState != Credits)
 				{
-					delete rMain;
+					CMainMenu::DestroyInstance();
 					rMain = 0;
 					break;
 				}
@@ -385,7 +385,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				if (g_currentState != Credits)
 				{
-					delete rMain;
+					CMainMenu::DestroyInstance();
 					rMain = 0;
 					break;
 				}
@@ -412,7 +412,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 				}
 				if (g_currentState != Credits)
 				{
-					delete rMain;
+					CMainMenu::DestroyInstance();
 					rMain = 0;
 
 					break;

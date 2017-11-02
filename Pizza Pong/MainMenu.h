@@ -41,6 +41,7 @@ public:
 
 	CBackBuffer* GetBackBuffer();
 	static CMainMenu* GetInstance();
+	static void DestroyInstance();
 
 	void TranslateRelative(int _iX, int _iY);
 	void TranslateAbsolute(int _iX, int _iY);
@@ -55,6 +56,7 @@ protected:
 
 	int m_iX;
 	int m_iY;
+	bool m_bIsDrawn;
 
 	HBITMAP m_hMainMenu;
 	HBITMAP m_hMask;

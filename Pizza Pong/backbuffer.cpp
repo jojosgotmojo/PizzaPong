@@ -34,6 +34,8 @@ CBackBuffer::~CBackBuffer()
     DeleteObject(m_hSurface);
     DeleteObject(m_hDC);
 
+	m_hSurface = 0;
+	m_hDC = 0;
 	m_iWidth = 0;
 	m_iHeight = 0;
 	m_hWnd = 0;
