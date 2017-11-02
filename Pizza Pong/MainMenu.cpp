@@ -23,7 +23,6 @@
 HDC CMainMenu::s_hSharedMainMenuDC = 0;
 int CMainMenu::s_iRefCount = 0;
 CMainMenu* CMainMenu::s_pMain = 0;
-CBackBuffer* CMainMenu::m_pBackBuffer = 0;
 
 CMainMenu::CMainMenu()
 	: m_iX(0)

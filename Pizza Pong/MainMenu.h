@@ -65,7 +65,7 @@ protected:
 	static HDC s_hSharedMainMenuDC;
 	static int s_iRefCount;
 
-	static CBackBuffer* m_pBackBuffer;
+	CBackBuffer* m_pBackBuffer;
 
 	static CMainMenu* s_pMain;
 
